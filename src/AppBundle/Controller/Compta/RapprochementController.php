@@ -93,7 +93,7 @@ class RapprochementController extends Controller
         $arr_depenses = array();
         foreach($arr_all_depenses as $depense){
           if($depense->getEtat() != 'RAPPROCHE'){
-            if($depense->getTotalRapproche() < $depense->getTotalTTC() && !$depense->isLettre() ){
+            if($depense->getTotalRapproche() < $depense->getTotalTTC() && !$depense->isLettre()  && $depense->getTotalAvoirs() < $depense->getTotalTTC()  ){
               $arr_depenses[] = $depense;
             }
           }
