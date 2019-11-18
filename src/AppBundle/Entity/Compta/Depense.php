@@ -938,4 +938,13 @@ class Depense
         }
         return false;
     }
+
+    public function getTotalAvoirs(){
+
+      $total = 0;
+      foreach($this->avoirs as $avoir){
+        $total+= $avoir->getTotalTTC();
+      }
+      return $total;
+    }
 }
