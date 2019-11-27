@@ -1143,13 +1143,13 @@ class ActionCommercialeController extends Controller
 					'valeur' => 'Prospect'
 				));
 
-				if(!$contact->hasTypeRelationCommerciale('CLIENT')){
-					$contact->addSetting($settingsClient);
+				if($contact->hasTypeRelationCommerciale('PROSPECT')){
+					$contact->removeSetting($settingsProspect);
 					$em->persist($contact);
 				}
 
-				if($contact->hasTypeRelationCommerciale('PROSPECT')){
-					$contact->removeSetting($settingsProspect);
+				if(count($contact->getTypeRelationCommerciale()) == 0){
+					$contact->addSetting($settingsClient);
 					$em->persist($contact);
 				}
 					
