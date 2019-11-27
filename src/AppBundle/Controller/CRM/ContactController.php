@@ -863,16 +863,13 @@ class ContactController extends Controller
 					//pas de factures
 					if(count($contact->getFactures()) == 0){
 						$contact->addSetting($prospect);
-						//$em->persist($contact);
+						$em->persist($contact);
 					}
-
 				}
-
 			}
-
 		}
 
-		//$em->flush();
+		$em->flush();
 
 		return new Response();
 
@@ -901,7 +898,6 @@ class ContactController extends Controller
 
 			if(count($contact->getTypeRelationCommerciale()) == 0){
 				$contact->addSetting($client);
-				//$arr_contacts[] = $contact;
 				$em->persist($contact);
 			}
 		}
