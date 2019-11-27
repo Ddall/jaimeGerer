@@ -16,30 +16,20 @@ class AppKernel extends Kernel
           new Symfony\Bundle\AsseticBundle\AsseticBundle(),
           new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
           new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
-          new AppBundle\AppBundle(),
-        	new Misd\PhoneNumberBundle\MisdPhoneNumberBundle(),
-        	new Shtumi\UsefulBundle\ShtumiUsefulBundle(),
-        	new Lexik\Bundle\FormFilterBundle\LexikFormFilterBundle(),
+          new Shtumi\UsefulBundle\ShtumiUsefulBundle(), //autocomplete
+          new FOS\UserBundle\FOSUserBundle(),
+          new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+          new Knp\Bundle\SnappyBundle\KnpSnappyBundle(), //wkhtmltopdf
         	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
-        	new Liuggio\ExcelBundle\LiuggioExcelBundle(),
-        	new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+        	new Liuggio\ExcelBundle\LiuggioExcelBundle(), //todo : remplacer par PHPSpreadsheet
         	new Fenrizbes\ColorPickerTypeBundle\FenrizbesColorPickerTypeBundle(),
         	new RC\AmChartsBundle\RCAmChartsBundle(),
-        	new FOS\UserBundle\FOSUserBundle(),
         	new Nicomak\UserBundle\NicomakUserBundle(),
-        	new Sonata\UserBundle\SonataUserBundle('NicomakUserBundle'),
-        	new Knp\Bundle\SnappyBundle\KnpSnappyBundle(),
-        	new Knp\Bundle\MenuBundle\KnpMenuBundle(),
-        	new Sonata\CoreBundle\SonataCoreBundle(),
-        	new Sonata\BlockBundle\SonataBlockBundle(),
-        	new Sonata\DoctrineORMAdminBundle\SonataDoctrineORMAdminBundle(),
-        	new Sonata\AdminBundle\SonataAdminBundle(),
-        	new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
-        	new Sonata\IntlBundle\SonataIntlBundle(),
           new Nicomak\PaypalBundle\NicomakPaypalBundle(),
           new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
           new Snowcap\ImBundle\SnowcapImBundle(),
-          new CMEN\GoogleChartsBundle\CMENGoogleChartsBundle()
+          new CMEN\GoogleChartsBundle\CMENGoogleChartsBundle(),
+          new AppBundle\AppBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

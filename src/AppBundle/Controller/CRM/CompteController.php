@@ -418,17 +418,7 @@ class CompteController extends Controller
 			'nom' => $nom,
 			'company' => $this->getUser()->getCompany()
 		));
-		/*
-		$s_telephone = null;
-		if($compte->getTelephone()){
-			$s_telephone = $this->get('libphonenumber.phone_number_util')->format($compte->getTelephone(), 'INTERNATIONAL');
-		}
-
-		$s_fax = null;
-		if($compte->getFax()){
-			$s_fax = $this->get('libphonenumber.phone_number_util')->format($compte->getFax(), 'INTERNATIONAL');
-		}
-		*/
+		
 		$response = new JsonResponse();
 		$response->setData(array(
     		'adresse' => $compte->getAdresse(),

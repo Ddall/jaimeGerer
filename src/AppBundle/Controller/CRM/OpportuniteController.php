@@ -534,15 +534,6 @@ class OpportuniteController extends Controller
 
 			foreach($arr_opportunites as $opportunite){
 
-				$s_telephone = "";
-				$s_fax = "";
-				if($opportunite->getTelephone()){
-					$s_telephone = $this->get('libphonenumber.phone_number_util')->format($opportunite->getTelephone(), 'INTERNATIONAL');
-				}
-				if($opportunite->getFax()){
-					$s_fax = $this->get('libphonenumber.phone_number_util')->format($opportunite->getFax(), 'INTERNATIONAL');
-				}
-
 				$arr_return[] =
 				array(
 						'id' => $opportunite->getId(),
@@ -551,8 +542,8 @@ class OpportuniteController extends Controller
 						'codePostal' => $opportunite->getCodePostal(),
 						'region' => $opportunite->getRegion(),
 						'pays' => $opportunite->getPays(),
-						'telephone' => $s_telephone,
-						'fax' => $s_fax,
+						'telephone' => $opportunite->getTelephone(),
+						'fax' => $opportunite->getFax(),
 						'url' => $opportunite->getUrl(),
 						'description' => $opportunite->getDescription(),
 						'gestionnaire' => $opportunite->getUserGestion()->__toString(),

@@ -69,27 +69,6 @@ class UserController extends Controller
     return new JsonResponse(array('promote' => $promote));
   }
 
-  //  /**
-  //   * @Route("promote-all", name="promote-all" )
-  //   **/
-  //   public function promoteAllAction(){
-  //
-  //     $userRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:User');
-  //     $arr_users = $userRepo->findAll();
-  //
-  //
-  //     $userManager = $this->get('fos_user.user_manager');
-  //
-  //     foreach($arr_users as $user){
-  //       $user->addRole('ROLE_NDF');
-  //       $userManager->updateUser($user);
-  //     }
-  //
-  //
-  //     return new Response();
-  // }
-
-
   /**
    * Add an user to the logged user's company
    * @return Response Rendered view

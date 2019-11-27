@@ -5,7 +5,6 @@ namespace AppBundle\Entity\CRM;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 use Doctrine\Common\Collections\Criteria;
 
 /**
@@ -1337,7 +1336,37 @@ class Contact
     public function getOpportunites()
     {
         return $this->opportunites;
-    }    
+    }
+
+    public function getTypeRelationCommerciale(){
+        $types = array();
+        foreach($this->settings as $settings){
+            if(strtoupper($settings->getParametre()) == "TYPE"){
+                $types[] = $settings;
+            }
+        }
+        return $types;
+    }
+
+
+    public function hasTypeRelationCommerciale($type){
+        foreach($this->settings as $settings){
+            if(strtoupper($settings->getParametre()) == "TYPE" && strtoupper($settings->getValeur()) == strtoupper($type) ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function getFactures(){
+        $factures = array();
+        foreach($this->documentsPrix as $documentPrix){
+            if( strtoupper($documentPrix->getType()) == "FACTURE" ){
+                $factures[] = $documentPrix;
+            }
+        }
+        return $factures;
+    }
 }
 
 

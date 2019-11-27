@@ -447,12 +447,8 @@ class ProspectionControllerCopy extends Controller
         $contact->setCodePostal($data['codePostal']);
         $contact->setRegion($data['region']);
         $contact->setPays($data['pays']);
-        if($data['telephoneFixe'] != null){
-            $contact->setTelephoneFixe( $this->get('libphonenumber.phone_number_util')->parse($data['telephoneFixe'], 'FR'));
-        }
-        if($data['telephonePortable'] != null){
-            $contact->setTelephonePortable( $this->get('libphonenumber.phone_number_util')->parse($data['telephonePortable'], 'FR'));
-        }
+        $contact->setTelephoneFixe($data['telephoneFixe']);
+        $contact->setTelephonePortable($data['telephonePortable']);
         $contact->setEmail($data['email']);
         $contact->setTitre($data['titre']);
 

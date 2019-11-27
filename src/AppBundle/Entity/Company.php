@@ -6,7 +6,6 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Misd\PhoneNumberBundle\Validator\Constraints\PhoneNumber as AssertPhoneNumber;
 
 /**
  * Company
@@ -337,7 +336,7 @@ class Company
     /**
      * Set telephone
      *
-     * @param phone_number $telephone
+     * @param string $telephone
      * @return Company
      */
     public function setTelephone($telephone)
@@ -350,7 +349,7 @@ class Company
     /**
      * Get telephone
      *
-     * @return phone_number 
+     * @return string 
      */
     public function getTelephone()
     {

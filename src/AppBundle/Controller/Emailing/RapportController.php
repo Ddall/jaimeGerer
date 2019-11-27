@@ -421,15 +421,9 @@ class RapportController extends Controller
 				$contact->setCodePostal($data['codePostal']);
 				$contact->setRegion($data['region']);
 				$contact->setPays($data['pays']);
-				if($data['telephoneFixe'] != null){
-					$contact->setTelephoneFixe( $this->get('libphonenumber.phone_number_util')->parse($data['telephoneFixe'], 'FR'));
-				}
-				if($data['telephonePortable'] != null){
-					$contact->setTelephonePortable( $this->get('libphonenumber.phone_number_util')->parse($data['telephonePortable'], 'FR'));
-				}
-				if($data['fax'] != null){
-					$contact->setFax($this->get('libphonenumber.phone_number_util')->parse($data['fax'], 'FR'));
-				}
+				$contact->setTelephoneFixe($data['telephoneFixe']);
+				$contact->setTelephonePortable($data['telephonePortable']);
+				$contact->setFax($data['fax']);
 				$contact->setEmail($data['email']);
 				$contact->setDescription($data['description']);
 				

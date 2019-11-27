@@ -216,7 +216,6 @@ class DocumentPrixRepository extends EntityRepository
 					$operateur = '=';
 				}
 				$where = '('.$prefix.'.'.$_champ_0.' * '.$prefix.'.'.$_champ_1.') '.$operateur.' '.$param;
-				//var_dump($filter->getValeur());
 				$query->setParameter($param, $filter->getValeur());
 
 				if($andor == 'AND'){

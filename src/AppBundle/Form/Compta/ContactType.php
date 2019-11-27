@@ -34,24 +34,13 @@ class ContactType extends AbstractType
         $builder
             ->add('nom', 'text', array(
         		'label' => 'Nom de l\'organisation'
-        		//~ 'attr'   =>  array(
-					//~ 'data-validation-engine' => "validate[required,custom[email]]",
-					//~ 'data-errormessage-value-missing' => "Email is required!" ,
-					//~ 'data-errormessage-custom-error' => "Let me give you a hint: someone@nowhere.com" ,
-					//~ 'data-errormessage' => "This is the fall-back error message."
-					//~ 'class' => 'form-control validate[required]'
-				//~ )
         	))
             ->add('telephone','text', array(
             	'required' => false,
-            	//'default_region' => 'FR',
-            	//'format' => PhoneNumberFormat::INTERNATIONAL,
             	'label' => 'Téléphone'
         	))
             ->add('fax', 'text', array(
             	'required' => false,
-            //	'default_region' => 'FR',
-            //	'format' => PhoneNumberFormat::INTERNATIONAL,
             	'label' => 'Fax'
         	))
             ->add('url', 'url', array(
@@ -84,14 +73,7 @@ class ContactType extends AbstractType
             ))
             ->add('description', 'textarea', array(
             	'required' => false,
-            	'label' => 'Description'
-        		//~ 'attr'   =>  array(
-					//~ 'data-validation-engine' => "validate[required]",
-					//~ 'data-errormessage-value-missing' => "Email is required!" ,
-					//~ 'data-errormessage-custom-error' => "Let me give you a hint: someone@nowhere.com" ,
-					//~ 'data-errormessage' => "This is the fall-back error message."
-					//~ 'class' => 'form-control validate[required]'
-				//~ )
+            	'label' => 'Description')
         	))
             ->add('compteParent', 'shtumi_ajax_autocomplete', array(
             		'entity_alias'=>'comptes',

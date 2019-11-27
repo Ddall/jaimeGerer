@@ -30,7 +30,7 @@ twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
     form:
-        resources: ['bootstrap_3_layout.html.twig', 'ShtumiUsefulBundle::fields.html.twig', 'LexikFormFilterBundle:Form:form_div_layout.html.twig']
+        resources: ['bootstrap_3_layout.html.twig', 'ShtumiUsefulBundle::fields.html.twig']
     globals:
       topol_login: '%topol_login%'
       topol_password: '%topol_password%'
@@ -59,9 +59,6 @@ doctrine:
         user:     "%database_user%"
         password: "%database_password%"
         charset:  UTF8
-        types:
-            phone_number: Misd\PhoneNumberBundle\Doctrine\DBAL\Types\PhoneNumberType
-            json: Sonata\Doctrine\Types\JsonType
         # if using pdo_sqlite as your database driver:
         #   1. add the path in parameters.yml
         #     e.g. database_path: "%kernel.root_dir%/data/data.db3"
@@ -120,38 +117,6 @@ fos_user:
     from_email:
         address:        laura@jaime-gerer.com
         sender_name:    J'aime gérer
-
-# SONATA User Bundle
-sonata_user:
-    security_acl: false
-    manager_type: orm
-    class:
-        user: AppBundle\Entity\User
-        group: AppBundle\Entity\Group
-    impersonating:
-        route: homepage
-    admin:
-        user:
-            class: Nicomak\UserBundle\Entity\UserAdmin
-            controller: SonataAdminBundle:CRUD
-            translation: SonataUserBundle
-
-sonata_block:
-    default_contexts: [cms]
-    blocks:
-        sonata.admin.block.admin_list:
-            contexts: [admin]
-        sonata.user.block.menu:    # used to display the menu in profile pages
-        sonata.block.service.text:
-        sonata.block.service.action: ~
-        sonata.block.service.rss: ~
-        sonata.admin.block.search_result: ~
-
-sonata_admin:
-    title:      Administration
-    title_logo: /web/images/logo-couleur-500px.png
-    templates:
-        layout:     admin/admin_layout.html.twig
 
 # KNP Snappy
 knp_snappy:

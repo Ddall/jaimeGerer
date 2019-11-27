@@ -20,8 +20,6 @@ use AppBundle\Form\CRM\ContactType;
 use AppBundle\Form\SettingsType;
 use AppBundle\Form\CRM\RapportType;
 
-use libphonenumber\PhoneNumberFormat;
-use libphonenumber\PhoneNumberUtil;
 
 class RapportController extends Controller
 {	
@@ -540,23 +538,10 @@ class RapportController extends Controller
 	private function _rapportProcessData($type, $arr_obj){
 	
 		$arr_processed_data = array();
-		$phoneUtil = PhoneNumberUtil::getInstance();
 		switch($type){
 				
 			case 'compte':
 				foreach($arr_obj as $compte){
-	
-// 					$s_telephone = "";
-// 					$s_fax = "";
-// 						//~ echo $i++ . " zz    ".$compte->getTelephone()." --- > ";
-// 					if($compte->getTelephone() && $phoneUtil->isViablePhoneNumber($compte->getTelephone())){
-// 						$phoneNumber = $phoneUtil->parse($compte->getTelephone(), 'FR', null, true);
-// 						$s_telephone = $phoneUtil->format($phoneNumber , 'INTERNATIONAL');
-// 					}
-// 					if($compte->getFax() && $phoneUtil->isViablePhoneNumber($compte->getFax())){
-// 						$phoneNumber = $phoneUtil->parse($compte->getFax(), 'FR', null, true);
-// 						$s_fax = $this->get('libphonenumber.phone_number_util')->format($phoneNumber, 'INTERNATIONAL');
-// 					}
 
 					$arr_processed_data[] =
 					array(
@@ -580,32 +565,6 @@ class RapportController extends Controller
 				
 			case 'contact':
 				foreach($arr_obj as $contact){
-			
-					$s_telephone_fixe = "";
-					$s_telephone_portable = "";
-					$s_fax = "";
-// 					if($contact->getTelephoneFixe() && $phoneUtil->isViablePhoneNumber($contact->getTelephoneFixe())){
-// 						$phoneNumber = $phoneUtil->parse($contact->getTelephoneFixe(), 'FR', null, true);
-// 						$s_telephone_fixe = $phoneUtil->format($phoneNumber , 'INTERNATIONAL');
-// 					}
-// 					if($contact->getTelephonePortable() && $phoneUtil->isViablePhoneNumber($contact->getTelephonePortable())){
-// 						$phoneNumber = $phoneUtil->parse($contact->getTelephonePortable(), 'FR', null, true);
-// 						$s_telephone_portable = $this->get('libphonenumber.phone_number_util')->format($phoneNumber, 'INTERNATIONAL');
-// 					}
-// 					if($contact->getFax() && $phoneUtil->isViablePhoneNumber($contact->getFax())){
-// 						$phoneNumber = $phoneUtil->parse($contact->getFax(), 'FR', null, true);
-// 						$s_fax = $this->get('libphonenumber.phone_number_util')->format($phoneNumber, 'INTERNATIONAL');
-// 					}
-					//~ if($contact->getTelephoneFixe()){
-						//~ $s_telephone_fixe = $this->get('libphonenumber.phone_number_util')->format($contact->getTelephoneFixe(), 'INTERNATIONAL');
-					//~ }
-					//~ if($contact->getTelephonePortable()){
-						//~ $s_telephone_portable = $this->get('libphonenumber.phone_number_util')->format($contact->getTelephonePortable(), 'INTERNATIONAL');
-					//~ }
-					//~ if($contact->getFax()){
-						//~ $s_fax = $this->get('libphonenumber.phone_number_util')->format($contact->getFax(), 'INTERNATIONAL');
-					//~ }
-			
 					$arr_data = array(
 							'id' => $contact->getId(),
 							'prenom' => $contact->getPrenom(),

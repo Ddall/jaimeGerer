@@ -289,6 +289,36 @@ class FactureController extends Controller
 			}
 
 			$em->persist($facture);
+
+			//mettre type de relation commerciale du contact comme "client"
+			if($facture->getContact()){
+				$contact = $facture->getContact();
+				$settingsRepository = $em->getRepository('AppBundle:Settings');
+				$settingsClient = $settingsRepository->findOneBy(array(
+					'company' => $this->getUser()->getCompany(),
+					'parametre' => 'TYPE',
+					'module' => 'CRM',
+					'valeur' => 'Client'
+				));
+				$settingsProspect = $settingsRepository->findOneBy(array(
+					'company' => $this->getUser()->getCompany(),
+					'parametre' => 'TYPE',
+					'module' => 'CRM',
+					'valeur' => 'Prospect'
+				));
+
+				if(!$contact->hasTypeRelationCommerciale('CLIENT')){
+					$contact->addSetting($settingsClient);
+					$em->persist($contact);
+				}
+
+				if($contact->hasTypeRelationCommerciale('PROSPECT')){
+					$contact->removeSetting($settingsProspect);
+					$em->persist($contact);
+				}
+					
+			}
+
 			$em->flush();
 
 			if($activationCompta){

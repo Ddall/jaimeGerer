@@ -10,9 +10,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 use AppBundle\Entity\Company;
 
-use libphonenumber\PhoneNumberFormat;
-use libphonenumber\PhoneNumberUtil;
-
 class DefaultController extends Controller
 {
     /**

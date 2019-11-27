@@ -4,6 +4,10 @@ parameters:
 #    parameter_name: value
 
 services:
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - { name: twig.extension }
     appbundle.utils_service:
         class: AppBundle\Service\UtilsService
         calls:

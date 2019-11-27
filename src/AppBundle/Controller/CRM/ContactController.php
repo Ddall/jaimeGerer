@@ -144,8 +144,7 @@ class ContactController extends Controller
 
         $secteurActivite = null;
     	if( $compte ){
-            ///////////////////////////////////chercher le SA dans le repo si compte not null////////////////////////////
-
+            
             $settingsRepo = $this->getDoctrine()->getManager()->getRepository('AppBundle:Settings');
             $secteurActivite =  $compte->getSecteurActivite();
 
@@ -288,7 +287,6 @@ class ContactController extends Controller
             $contactRepository = $this->getDoctrine()->getRepository(Contact::class);
             $contactA = $contactRepository->find($idContactA);
             $contactB = $contactRepository->find($idContactB);
-            // @TODO Quoi faire si un contact n'a pas de compte ? (vu avec Laura, ce n'est pas normal qu'il y ait des contacts sans comptes en base, en attendant que ce soit fixé je laisse le teste sur getCompte()
             if ($contactA && $contactB && $contactA->getCompte() && $contactB->getCompte() && $contactA->getCompte()->getCompany() === $this->getUser()->getCompany() && $contactB->getCompte()->getCompany() === $this->getUser()->getCompany()) {
                 /* @var $contactService ContactService */
                 $contactService = $this->get('appbundle.crm_contact_service');
@@ -833,6 +831,84 @@ class ContactController extends Controller
 		return $this->redirect(
 			$this->generateUrl( 'crm_contact_voir', array('id' => $contact->getId()) )
 		);
+	}
+
+	/**
+	 * @Route("/crm/contact/prospects", name="crm_contact_prospects")
+	 */
+	public function marquerLesProspects(){
+
+		$em = $this->getDoctrine()->getManager();
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+		$devisRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
+		$settingsRepo = $em->getRepository('AppBundle:Settings');
+
+		$arr_contacts = array();
+		$prospect = $settingsRepo->find(59);
+
+		$arr_devis = $devisRepo->findForCompany($this->getUser()->getCompany(), 'DEVIS');
+		foreach($arr_devis as $devis){
+
+			$contact = $devis->getContact();
+			if($contact == null){
+				continue;
+			}
+
+			//pas encore marqué prospect
+			if(!$contact->hasTypeRelationCommerciale('PROSPECT')){
+
+				//pas d'autre relation commerciale indiquée
+				if(count($contact->getTypeRelationCommerciale()) == 0){
+
+					//pas de factures
+					if(count($contact->getFactures()) == 0){
+						$contact->addSetting($prospect);
+						//$em->persist($contact);
+					}
+
+				}
+
+			}
+
+		}
+
+		//$em->flush();
+
+		return new Response();
+
+	}
+
+	/**
+	 * @Route("/crm/contact/clients", name="crm_contact_clients")
+	 */
+	public function marquerLesClients(){
+
+		$em = $this->getDoctrine()->getManager();
+		$contactRepo = $em->getRepository('AppBundle:CRM\Contact');
+		$factureRepo = $em->getRepository('AppBundle:CRM\DocumentPrix');
+		$settingsRepo = $em->getRepository('AppBundle:Settings');
+
+		$arr_contacts = array();
+		$client = $settingsRepo->find(60);
+
+		$arr_factures = $factureRepo->findForCompany($this->getUser()->getCompany(), 'FACTURE');
+		foreach($arr_factures as $facture){
+
+			$contact = $facture->getContact();
+			if($contact == null){
+				continue;
+			}
+
+			if(count($contact->getTypeRelationCommerciale()) == 0){
+				$contact->addSetting($client);
+				//$arr_contacts[] = $contact;
+				$em->persist($contact);
+			}
+		}
+
+		$em->flush();
+		return new Response();
+
 	}
 	
 }

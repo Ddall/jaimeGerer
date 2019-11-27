@@ -328,6 +328,26 @@ class ActionCommercialeController extends Controller
 			}
 			
 			$em->persist($devis);
+
+			//mettre type de relation commerciale du contact comme "prospect" si rien d'autre indiqué et pas de facture
+			if($devis->getContact()){
+				$contact = $devis->getContact();
+				$settingsRepository = $em->getRepository('AppBundle:Settings');
+				$settingsProspect = $settingsRepository->findOneBy(array(
+					'company' => $this->getUser()->getCompany(),
+					'parametre' => 'TYPE',
+					'module' => 'CRM',
+					'valeur' => 'Prospect'
+				));
+
+				if(count($contact->getTypeRelationCommerciale()) == 0){
+					if(count($contact->getFactures()) == 0){
+						$contact->addSetting($settingsProspect);
+						$em->persist($contact);
+					}
+				}	
+			}
+
 			$em->flush();
 			
 			return $this->redirect($this->generateUrl(
@@ -1105,6 +1125,36 @@ class ActionCommercialeController extends Controller
 			}
 
 			$em->persist($facture);
+
+			//mettre type de relation commerciale du contact comme "client"
+			if($facture->getContact()){
+				$contact = $facture->getContact();
+				$settingsRepository = $em->getRepository('AppBundle:Settings');
+				$settingsClient = $settingsRepository->findOneBy(array(
+					'company' => $this->getUser()->getCompany(),
+					'parametre' => 'TYPE',
+					'module' => 'CRM',
+					'valeur' => 'Client'
+				));
+				$settingsProspect = $settingsRepository->findOneBy(array(
+					'company' => $this->getUser()->getCompany(),
+					'parametre' => 'TYPE',
+					'module' => 'CRM',
+					'valeur' => 'Prospect'
+				));
+
+				if(!$contact->hasTypeRelationCommerciale('CLIENT')){
+					$contact->addSetting($settingsClient);
+					$em->persist($contact);
+				}
+
+				if($contact->hasTypeRelationCommerciale('PROSPECT')){
+					$contact->removeSetting($settingsProspect);
+					$em->persist($contact);
+				}
+					
+			}
+			
 			$em->flush();
 			
 			if($activationCompta){

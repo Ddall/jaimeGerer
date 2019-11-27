@@ -2,7 +2,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sonata\UserBundle\Entity\BaseGroup;
+use FOS\UserBundle\Model\Group as BaseGroup;
 
 /**
  * Group

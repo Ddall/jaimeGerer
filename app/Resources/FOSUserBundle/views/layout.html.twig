@@ -12,14 +12,26 @@
             {% endfor %}
         {% endif %}
 
-	<div class="container-fluid">
+    <div class="container-fluid">
 
-    	<div class="row center">
-    		<div class="col-md-12">
-                <p>LOGO</p>
-	   	 		{% block fos_user_content %}{% endblock %}
-	   	 	</div>
-	    </div>
+        <div class="row center" id="login-logo-wrapper">
+            <div class="col-md-12">
+                <img src="{{ asset('images/assets/jaimegerer-logo-250.png') }}" alt="logo" title="J'aime Gérer" />
+                <hr />
+            </div>
+        </div>
+
+        <div class="row center">
+            <div class="col-md-12">
+
+              <!-- xmas gif -->
+              {% if ("now"|date('md')) > 1212 and ("now"|date('md') < 1225) %}
+                <p><img src="{{ asset('images/assets/xmas_santa.gif') }}" alt="Le père Noël" title="Toute l'équipe de J'aime Gérer vous souhaite un joyeux Noël !" /></p>
+              {% endif %}
+
+                {% block fos_user_content %}{% endblock %}
+            </div>
+        </div>
 
     </div>
 {% endblock %}
