@@ -168,27 +168,6 @@ nicomak_paypal:
     confirm_route: "payment_credits_confirm"
     cancel_route: "payment_credits_cancel"
 
-snowcap_im:
-
-  # the timeout in seconds for the imagemagick process (optional). Default: 60
-  timeout: 300
-
-  # optional too, a list of pre-defined conversions
-  formats:
-    # resizes to 50 width, at 80% quality
-    small:
-      resize: 50x
-      quality: 80
-
-    # resizes to fit in 100x100, only if bigger, and remove all crap (meta-data, ...)
-    medium:
-      thumbnail: 100x100>
-
-    # crop to get exactly 100x100, keeping the maximum area possible, centered
-    square:
-      resize: 100x100^
-      gravity: center
-      crop: 100x100+0+0
 
 cmen_google_charts:
     version: "current"

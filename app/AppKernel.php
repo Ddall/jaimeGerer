@@ -23,12 +23,10 @@ class AppKernel extends Kernel
         	new Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle(),
         	new Liuggio\ExcelBundle\LiuggioExcelBundle(), //todo : remplacer par PHPSpreadsheet
         	new Fenrizbes\ColorPickerTypeBundle\FenrizbesColorPickerTypeBundle(),
-        	new RC\AmChartsBundle\RCAmChartsBundle(),
+        	new RC\AmChartsBundle\RCAmChartsBundle(), //funnel chart
+          new CMEN\GoogleChartsBundle\CMENGoogleChartsBundle(),
         	new Nicomak\UserBundle\NicomakUserBundle(),
           new Nicomak\PaypalBundle\NicomakPaypalBundle(),
-          new Sensio\Bundle\BuzzBundle\SensioBuzzBundle(),
-          new Snowcap\ImBundle\SnowcapImBundle(),
-          new CMEN\GoogleChartsBundle\CMENGoogleChartsBundle(),
           new AppBundle\AppBundle()
         );
 

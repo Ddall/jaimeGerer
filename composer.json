@@ -28,19 +28,14 @@
 	  "knplabs/knp-snappy-bundle" : "1.0.*",
 	  "stfalcon/tinymce-bundle" : "1.1",
 	  "phpoffice/phpexcel" : "1.8.1",
-	  "liuggio/ExcelBundle" : "dev-master",
+	  "liuggio/excelbundle" : "dev-master",
 	  "parsecsv/php-parsecsv" : "1.0.0",
 	  "it-blaster/color-picker-type-bundle" : "dev-master@dev",
 	  "rcousens/amcharts-bundle" : "dev-master@dev",
-	  "sensio/buzz-bundle": "dev-master",
-	  "snowcap/im-bundle": "~1.0",
 	  "cmen/google-charts-bundle": "^2.1",
-	 
-	  "nelmio/api-doc-bundle": "^2.4",
-	  "friendsofsymfony/rest-bundle": "~2.0",
 	  "mailgun/mailgun-php": "~2.4",
-		"php-http/curl-client": "^1.7",
-		"guzzlehttp/psr7": "^1.5"
+	  "php-http/curl-client": "^1.7",
+	  "guzzlehttp/psr7": "^1.5"
 	},
 	"require-dev" : {
 		"sensio/generator-bundle" : "~2.3",

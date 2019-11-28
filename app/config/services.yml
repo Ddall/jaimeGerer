@@ -16,11 +16,6 @@ services:
         class: AppBundle\Service\MailevaService
         calls:
             - [setContainer, ["@service_container"]]
-    appbundle.receiptbank_service:
-        class: AppBundle\Service\ReceiptBankService
-        calls:
-            - [setContainer, ["@service_container"]]
-        arguments: ["@buzz"]
     appbundle.activation_outils:
         class: AppBundle\Service\ActivationOutilsService
         calls:

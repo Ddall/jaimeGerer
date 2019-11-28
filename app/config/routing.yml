@@ -36,7 +36,3 @@ fos_user_change_password:
 # FOS JS BUNDLE
 fos_js_routing:
     resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
-
-# SnowcapImBundle
-snowcap_im:
-    resource: "@SnowcapImBundle/Resources/config/routing.yml"
