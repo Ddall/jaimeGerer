@@ -2,10 +2,8 @@
 
 namespace Nicomak\UserBundle\Admin;
 
-use Sonata\UserBundle\Admin\Model\UserAdmin as SonataUserAdmin;
-use Sonata\AdminBundle\Form\FormMapper;
 
-class NicomakUserAdmin extends SonataUserAdmin
+class NicomakUserAdmin
 {
     /**
         * {@inheritdoc}

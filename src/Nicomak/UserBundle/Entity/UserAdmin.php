@@ -2,10 +2,7 @@
 
 namespace Nicomak\UserBundle\Entity;
 
-use Sonata\UserBundle\Admin\Entity\UserAdmin as BaseAdmin;
-use Sonata\AdminBundle\Form\FormMapper;
-
-class UserAdmin extends BaseAdmin
+class UserAdmin
 {
 
 	/**
