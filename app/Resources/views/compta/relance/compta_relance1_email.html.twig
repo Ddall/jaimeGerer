@@ -2,11 +2,11 @@
 Madame, Monsieur,
 </p>
 <p>
-90% de nos clients nous règlent dans les temps. Cependant, sauf erreur ou omission de notre part, la mise à jour de votre compte-client présente à ce jour un solde débiteur de {{ total_du }} €.
+Sauf erreur ou omission de notre part, la mise à jour de votre compte-client présente à ce jour un solde débiteur de {{ total_du }} €.
 En effet, {% if arr_factures|length == 1 %} 
-	la facture  n°{{ arr_factures|first.num }}, du {{ arr_factures|first.dateCreation|date('d/m/Y')  }}, n'a pas encore été honorée.
+	la facture  n°{{ arr_factures|first.num }}, du {{ arr_factures|first.dateCreation|date('d/m/Y')  }}, est toujours en attente de règlement.
 {% else %}
-	les factures suivantes n'ont pas encore été honorées :
+	les factures suivantes sont toujours en attente de règlement :
 	<ul>
 	{% for facture in arr_factures %}
 		<li>facture  n°{{ facture.num }}, du {{ facture.dateCreation|date('d/m/Y') }}</li>
@@ -15,7 +15,7 @@ En effet, {% if arr_factures|length == 1 %}
 {% endif %}
 </p>
 <p>
-Il s'agit sans doute d'un oubli involontaire de votre part ou d'une facture mal (re)transmise. Néanmoins, l'échéance étant dépassée, nous vous demandons, pour la bonne règle de nos écritures, de nous adresser le règlement dans les plus brefs délais.
+Pensant qu’il ne s’agit que d’un oubli de votre part, nous comptons sur votre règlement dès réception de ce jour. 
 </p>
 <p>
 Dans le cas où celui-ci aurait été adressé entre temps, nous vous prions de ne pas tenir compte de la présente.
@@ -24,7 +24,7 @@ Dans le cas où celui-ci aurait été adressé entre temps, nous vous prions de 
 Vous pouvez consulter {% if arr_factures|length == 1 %}cette facture{% else %}ces factures{% endif %} en pièce jointe.
 </p>
 <p>
-Nous vous prions de croire, Madame, Monsieur, en l'assurance de notre considération distinguée.
+Dans l’attente, nous vous prions de croire à l’assurance de nos sincères salutations.
 </p>
 <p>
 {{ app.user }}

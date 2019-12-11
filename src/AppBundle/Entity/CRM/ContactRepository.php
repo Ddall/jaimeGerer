@@ -245,8 +245,7 @@ class ContactRepository extends EntityRepository
 
 		$qb  = $this->_em->createQueryBuilder();
 
-		$query = $this->createQueryBuilder('c')
-		->leftJoin('c.settings', 's');
+		$query = $this->createQueryBuilder('c')->leftJoin('c.settings', 's');
 
 		$index = 0;
 		$newGroup = true;
@@ -264,8 +263,7 @@ class ContactRepository extends EntityRepository
 
 			if($action == 'NOT_EQUALS' || $action == 'NOT_CONTAINS'){
 				$operateur = 'NOT LIKE';
-			} 
-			 elseif ($action == 'MORE_THAN'){
+			} elseif ($action == 'MORE_THAN'){
 			 	$operateur = '>';
 			} elseif ($action == 'LESS_THAN'){
 			 	$operateur = '<';
