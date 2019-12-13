@@ -1275,6 +1275,7 @@ class ActionCommercialeController extends Controller
 				$facture->setOpportunite(null);
 				$facture->setObjet($data['objet']);
 				$facture->setFactureFrais(true);
+				$facture->setRemise(0); //pas de remise sur les frais !
 
 				if($facture->getCompte()->getAdresseFacturation()){
 					$facture->setNomFacturation($facture->getCompte()->getNomFacturation());
