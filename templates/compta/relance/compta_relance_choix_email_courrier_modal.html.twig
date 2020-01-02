@@ -1,0 +1,83 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">×</a>
+	<h3>Envoyer une relance</h3>
+</div>
+<div class="modal-body center">
+	<div class="row">
+		<div class="col-md-12">
+			<p>Vous pouvez envoyer votre relance par email ou par courrier directement depuis <span class="jaimelacompta">J'aime la compta</span>.<br />
+			L'envoi par courrier passe par le service en ligne <a href="http://www.maileva.com" target="_blank">Maileva</a>, filiale de La Poste.</p>
+			</p>
+			<p><strong>Comment souhaitez-vous envoyer votre relance ?</strong></p>
+		</div>
+		<div class="col-md-6">
+			{% if facture.contact is null %}
+				<a class="btn btn-default not-active"">Par email</a><br />
+				<i>Votre facture n'est pas liée à un contact.</i>
+			{% elseif facture.contact.email is empty %}
+				<a class="btn btn-default not-active">Par email</a><br />
+				<i>L'adresse email du contact de votre facture n'est pas renseignée.</i>
+			{% else %}
+				<a class="btn btn-info" style="width: 200px;" id="btn-relance-email">Par email</a>
+			{% endif %}
+		</div>
+		<div class="col-md-6">
+			{% if facture.contact is null %}
+				<a class="btn btn-default not-active">Par courrier</a><br />
+				<i>Votre facture n'est pas liée à un contact.</i>
+			{% elseif (facture.adresse is empty) or (facture.ville is empty) or (facture.codePostal is empty) or (facture.pays is empty)  %}
+				<a class="btn btn-default not-active">Par courrier</a><br />
+				<i>L'adresse du destinataire de la facture est incomplète.</i>
+			{% elseif app.user.company.credits < 1.3 %}
+				<a class="btn btn-default not-active">Par courrier</a><br />
+				<i>Vous n'avez pas assez de crédit.</i><br />
+				<a href="{{ path('payment_credits_choose') }}">Acheter du crédit</a>	
+			{% else %}
+				<a class="btn btn-warning" style="width: 200px;" id="btn-relance-courrier">Par courrier</a>
+			{% endif %}
+
+		</div>
+	</div>
+</div>
+
+<script>
+    tinymce.init({
+    selector: '.tinymce',
+    theme : "simple",
+    content_css : "{{ asset('css/tinymce_content.css') }}",
+ });
+</script>
+
+<script type="text/javascript">
+$(document).ready( function () {    
+	$('#btn-relance-email').click(function(){
+		var id = {{ facture.id }};
+		 $.ajax({
+	          type: "POST",
+	          url: Routing.generate('compta_facture_relancer_email', {'id' : {{ facture.id}} }),
+	          success: function(data)
+	          {
+	        	  $("#modal").modal('hide');
+	        	  $('#modal-lg div.modal-content').html(data);
+				  $("#modal-lg").modal('show');
+	          }
+         });
+			
+	});
+
+	$('#btn-relance-courrier').click(function(){
+		var id = {{ facture.id }};
+		 $.ajax({
+	          type: "POST",
+	          url: Routing.generate('compta_facture_relancer_courrier', {'id' : {{ facture.id}} }),
+	          success: function(data)
+	          {
+	        	  $("#modal").modal('hide');
+	        	  $('#modal-lg div.modal-content').html(data);
+				  $("#modal-lg").modal('show');
+	          }
+         });
+			
+	});
+});
+</script>

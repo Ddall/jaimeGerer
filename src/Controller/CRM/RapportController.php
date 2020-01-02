@@ -1,0 +1,815 @@
+<?php
+
+namespace App\Controller\CRM;
+
+use App\Entity\CRM\Rapport;
+use App\Form\CRM\RapportType;
+use App\Util\DependancyInjectionTrait\ContactServiceTrait;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer;
+use Symfony\Component\Serializer\Serializer;
+
+
+class RapportController extends AbstractController
+{
+
+    use ContactServiceTrait;
+
+	/**
+	 * @Route("/crm/rapport/liste/{type}/{user}", name="crm_rapport_liste")
+	 */
+	public function rapportListeAction($type, $user=null)
+	{
+		$repository = $this->getDoctrine()->getManager()->getRepository('App:CRM\Rapport');
+	
+		$criteria = array(
+				'company' => $this->getUser()->getCompany(),
+				'module' => 'CRM',
+				'type' => $type
+		);
+		
+		if($user == 'mine'){
+			$criteria['userCreation'] = $this->getUser();
+		}
+		
+		$list = $repository->findBy($criteria);
+		
+		return $this->render('crm/rapport/crm_rapport_liste.html.twig', array(
+				'list' => $list,
+				'type' => $type,
+				'user' => $user
+		));
+	}
+	
+	/**
+	 * @Route("/crm/rapport/ajouter/{type}", name="crm_rapport_ajouter")
+	 * @Route("/crm/rapport/ajouter/{type}/{module}", requirements={"module" = "CRM|Emailing"}, name="crm_rapport_emailing_ajouter")
+	 */
+	public function rapportAjouterAction(Request $request, $type, $module='CRM')
+	{
+		$em = $this->getDoctrine()->getManager();
+        $settingsRepo = $em->getRepository('App:Settings');
+        
+		$rapport = new Rapport();
+        $form = $this->createForm(RapportType::class, $rapport, array(
+            'type' => $type
+        ));
+			
+		$form->handleRequest($request);
+	
+		if ($form->isSubmitted()) {
+			$rapport->setCompany($this->getUser()->getCompany());
+			$rapport->setModule($module);
+			$rapport->setType($type);
+			$rapport->setDateCreation(new \DateTime(date('Y-m-d')));
+			$rapport->setUserCreation($this->getUser());
+			
+			$em->persist($rapport);
+			$em->flush();
+
+			return $this->redirect($this->generateUrl(
+				'crm_rapport_voir',
+				array('id' => $rapport->getId())
+			));
+		}
+
+		$organisation = $this->getUser()->getCompany();
+		$opportunityStatutList = $settingsRepo->findBy(array('company'=> $organisation,'parametre'=> 'OPPORTUNITE_STATUT'));
+	
+		return $this->render('crm/rapport/crm_rapport_ajouter.html.twig', array(
+				'form' => $form->createView(),
+                'opportuniteList' => $opportunityStatutList,
+                'type' => $type
+		));
+	
+	}
+	
+	
+	private function getHTMLRender($col) {
+		$arr_readOnly_cols = array(
+				'gestionnaire', 'type', 'origine', 'reseau', 'carte_voeux', 'services_interet', 'themes_interet', 'num', 'compte', 'contact'
+		);
+		if (in_array($col, $arr_readOnly_cols)) {
+			//if($col == 'gestionnaire' || $col == 'type' || $col == 'origine' || $col == 'reseau' || $col == 'carte_voeux' || $col == 'services_interet' || $col == 'themes_interet' || $col == 'num' || $col == 'compte' || $col == 'contact'){
+			return array('data' => $col, 'readOnly' => true, 'renderer' => 'html');
+		} else {
+			return array('data' => $col, 'renderer' => 'html');
+		}
+	}
+	
+	
+	/**
+	 * @Route("/crm/rapport/voir/{id}/{bounce}/{warning}", name="crm_rapport_voir", options={"expose"=true})
+	 */
+	public function rapportVoirAction(Rapport $rapport, $bounce = 0, $warning = 0)
+	{
+
+		$encoders = array(new JsonEncoder());
+		$normalizers = array(new GetSetMethodNormalizer());
+		$serializer = new Serializer($normalizers, $encoders);
+		
+		$arr_headers = array();
+		$arr_columns = array();
+		
+		$filterRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\RapportFilter');
+		$arr_filters = $filterRepo->findByRapport($rapport);
+
+		switch($rapport->getType()){
+			case 'compte':
+				$objRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\Compte');
+				$arr_headers_keys = array(
+						'nom' =>	'Nom',
+						'adresse' => 'Adresse',
+						'ville' =>	'Ville',
+						'codePostal' =>	'Code postal',
+						'region' =>	'Region',
+						'pays' =>	'Pays',
+						'telephone' =>	'Telephone',
+						'fax' =>	'Fax',
+						'url' =>	'Site web',
+						'description' => 'Description',
+						'gestionnaire' => 'Gestionnaire du compte',
+						'secteurActivite' => 'Secteur d\'activité'
+				);
+				break;
+				
+			case 'contact':
+				$objRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\Contact');
+				$arr_headers_keys = array(
+						'prenom' => 'Prénom',
+						'nom' =>	'Nom',
+						'compte' => 'Organisation',
+						'titre' => 'Titre',
+						'adresse' => 'Adresse',
+						'ville' =>	'Ville',
+						'codePostal' =>	'Code postal',
+						'region' =>	'Region',
+						'pays' =>	'Pays',
+						'telephoneFixe' =>	'Telephone fixe',
+						'telephonePortable' =>	'Telephone portable',
+						'fax' =>	'Fax',
+						'email' =>	'Email',
+						'description' =>	'Description',
+						'type' => 'Type de relation commerciale',
+						'reseau' => 'Réseau',
+						'origine' => 'Origine',
+						'themes_interet' => 'Thèmes d\'intérêt',
+						'services_interet' => 'Services d\'intérêt',
+						'carte_voeux' => 'Carte de voeux',
+						'newsletter' => 'Newsletter',
+						'rejetNewsletter' => 'Ne pas envoyer newsletter',
+						'rejetEmail' => 'Ne pas envoyer emailings',
+						'bounce' => 'Bounce',
+						'gestionnaire' =>	'Gestionnaire du contact',
+				);
+				break;
+				
+			case 'devis':
+				$objRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\DocumentPrix');
+				$arr_headers_keys = array(
+						'objet' => 'Objet',
+						'num' => 'Numéro de devis',
+						'date_validite' => 'Date de validité',
+						'compte' =>	'Compte',
+						'contact' => 'Contact',
+						'adresse' => 'Adresse',
+						'ville' =>	'Ville',
+						'codePostal' =>	'Code postal',
+						'region' =>	'Region',
+						'description' =>	'Description',
+						'gestionnaire' =>	'Gestionnaire du devis',
+						'dateCreation' => 'Date de création',
+						'dateEdition' => 'Date de modification',
+						'total_ht' => 'Total HT',
+						'total_ttc' => 'Total TTC',
+				);
+				break;
+			case 'facture':
+				$objRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\DocumentPrix');
+				$arr_headers_keys = array(
+						'objet' => 'Objet',
+						'num' => 'Numéro de facture',
+						'date_validite' => 'Date de validité',
+						'compte' =>	'Compte',
+						'contact' => 'Contact',
+						'adresse' => 'Adresse',
+						'ville' =>	'Ville',
+						'codePostal' =>	'Code postal',
+						'region' =>	'Region',
+						'description' =>	'Description',
+						'gestionnaire' =>	'Gestionnaire de la facture',
+						'bon_commande_interne' =>	'Numéro de bon de commande interne',
+						'bon_commande_client' =>	'Numéro de bon de commande client',
+						'dateCreation' => 'Date de création',
+						'dateEdition' => 'Date de modification',
+				);
+				break;
+			case 'opportunite':
+				$objRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\Opportunite');
+				$arr_headers_keys = array(
+						'nom' => 'Nom',
+						'montant' => 'Montant',
+						'echeance' => 'Echéance',
+						'statut' => 'Statut',
+						'type' =>	'Type',
+						'origine' => 'Origine',
+						'probabilite' => 'Probabilite',
+						'compte' =>	'Compte',
+						'contact' =>	'Contact',
+						'gestionnaire' =>	"Gestionnaire de l'opportunité",
+						'dateCreation' => 'Date de création',
+						'dateEdition' => 'Date de modification',
+				);
+				break;
+		}
+
+		if (($rapport->getType() == 'devis') || ($rapport->getType() == 'facture')) {
+			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters,$rapport->getType(), $this->getUser()->getCompany());
+		} elseif($rapport->getType() == "contact") {
+			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany(), $rapport->getEmailing(), $bounce, $warning, $rapport->getExcludeWarnings());
+		} else {
+			$arr_obj = $objRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany());
+		}
+
+		$arr_new = array();
+ 		
+		$arr_data = $this->_rapportProcessData($rapport->getType(), $arr_obj);
+			
+		foreach($arr_headers_keys as $col => $header){
+			$arr_headers[] = $header;
+			$arr_columns[] = $this->getHTMLRender($col);
+		}
+	
+		return $this->render('crm/rapport/crm_rapport_voir.html.twig', array(
+				'arr_obj' => $arr_data,
+				'arr_headers' => $arr_headers,
+				'arr_columns' => $arr_columns,
+				'rapport' => $rapport,
+				'hide_tiny' => true,
+                'type' => $rapport->getType(),
+                'bounce' => $bounce,
+                'warning' => $warning
+		));
+	}
+	
+	
+	/**
+	 * @Route("/crm/rapport/editer/{id}", name="crm_rapport_editer")
+	 */
+	public function rapportEditerAction(Request $request, Rapport $rapport)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$settingsRepo = $em->getRepository('App:Settings');
+
+        $form = $this->createForm(RapportType::class, $rapport);
+	
+		$form->handleRequest($request);
+	
+		if ($form->isSubmitted()) {
+			
+			 $em->persist($rapport);
+			 $em->flush();
+			
+			return $this->redirect($this->generateUrl(
+					'crm_rapport_voir',
+					array('id' => $rapport->getId())
+			));
+	
+		}
+
+		$organisation = $this->getUser()->getCompany();
+        $opportunityStatutList = $settingsRepo->findBy(array('company'=> $organisation,'parametre'=> 'OPPORTUNITE_STATUT'));
+	
+		return $this->render('crm/rapport/crm_rapport_editer.html.twig', array(
+			'form' => $form->createView(),
+			'rapport' => $rapport,
+			'opportuniteList' => $opportunityStatutList,
+			'type' => $rapport->getType()
+		));
+	}
+	
+	
+	/**
+	 * @Route("/crm/rapport/supprimer/{id}", name="crm_rapport_supprimer")
+	 */
+	public function rapportSupprimerAction(Request $request, Rapport $rapport)
+	{
+		$form = $this->createFormBuilder()->getForm();
+	
+		$form->handleRequest($request);
+	
+		if ($form->isSubmitted() && $form->isValid()) {
+	
+			$type = $rapport->getType();
+			
+			$em = $this->getDoctrine()->getManager();
+			$em->remove($rapport);
+			$em->flush();
+	
+			return $this->redirect($this->generateUrl(
+					'crm_rapport_liste', array('type' => $type)
+			));
+		}
+	
+		return $this->render('crm/rapport/crm_rapport_supprimer.html.twig', array(
+				'form' => $form->createView(),
+				'rapport' => $rapport
+		));
+	}
+	
+	// /**
+	//  * @Route("/crm/rapport/enregistrer", name="crm_rapport_enregistrer")
+	//  */
+	// public function rapportEnregistrerAction()
+	// {
+	// 	//~ echo "<pre>";
+	// 	//~ print_r($arr_data);
+	// 	//~ echo "\n";
+	// 	//~ print_r($_POST); echo "</pre>"; exit;
+	// 	$request = $this->getRequest();
+	
+	// 	$encoders = array(new JsonEncoder());
+	// 	$normalizers = array(new GetSetMethodNormalizer());
+	// 	$serializer = new Serializer($normalizers, $encoders);
+		
+	// 	$id = $request->request->get('id');
+	// 	//~ $arr_data = json_decode($request->request->get('data'), true);
+
+	// 	$repository = $this->getDoctrine()->getManager()->getRepository('App:CRM\Rapport');
+	// 	$rapport = $repository->find($id);
+
+	// 	$data = json_decode($request->request->get('data'), true);
+	// 	//~ $data = json_decode($data);
+	// 	$data_json = $serializer->serialize($data, 'json');
+
+	// 	$rapport->setData($data_json);
+		
+	// 	$cols = $request->request->get('cols');
+	// 	$cols_json = $serializer->serialize($cols, 'json');
+	// 	$rapport->setCols($cols_json);
+		
+	// 	$em = $this->getDoctrine()->getManager();
+	// 	$em->persist($rapport);
+	// 	$em->flush();
+		
+	// 	$response = new JsonResponse();
+	// 	$response->setData('ok');
+		
+	// 	return $response;
+	
+	// }
+	
+	/**
+	 * @Route("/crm/rapport/row_maj", name="crm_rapport_row_maj", options={"expose"=true})
+	 */
+	public function rapportRowMajAction(Request $request)
+	{
+		$data = $request->request->get('data');
+		$type = $request->request->get('type');
+		
+		$em = $this->getDoctrine()->getManager();
+		
+		switch($type){
+			
+			case 'compte':
+				$repository = $this->getDoctrine()->getManager()->getRepository('App:CRM\Compte');
+				$compte = $repository->find($data['id']);
+				
+				$compte->setNom($data['nom']);
+				$compte->setAdresse($data['adresse']);
+				$compte->setVille($data['ville']);
+				$compte->setCodePostal($data['codePostal']);
+				$compte->setRegion($data['region']);
+				$compte->setPays($data['pays']);
+				$compte->setTelephone($data['telephone']);
+				$compte->setFax($data['fax']);
+				$compte->setUrl($data['url']);
+				$compte->setDescription($data['description']);
+
+				$em->persist($compte);
+				$em->flush();
+				
+				break;
+				
+			case 'contact':
+				$repository = $this->getDoctrine()->getManager()->getRepository('App:CRM\Contact');
+				$contact = $repository->find($data['id']);
+			
+				$contact->setPrenom($data['prenom']);
+				$contact->setNom($data['nom']);
+				$contact->setAdresse($data['adresse']);
+				$contact->setVille($data['ville']);
+				$contact->setCodePostal($data['codePostal']);
+				$contact->setRegion($data['region']);
+				$contact->setPays($data['pays']);
+				if($data['telephoneFixe'] != null){
+					$contact->setTelephoneFixe($data['telephoneFixe']);
+				}
+				if($data['telephonePortable'] != null){
+					$contact->setTelephonePortable($data['telephonePortable']);
+				}
+				if($data['fax'] != null){
+					$contact->setFax($data['fax']);
+				}
+
+				$contact->setDescription($data['description']);
+
+				if($contact->getEmail()){
+					$oldEmail = $contact->getEmail();
+					$contact->setEmail($data['email']);
+					if( $oldEmail != $contact->getEmail() && $contact->getCompte()->getCompany()->getZeroBounceApiKey() ){
+						$this->contactService->verifierBounce($contact);
+					}	
+				} else {
+					$contact->setBounce(null);
+				}
+
+				$em->persist($contact);
+				$em->flush();
+				
+				break;
+				
+			case 'devis':
+				$repository = $this->getDoctrine()->getManager()->getRepository('App:CRM\DocumentPrix');
+				$devis = $repository->find($data['id']);
+			
+				$devis->setObjet($data['objet']);
+				$devis->setAdresse($data['adresse']);
+				$devis->setVille($data['ville']);
+				$devis->setCodePostal($data['codePostal']);
+				$devis->setRegion($data['region']);
+				$devis->setPays($data['pays']);
+				$devis->setDescription($data['description']);
+				
+				if ($data['date_validite']) {
+					$dateValidite = \DateTime::createFromFormat('d/m/Y', $data['date_validite']);
+					if ($dateValidite)
+						$devis->setDateValidite($dateValidite);
+				}
+				
+				$dateCreation = \DateTime::createFromFormat('d/m/Y', $data['dateCreation']);
+				$devis->setDateCreation($dateCreation);
+				
+				$dateEdition = \DateTime::createFromFormat('d/m/Y', $data['dateEdition']);
+				$devis->setDateCreation($dateEdition);
+			
+				$em->persist($devis);
+				$em->flush();
+			
+				break;
+				
+			case 'facture':
+				$repository = $this->getDoctrine()->getManager()->getRepository('App:CRM\DocumentPrix');
+				$facture = $repository->find($data['id']);
+					
+				$facture->setObjet($data['objet']);
+				$facture->setAdresse($data['adresse']);
+				$facture->setVille($data['ville']);
+				$facture->setCodePostal($data['codePostal']);
+				$facture->setRegion($data['region']);
+				$facture->setPays($data['pays']);
+				$facture->setDescription($data['description']);
+			
+				if ($data['date_validite']) {
+					$dateValidite = \DateTime::createFromFormat('d/m/Y', $data['date_validite']);
+					if ($dateValidite)
+						$facture->setDateValidite($dateValidite);
+				}
+				
+				$dateCreation = \DateTime::createFromFormat('d/m/Y', $data['dateCreation']);
+				$facture->setDateCreation($dateCreation);
+				
+				$dateEdition = \DateTime::createFromFormat('d/m/Y', $data['dateEdition']);
+				$facture->setDateCreation($dateEdition);
+					
+				$em->persist($facture);
+				$em->flush();
+					
+				break;
+				
+			case 'opportunite':
+				$repository = $this->getDoctrine()->getManager()->getRepository('App:CRM\Opportunite');
+				$opportunite = $repository->find($data['id']);
+					
+				$opportunite->setNom($data['nom']);
+				$opportunite->setMontant($data['montant']);
+				
+				if ($data['echeance']) {
+					$echeance = \DateTime::createFromFormat('d/m/Y', $data['echeance']);
+					if ($echeance)
+						$opportunite->setEcheance($echeance);
+				}
+				$opportunite->setType($data['type']);
+				//$opportunite->setOrigine($data['origine']);
+				//$opportunite->setProbabilite($data['probabilite']);
+					
+				$dateCreation = \DateTime::createFromFormat('d/m/Y', $data['dateCreation']);
+				$opportunite->setDateCreation($dateCreation);
+				
+				$dateEdition = \DateTime::createFromFormat('d/m/Y', $data['dateEdition']);
+				$opportunite->setDateCreation($dateEdition);
+					
+				
+				$em->persist($opportunite);
+				$em->flush();
+					
+				break;
+		
+		}
+		
+		$response = new JsonResponse();
+		$response->setData('ok');
+		return $response;
+	}
+	
+	private function _rapportProcessData($type, $arr_obj){
+	
+		$arr_processed_data = array();
+		switch($type){
+				
+			case 'compte':
+				foreach($arr_obj as $compte){
+
+					$arr_processed_data[] =
+					array(
+							'id' => $compte->getId(),
+							'nom' => $compte->getNom(),
+							'adresse' => $compte->getAdresse(),
+							'ville' => $compte->getVille(),
+							'codePostal' => $compte->getCodePostal(),
+							'region' => $compte->getRegion(),
+							'pays' => $compte->getPays(),
+							'telephone' => $compte->getTelephone(),
+							'fax' => $compte->getFax(),
+							'url' => $compte->getUrl(),
+							'description' => $compte->getDescription(),
+							'gestionnaire' => $compte->getUserGestion()->__toString(),
+                            'secteurActivite' => $compte->getSecteurActivite()
+					);
+				}
+
+				break;
+				
+			case 'contact':
+				foreach($arr_obj as $contact){
+					$arr_data = array(
+							'id' => $contact->getId(),
+							'prenom' => $contact->getPrenom(),
+							'nom' => $contact->getNom(),
+							'compte' => $contact->getCompte()->getNom(),
+							'titre' => $contact->getTitre(),
+							'adresse' => $contact->getAdresse(),
+							'ville' => $contact->getVille(),
+							'codePostal' => $contact->getCodePostal(),
+							'region' => $contact->getRegion(),
+							'pays' => $contact->getPays(),
+							'telephoneFixe' => $contact->getTelephoneFixe(),
+							'telephonePortable' => $contact->getTelephonePortable(),
+							'fax' => $contact->getFax(),
+							'email' => $contact->getEmail(),
+							'type' => null,
+							'reseau' => null,
+							'origine' => null,
+							'themes_interet' => null,
+							'services_interet' => null,
+							'carte_voeux' => null,
+							'newsletter' => null,
+							'description' => $contact->getDescription(),
+							'gestionnaire' => $contact->getUserGestion()->__toString(),
+					);
+					
+					if($contact->getReseau()){
+						$arr_data['reseau'] = $contact->getReseau()->__toString();
+					}
+
+					if($contact->getOrigine()){
+						$arr_data['origine'] = $contact->getOrigine()->__toString();
+					}
+					
+					$s_types = '';
+					$s_themes = '';
+					$s_services = '';
+					foreach($contact->getSettings() as $setting){
+						if($setting->getParametre() == 'TYPE'){
+							$s_types.=$setting->getValeur().'<br />';
+						} else if ($setting->getParametre() == 'SERVICE_INTERET'){
+							$s_services.=$setting->getValeur().'<br />';
+						} else if($setting->getParametre() == 'THEME_INTERET'){
+							$s_themes.=$setting->getValeur().'<br />';
+						}
+					}
+					$arr_data['type'] = $s_types;
+					$arr_data['themes_interet'] = $s_themes;
+					$arr_data['services_interet'] = $s_services;
+					
+					if($contact->getCarteVoeux()){
+						$arr_data['carte_voeux'] = '<span class="glyphicon glyphicon-ok"></span>';
+					}else {
+						$arr_data['carte_voeux'] = "";
+					}
+					
+					if($contact->getNewsletter()){
+						$arr_data['newsletter'] = '<span class="glyphicon glyphicon-ok"></span>';
+					} else {
+						$arr_data['newsletter'] = "";
+					}
+
+					if($contact->getRejetNewsletter()){
+						$arr_data['rejetNewsletter'] = '<span class="glyphicon glyphicon-ok"></span>';
+					} else {
+						$arr_data['rejetNewsletter'] = "";
+					}
+
+					if($contact->getRejetEmail()){
+						$arr_data['rejetEmail'] = '<span class="glyphicon glyphicon-ok"></span>';
+					} else {
+						$arr_data['rejetEmail'] = "";
+					}
+
+					if($contact->isBounce()){
+						$arr_data['bounce'] = '<span class="glyphicon glyphicon-ok"></span>';
+					} else {
+						$arr_data['bounce'] = "";
+					}
+						
+					$arr_processed_data[] = $arr_data;
+			
+				}
+			
+				break;
+				
+			case 'devis':
+				foreach($arr_obj as $devis){
+			
+					$contact = null;
+					if($devis->getContact() != null){
+						$contact = $devis->getContact()->__toString();
+					}
+						
+					
+					$arr_data =
+					array(
+							'id' => $devis->getId(),
+							'compte' => $devis->getCompte()->__toString(),
+							'contact' => $contact,
+							'objet' => $devis->getObjet(),
+							'num' => $devis->getNum(),
+							'date_validite' => $devis->getDateValidite()->format('d/m/Y'),
+							'adresse' => $devis->getAdresse(),
+							'ville' => $devis->getVille(),
+							'codePostal' => $devis->getCodePostal(),
+							'region' => $devis->getRegion(),
+							'pays' => $devis->getPays(),
+							'description' => $devis->getDescription(),
+							'gestionnaire' => $devis->getUserGestion()->__toString(),
+							'dateCreation' => $devis->getDateCreation()->format('d/m/Y')	
+					);
+					if($devis->getDateEdition()){
+						$arr_data['dateEdition'] = $devis->getDateEdition()->format('d/m/Y');
+					}
+					
+					$arr_data['total_ht'] = $devis->getTotalHT().' €';
+					$arr_data['total_ttc'] = $devis->getTotalTTC().' €';
+			
+					$arr_processed_data[] = $arr_data;
+				}
+			
+				break;
+			
+			case 'facture':
+				foreach($arr_obj as $facture){
+						
+					$contact = null;
+					if($facture->getContact() != null){
+						$contact = $facture->getContact()->__toString();
+					}
+					
+					
+					$arr_data=
+					array(
+							'id' => $facture->getId(),
+							'compte' => $facture->getCompte()->__toString(),
+							'contact' => $contact,
+							'objet' => $facture->getObjet(),
+							'num' => $facture->getNum(),
+							'date_validite' => $facture->getDateValidite()->format('d/m/Y'),
+							'adresse' => $facture->getAdresse(),
+							'ville' => $facture->getVille(),
+							'codePostal' => $facture->getCodePostal(),
+							'region' => $facture->getRegion(),
+							'pays' => $facture->getPays(),
+							'description' => $facture->getDescription(),
+							'gestionnaire' => $facture->getUserGestion()->__toString(),
+							'bon_commande_interne' => $facture->getNumBCInterne(),
+							'bon_commande_client' => $facture->getNumBCClient(),
+							'dateCreation' => $facture->getDateCreation()->format('d/m/Y')
+					);
+					
+					if($devis->getDateEdition()){
+						$arr_data['dateEdition'] = $facture->getDateEdition()->format('d/m/Y');
+					}
+						
+					$arr_processed_data[] = $arr_data;
+				}
+					
+				break;
+				
+			case 'opportunite':
+				//~ $fff = 0;
+				foreach($arr_obj as $opportunite){
+					//~ if( $fff++ == 226 ) {break;}
+					$contact = null;
+					if($opportunite->getContact()){
+						$contact = $opportunite->getContact()->__toString();
+					}
+					$arr_data =
+					array(
+							'id' => $opportunite->getId(),
+							'compte' => $opportunite->getCompte()->__toString(),
+							'contact' => $contact,
+							'nom' => $opportunite->getNom(),
+							'montant' => $opportunite->getMontant(),
+							'echeance' => $opportunite->getEcheance()->format('d/m/Y'),
+							'statut' => '',
+							'probabilite' => $opportunite->getProbabilite()->__toString(),
+							'type' => $opportunite->getType(),
+							'gestionnaire' => $opportunite->getUserGestion()->__toString(),
+							'dateCreation' => $opportunite->getDateCreation()->format('d/m/Y')
+					);
+					
+					if ($opportunite->getOrigine()) {
+						$arr_data['origine']= $opportunite->getOrigine()->__toString();
+					} else {
+						$arr_data['origine'] = null;
+					}
+					
+					if($opportunite->getDateEdition()){
+						$arr_data['dateEdition'] = $opportunite->getDateEdition()->format('d/m/Y');
+					}
+					
+					$arr_processed_data[] = $arr_data;
+			
+				}
+		
+				break;
+					
+		}
+	
+		return $arr_processed_data;
+	}
+
+
+	/**
+	 * @Route("/crm/rapport/verifier-bounces/{id}", name="crm_rapport_verifier_bounces")
+	 */
+	public function rapportVerifierBouncesAction(Rapport $rapport)
+	{
+
+		if( !$this->getUser()->getCompany()->getZeroBounceApiKey() ){
+			throw new \Exception('API Key non renseignée');
+		}
+
+		$arr_results = array();
+
+		$contactRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\Contact');
+		$filterRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\RapportFilter');
+
+		$arr_filters = $filterRepo->findByRapport($rapport);
+		$arr_obj = $contactRepo->createQueryAndGetResult($arr_filters, $this->getUser()->getCompany(), $rapport->getEmailing());
+
+		$arr_contacts = array();
+		foreach($arr_obj as $contact){
+			if($contact->getEmail()){
+				$arr_contacts[] = $contact;
+			}
+		}
+
+		return $this->render('crm/rapport/crm_rapport_verifier_bounces_resultat.html.twig', array(
+			'rapport' => $rapport,
+            'arr_results' => $arr_results,
+            'arr_contacts' => $arr_contacts
+		));
+	}
+
+
+	/**
+	 * @Route("/crm/rapport/get-contacts-for-emailing/{id}", name="crm_rapport_get_contacts_for_emailing", options={"expose"=true})
+	 */
+	public function rapportGetContactsForEmailingAction(Rapport $rapport)
+	{
+		$repo = $this->getDoctrine()->getManager()->getRepository('App:CRM\Contact');
+		$filterRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\RapportFilter');
+
+		$arr_filters = $filterRepo->findByRapport($rapport);
+		$arr_obj = $repo->createQueryAndGetResult($arr_filters, $rapport->getCompany(), true, false, false, false);		
+
+		$response = new JsonResponse();
+		$response->setData($arr_obj);
+		return $response;
+	}
+	
+}

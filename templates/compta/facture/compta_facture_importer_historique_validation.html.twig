@@ -1,0 +1,51 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Importation des factures non rapprochées</h3>
+	</div>
+	
+	<div class="modal-body">
+		<p>Choissez comment corriger les erreurs.</p>
+	
+		{{ form_start(form,  { 'action': path('compta_facture_importer_historique_validation', {'initialisation' : true }), 'attr': {'data-async': '', 'data-target' : '#modal-lg' } }) }}
+		
+		
+		<h2>Comptes inexistants :</h2>
+	
+		{% for key, err in arr_err_comptes %}
+			<div class="row">
+				<div class="col-md-2">
+				    {{ form_label(attribute(form, 'compte-'~key)) }}
+			    </div>
+			   	<div class="col-md-10">
+			   		 {{ form_widget(attribute(form, 'compte-'~key)) }}  
+			   		 {{ form_errors(attribute(form, 'compte-'~key)) }}
+			   	</div>
+			  </div>
+		{% endfor %}
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Utilisateurs inconnus :</h2>
+			</div>
+		</div>
+		
+		{% for key, err in arr_err_users %}
+			<div class="row">
+				<div class="col-md-2">
+				    {{ form_label(attribute(form, 'user-'~key)) }}
+			    </div>
+			   	<div class="col-md-10">
+			   		 {{ form_widget(attribute(form, 'user-'~key)) }}  
+			   		 {{ form_errors(attribute(form, 'user-'~key)) }}
+			   	</div>
+			</div>
+		{% endfor %}
+
+		<div class="alert alert-danger hidden error">Une erreur s'est produite durant l'import du fichier.</div>
+		
+		 {{ form_widget(form.submit) }} 
+
+		{{ form_errors(form) }}
+		{{ form_end(form) }}
+	</div>
+</div>

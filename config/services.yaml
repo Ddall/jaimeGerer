@@ -1,0 +1,77 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: fr
+    actions_commerciales_fichier_directory: '%kernel.root_dir%/../web/upload/crm/actions_commerciales_pj'
+    secret: "%kernel.secret%"
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: true       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+        bind:
+            $rootDir: "%kernel.root_dir%"
+            $tvaLogger: "@monolog.logger.tva_logger"
+            $cronLogger: "@monolog.logger.cron_logger"
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: '../src/*'
+        exclude: '../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}'
+
+    # controllers are imported separately to make sure services can be injected
+    # as action arguments even if you don't extend any base controller class
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # -- Services
+    twig.extension.text:
+        class: Twig_Extensions_Extension_Text
+        tags:
+            - { name: twig.extension }
+
+    twig.extension.intl:
+        class: Twig\Extensions\IntlExtension
+        tags:
+            - { name: twig.extension }
+
+    App\Service\Emailing\MailgunService:
+        arguments: ['%env(MAILGUN_API_KEY)%', '%env(MAILGUN_DOMAIN)%']
+
+    App\Service\CRM\ActionCommercialeFileUploader:
+        arguments: ['%actions_commerciales_fichier_directory%']
+
+    # -- Controllers
+    App\Controller\Paypal\PaypalDefaultController:
+        arguments:
+            - "events@nicomak.eu"
+            - "payment_credits_confirm"
+            - "payment_credits_cancel"
+            - "%kernel.environment%"
+
+    App\Controller\Security\ResettingController:
+        decorates: fos_user.resetting.controller
+        arguments:
+            - '@event_dispatcher'
+            - '@fos_user.resetting.form.factory'
+            - '@fos_user.user_manager'
+            - '@fos_user.util.token_generator'
+            - '@fos_user.mailer'
+            - '%fos_user.resetting.retry_ttl%'
+            - '@security.csrf.token_manager'
+
+    # -- Commands
+#    App.command.emailing_send_scheduled_command:
+#        class: App\Command\EmailingSendScheduledCommand
+#        tags:
+#            - { name: console.command }

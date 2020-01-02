@@ -1,0 +1,105 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	 {{ parent() }}
+	<!-- Generic page styles -->
+	<link rel="stylesheet" href="{{ asset('lib/jquery-file-upload/css/style.css') }}">
+	<!-- CSS to style the file input field as button and adjust the Bootstrap progress bars -->
+	<link rel="stylesheet" href="{{ asset('lib/jquery-file-upload/css/jquery.fileupload.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div class="row wrap-index">
+		<div class="col-md-12 center">
+			<div class="wrap-index-head">
+				<img alt="Logo de J'aime la compta" src="{{ asset('images/assets/comptabilite.png') }}" style="width: 200px;" />
+			
+				<h1>Importez votre plan comptable</h1>	
+			
+				<p>Pour importer votre plan comptable dans <span class="jaimelacompta">J'aime la compta</span>, il suffit d'uploader un fichier Excel comportant :</p>
+				<ul>
+					<li>les numéros de comptes en colonne A</li>
+					<li>les libellés des comptes en colonne B</li>
+				</ul>  
+					
+				<!-- The fileinput-button span is used to style the file input field as button -->
+		        <a class="btn btn-info"><span class="fileinput-button">
+		        	Choisir un fichier 
+		        	<!-- The file input field used as target for the file upload widget -->
+		        	<input class="fileupload" type="file" name="files[]">
+			    </span></a>
+			    <br>
+			    <br>
+			    <!-- The global progress bar -->
+			    <div id="progress" class="progress" style="width:250px; margin: auto;">
+			        <div class="progress-bar progress-bar-success"></div>
+			    </div>	
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+
+	{{ parent() }}
+	
+<!-- The Iframe Transport is required for browsers without support for XHR file uploads -->
+	<script src="{{ asset('lib/jquery-file-upload/js/jquery.iframe-transport.js') }}"></script>
+	<!-- The basic File Upload plugin -->
+	<script src="{{ asset('lib/jquery-file-upload/js/jquery.fileupload.js') }}"></script>
+	
+	<script type="text/javascript">
+	$(document).ready(function() {
+		var url = "{{ path('compta_compte_importer_upload') }}";
+	    $('.fileupload').fileupload({
+	        url: url,
+	        dataType: 'json',
+	        done: function (e, data) {
+	          $('#modal-lg div.modal-dialog').load('{{ path('compta_compte_importer_mapping_clients_fournisseurs', {'initialisation' : true }) }}');
+			  $('#modal-lg').modal('show');
+	        },
+	        progressall: function (e, data) {
+	            var progress = parseInt(data.loaded / data.total * 100, 10);
+	            $('#progress .progress-bar').css(
+	                'width',
+	                progress + '%'
+	            );
+	        }
+	    });
+
+	    $('#modal-lg').on('submit','form[data-async]', function(event) {
+			var $form = $(this);
+			var target = $form.attr('data-target');
+			$form.find('button[type="submit"]').attr('disabled', true).addClass('blink_me').html('Importation en cours...');
+			$.ajax({
+				type: $form.attr('method'),
+				url: $form.attr('action'),
+				data: $form.serialize(),
+
+				success: function(data, status) {
+					$.each(target.split("|"),function(i,val){
+						if(val == "close"){
+							$form.closest(".modal-lg").modal("hide");
+						}else if(val == "event"){
+							$form.trigger("ajax-submit");
+						}else{
+							console.log('zzk1');
+							
+							//$('#modal div.modal-dialog div.modal-body').html(data);
+							if( data == 1 )
+							{
+								$("#modal-lg").modal('hide');
+								$("#ModalAlert").modal('show');
+							}
+							else $('#modal-lg div.modal-dialog').html(data);
+						}
+					});
+				}
+			});
+			return false;
+			event.preventDefault();
+		});
+		
+	});
+	</script>
+{% endblock %}

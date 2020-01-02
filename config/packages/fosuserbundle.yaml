@@ -1,0 +1,21 @@
+# FOS User Bundle Configuration
+fos_user:
+  service:
+    mailer: fos_user.mailer.twig_swift
+  db_driver: orm
+  firewall_name: main
+  user_class: App\Entity\User
+  group:
+    group_class: App\Entity\Group
+  registration:
+    form:
+      type: App\Form\User\RegistrationFormType
+    confirmation:
+      enabled: true
+      template: "email/registration/confirmation.email.twig"
+  resetting:
+    email:
+      template: "email/resetting/reset.email.twig"
+  from_email:
+    address:        laura@jaime-gerer.com
+    sender_name:    J'aime gérer

@@ -1,0 +1,47 @@
+version: '3.4'
+
+volumes:
+  symfony_cache:
+
+services:
+    # build stages
+    php:
+        build:
+            context: .
+            target: php_dev
+        volumes:
+            - ./:/var/www/symfony:delegated
+            - symfony_cache:/var/www/symfony/var/cache
+        environment:
+
+            PHP_IDE_CONFIG: serverName=jaimegerer
+            XDEBUG_CONFIG: jaimegerer
+
+    nginx:
+        build:
+            context: ./docker/nginx
+            target: nginx_dev
+        ports:
+            - 9290:80
+        volumes:
+            - .:/var/www/symfony/
+            - ./data/logs/nginx:/var/log/nginx
+
+    # FROM bare images
+    db:
+        image: mysql:5.7
+        volumes:
+            - ./data/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: db_root_pw
+            MYSQL_DATABASE: project_db
+            MYSQL_USER: db_user
+            MYSQL_PASSWORD: db_password
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        environment:
+            MYSQL_ROOT_PASSWORD: db_root_pw
+        ports:
+            - "9291:80"
+        links:
+            - db

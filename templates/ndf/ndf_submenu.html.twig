@@ -1,0 +1,10 @@
+{% block submenu %}
+	<ul class="nav nav-tabs center">
+		<li class=" col-xs-6 {% if app.request.pathInfo == "/ndf/recu/liste" %} active {% endif %}">
+        	<a href="{{ path('ndf_recus_liste') }}"><span class="glyphicon glyphicon-duplicate"></span> Mes reçus</a>
+      	</li>
+      	<li class=" col-xs-6 {% if app.request.pathInfo == "/ndf/liste"  %} active {% endif %}">
+        	<a href="{{ path('ndf_liste') }}" ><span class="glyphicon glyphicon-piggy-bank"></span> Mes notes de frais</a>
+      	</li>
+	</ul>
+{% endblock %}

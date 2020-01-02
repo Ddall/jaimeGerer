@@ -1,0 +1,10 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+    form_theme: ['bootstrap_3_layout.html.twig', "@ShtumiUseful/fields.html.twig"]
+    globals:
+        topol_login: '%env(TOPOL_LOGIN)%'
+        topol_password: '%env(TOPOL_PASSWORD)%'
+        google_maps_api_key: '%env(GOOGLEM_APS_API_KEY)%'
+        actions_commerciales_fichier_directory: '%actions_commerciales_fichier_directory%'

@@ -1,0 +1,210 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			{% include 'crm/contact/crm_contact_submenu.html.twig' %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12 center-mobile">
+			<h1>Contacts</h1>
+		</div>
+	</div>
+
+	<div class="row spacer-top">
+		<div class="col-md-12">
+			<p class="center-mobile">
+				<a target="_blank" href="{{ path('crm_contact_ajouter') }}" class="btn btn-success btn-block-mobile">
+					<span class="glyphicon glyphicon-plus"></span> Ajouter
+				</a>
+				<a class="btn btn-info hidden-xs" target="_blank" href="{{ path('crm_contact_import_upload' )}}">
+					Importer des contacts
+				</a>
+			</p>
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<table id="table_contact_list" class="table table-bordered table-striped">
+				<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Organisation et titre</th>
+					<th>Téléphone et email</th>
+					<th class="hidden-xs">Ville, région et pays</th>
+					<th class="hidden-xs">Actions</th>
+				</tr>
+				</thead>
+
+			</table>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+
+		$("* [rel='tooltip']").tooltip({
+			html: true,
+			placement: 'top'
+		});
+
+		$(document).ready( function () {
+			var table = $('#table_contact_list').DataTable({
+				"dom": 'T<"clear">lfrtip',
+				"iDisplayLength": 100,
+				"language" : {
+					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
+				},
+				"responsive": true,
+				"processing": true,
+				"serverSide": true,
+				"ajax":{
+					url : Routing.generate('crm_contact_liste_ajax'),
+					type: "post",  
+				},
+				"columns": [
+					{ "data": "nom"},
+					{ "data": "compte_nom" },
+					{ "data": "telephoneFixe" },
+					{ "data": "region", "className" : "hidden-xs"  },
+					{ "className" : "hidden-xs"  },
+				],
+				fnDrawCallback: function () {
+					$( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn',
+					} );
+				},
+				fnInitComplete: function () {
+					$( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn',
+					} );
+				},
+				"columnDefs": [
+					{
+						"render": function ( data, type, row ) {
+							var url = Routing.generate('crm_contact_voir', {'id' : row['id']});
+							var s = '<a target="_blank" href="'+url+'">' ;
+							if(row['prenom']){
+								s+= row['prenom']+' ';
+							}
+
+							s+= data+'</a>';
+							return s;
+						},
+						"targets": 0
+					},
+					{
+						"render": function ( data, type, row ) {
+
+							var url = Routing.generate('crm_compte_voir', {'id' : row['compte_id']});
+							var s= '<a target="_blank" href="'+url+'">'+data+'</a>';
+							if(row['titre']){
+								s+='<br /><i>'+row['titre']+'</i>';
+							}
+							return s;
+						},
+						"targets": 1
+					},
+					{
+						// The `data` parameter refers to the data for the cell (defined by the
+						// `data` option, which defaults to the column being worked with, in
+						// this case `data: 0`.
+						"render": function ( data, type, row ) {
+							var s="";
+							var br = false;
+
+							if(row['telephoneFixe']){
+								s+= '<a href="tel:'+row['telephoneFixe']+'">'+row['telephoneFixe']+'</a>';
+								br = true;
+							}
+
+							if(row['telephonePortable']){
+								s+= (br ? '<br />' : '') + '<a href="tel:'+row['telephonePortable']+'">'+row['telephonePortable']+'</a>';
+								br = true;
+							}
+
+							if(row['email']){
+								s+= (br ? '<br />' : '') + '<a href="mailto:'+row['email']+'">'+row['email']+'</a>';
+								if(row['bounce'] == "BOUNCE"){
+									s+= " <span class='label label-danger'>Bounce</span>";
+								} else if(row['bounce'] == "WARNING"){
+									s+= " <span class='label label-warning'>Bounce potentiel</span>";
+								}
+							}
+
+							return s;
+						},
+						"targets": 2
+					},
+					{
+						// The `data` parameter refers to the data for the cell (defined by the
+						// `data` option, which defaults to the column being worked with, in
+						// this case `data: 0`.
+						"render": function ( data, type, row ) {
+							var s='';
+							var br = false;
+							if(data){
+								//s+=data;
+								br = true;
+							}
+
+							if(row['ville']){
+								s+= row['ville'];
+								br = true;
+							}
+
+							if(row['region']){
+								s+= (br ? '<br />' : '') + row['region'];
+								br = true;
+							}
+
+							if(row['pays']){
+								s+= (br ? '<br />' : '') + row['pays'];
+							}
+	
+							return s;
+						},
+						"targets": 3
+					},
+					{
+						// The `data` parameter refers to the data for the cell (defined by the
+						// `data` option, which defaults to the column being worked with, in
+						// this case `data: 0`.
+						"render": function ( data, type, row ) {
+
+							var voirUrl = Routing.generate('crm_contact_voir', {'id' : row['id']});
+							var editerUrl = Routing.generate('crm_contact_editer', {'id' : row['id']});
+							var supprimerUrl = Routing.generate('crm_contact_supprimer', {'id' : row['id']});
+
+							return "<a target='_blank' href=\""+voirUrl+"\" class=\"btn btn-xs btn-info\" ​data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a>" +" "+
+									"<a target='_blank'  href=\""+editerUrl+"\" class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip\" title=\"Editer\"><span class=\"glyphicon glyphicon-pencil\"></span></a>" +" "+
+									"<a target='_blank' href=\""+supprimerUrl+"\" class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
+						},
+						"targets": 4
+					},
+					{ "visible": false,  "targets": [ 'id' ] }
+				]
+			});
+
+
+			{% if search is defined %}
+				var searchedValue = "{{ search }}";
+				table.search( searchedValue ).draw();
+			{% endif %}
+
+		});
+	</script>
+{% endblock %}

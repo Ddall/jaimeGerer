@@ -1,0 +1,144 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Importation des dépenses non rapprochées</h3>
+	</div>
+	<div class="modal-body">
+
+			<p>Choissez comment corriger les erreurs.</p>
+			
+			{{ form_start(form,  { 'action': path('compta_depense_importer_historique_validation', {'initialisation' : true }), 'attr': {'data-async': '', 'data-target' : '#modal-lg' } }) }}
+		
+			<p><strong>Comptes inexistants :</strong></p>
+			
+	{# 	{% for key, err in arr_err_comptes %}#}
+	{# 		<div class="row">#}
+	{# 			<div class="col-md-2">#}
+	{# 			    {{ form_label(attribute(form, 'compte-'~key)) }}#}
+	{# 		    </div>#}
+	{# 		   	<div class="col-md-10">#}
+	{# 		   		 {{ form_widget(attribute(form, 'compte-'~key)) }}  #}
+	{# 		   		 {{ form_errors(attribute(form, 'compte-'~key)) }}#}
+	{# 		   	</div>#}
+	{# 		  </div>#}
+	{# 	{% endfor %}#}
+	
+		<div class="row">
+			<div class="col-md-12">
+				<table class="table table-striped">
+					<tbody>
+						{% for key, err in arr_err_comptes %}
+							<tr>
+								<td><strong>{{ err }}</strong></td>
+								<td>
+									{{ form_widget(attribute(form, key~'-radio')) }}
+								</td>
+								<td>
+									<div class="typeahead-container">
+								    	<div class="typeahead-field">
+								        	<span class="typeahead-query">
+								        		{{ form_label(attribute(form, key~'-name')) }}
+												{{ form_widget(attribute(form, key~'-name'), {'attr' : {'class' : 'typeahead-compte input-compte-name'}}) }}
+				  								{{ form_row(attribute(form, key~'-compte')) }}
+				  								{{ form_row(attribute(form, key~'-label')) }}
+											</span> 
+								        </div>
+								    </div>
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div>
+		</div>
+	
+		<div class="row">
+			<div class="col-md-12">
+				<p><strong>Utilisateurs inconnus :</strong></p>
+			</div>
+		</div>
+		
+		{% for key, err in arr_err_users %}
+			<div class="row">
+				<div class="col-md-2">
+				    {{ form_label(attribute(form, 'user-'~key)) }}
+			    </div>
+			   	<div class="col-md-10">
+			   		 {{ form_widget(attribute(form, 'user-'~key)) }}  
+			   		 {{ form_errors(attribute(form, 'user-'~key)) }}
+			   	</div>
+			</div>
+		{% endfor %}
+		
+		<div class="row">
+			<div class="col-md-12">
+				<h2>Comptes comptables inconnus :</h2>
+			</div>
+		</div>
+		
+		{% for key, err in arr_err_cc %}
+			<div class="row">
+				<div class="col-md-2">
+				    {{ form_label(attribute(form, 'cc-'~key)) }}
+			    </div>
+			   	<div class="col-md-10">
+			   		 {{ form_widget(attribute(form, 'cc-'~key)) }}  
+			   		 {{ form_errors(attribute(form, 'cc-'~key)) }}
+			   	</div>
+			</div>
+		{% endfor %}
+
+	
+		<div class="alert alert-danger hidden error">Une erreur s'est produite durant l'import du fichier.</div>
+	
+		 {{ form_widget(form.submit) }} 
+	
+		{{ form_errors(form) }}
+		{{ form_end(form) }}
+		
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready( function () {   
+	
+		{% for key, compte in arr_err_comptes %}
+			var selector = "#form_{{ key }}-name";
+			$(selector).typeahead({
+			    order: "desc",
+			    accent: true,
+			    source: {
+			        url: "/web/app_dev.php/crm/compte/get-comptes-and-contacts"
+			    },
+			    callback: {
+			        onInit: function (node) {
+			            console.log('Typeahead Initiated on ' + node.selector);
+			        },
+			        onClickAfter: function (node, a, item, event) {
+						$("#form_{{ key }}-compte").val(item.id);
+					}
+			    },
+			    debug: true
+			});
+			
+		{% endfor %}
+	
+		//activer ou désactiver le textinput selon l'option choisie
+		$('input:radio').click(function(){
+			
+			if($(this).val() == "existing"){
+				$(this).parents('td').next().find('.input-compte-name').attr('disabled', false);
+			} else {
+				$(this).parents('td').next().find('.input-compte-name').attr('disabled', true);
+			}
+		});
+	
+		$('.input-compte-name').each(function(){
+			if($(this).val() != ''){
+				$(this).attr('disabled', false);
+			} else {
+				$(this).attr('disabled', true);
+			}
+		});
+	});
+</script>

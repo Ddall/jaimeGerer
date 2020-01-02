@@ -1,0 +1,37 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Importer l'historique des factures</h1>	
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+		 	{{ form_start(form, {'action': path('compta_facture_importer_historique', {'etape' : 1})}) }}
+		
+			{{ form_errors(form) }}
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col-md-12">			
+			<div class="form-group">
+			   	{{ form_label(form.file) }}<br />
+			    {{ form_errors(form.file) }}
+			    {{ form_widget(form.file) }}  
+			</div>
+
+			 <div class="form-group">
+			 	<a class="btn" href="{{ path('compta_facture_liste') }}">
+		       		<span class="glyphicon glyphicon-chevron-left"></span>Annuler
+		   		 </a>
+			    {{ form_widget(form.submit) }}  
+			</div>
+		
+			{{ form_rest(form) }}
+			{{ form_end(form) }}
+		</div>
+	</div>
+
+{% endblock %}

@@ -1,0 +1,60 @@
+<div class="col-md-4">
+	<table class="settings-table">
+		<thead>
+			<tr>
+				<th colspan="2">
+					{{ settings.titre }} <br />
+					<span style="text-transform: none; font-weight: normal;"><i>{{ settings.helpText }}</i></span>
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% if settings.type == "LISTE" %}
+				{% for valeurSettingsListe in arr_valeursSettingsListe[settings.id] if valeurSettingsListe.valeur is not empty %}
+					<tr class="liste-settings-valeur">
+						<td width="90%">
+							<a href="#" class="editable-liste-valeur" data-type="text" data-pk="{{ settings.id }}" data-url="{{ path('crm_settings_completer', {'id' : settings.id}) }}" data-title="{{ settings.titre }}">{{ valeurSettingsListe.valeur }}</a>
+						</td>
+						<td>
+							<span class="btn btn-xs btn-danger glyphicon glyphicon-trash btn-remove" id="{{ valeurSettingsListe.id }}"></span>
+						</td>
+					</tr>
+				{% endfor %}
+			{% endif %}
+			<tr>
+				<td>
+					{% if (settings.type == "TEXTE") or (settings.type == "NUM") %}
+						<a href="#" class="editable" {% if settings.type == "TEXTE" %}data-type="text"{% elseif settings.type == "NUM"%}data-type="number"{% endif %} data-pk="{{ settings.id }}" data-url="{{ path('crm_settings_completer', {'id' : settings.id} ) }}" data-title="{{ settings.titre }}">
+							{{ settings.valeur }}
+						</a>
+					{% elseif settings.type == "LISTE" %}
+						<a href="#" class="editable-liste" data-type="text" data-pk="{{ settings.id }}" data-url="{{ path('crm_settings_liste_ajouter') }}" data-title="{{ settings.titre }}"></a>
+					{% elseif settings.type == "IMAGE" %}
+						{% if settings.valeur is not empty %}
+							<img src="{{ asset('upload/crm/pub_facture/'~settings.valeur) }}" style="width: 100px" alt="Image de pub pour les factures" class="facture-pub-image" /><br />
+						{% else %}
+						 	<img src="" style="width: 100px" alt="Image de pub pour les factures" class="facture-pub-image" /><br />
+						{% endif %}
+						<br />
+						 <!-- The fileinput-button span is used to style the file input field as button -->
+					    <a><span class="fileinput-button">
+					    	{% if settings.valeur is not empty %}
+					     		Modifier l'image
+					     	{% else %}
+					     		Choisir l'image
+					     	{% endif %}
+					        <!-- The file input field used as target for the file upload widget -->
+					        <input class="fileupload" type="file" name="files[]" id="{{ settings.id }}">
+					    </span></a>
+					    <br>
+					    <br>
+					    <!-- The global progress bar -->
+					    <div id="progress" class="progress" width="50%">
+					        <div class="progress-bar progress-bar-success"></div>
+					    </div>	
+					{% endif %}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

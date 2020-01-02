@@ -1,0 +1,197 @@
+	{{ form_start(form, { 'attr': {'class': 'form-contact'} }) }}
+	<div class="row">
+		<div class="col-md-6">
+			{{ form_errors(form) }}
+			{{ form_row(form.prenom) }}
+			{{ form_row(form.nom) }}
+		</div>
+		<div class="col-md-6">
+			<div class="form-group">
+				{{ form_label(form.compte_name) }}
+				<a href="{{ path('crm_compte_ajouter_modal') }}" style="margin-left:10px" class="add_compte_link btn btn-xs btn-success" data-toggle="modal" data-target="#modal"><span class="glyphicon glyphicon-plus"></span></a>
+				{{ form_errors(form.compte_name) }}
+				<div class="typeahead-container">
+					<div class="typeahead-field">
+		        		<span class="typeahead-query">
+							{{ form_widget(form.compte_name, {'attr' : {'class' : 'typeahead-compte input-compte-name'}}) }}
+							{{ form_row(form.compte) }}
+						</span>
+					</div>
+				</div>
+			</div>
+			{{ form_row(form.titre) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			{{ form_row(form.secteur, {'attr' : {'class' : 'input-secteur'}}) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			{{ form_row(form.userGestion) }}
+		</div>
+		<div class="col-md-6">
+ 			{{ form_row(form.types) }}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			{{ form_row(form.addressPicker) }}
+			{{ form_row(form.adresse, {'attr' : {'class' : 'input-adresse'}}) }}
+			{{ form_row(form.codePostal, {'attr' : {'class' : 'input-codepostal'}}) }}
+			{{ form_row(form.ville, {'attr' : {'class' : 'input-ville'}}) }}
+			{{ form_row(form.region, {'attr' : {'class' : 'input-region'}}) }}
+			{{ form_row(form.pays, {'attr' : {'class' : 'input-pays'}}) }}
+	    </div>
+
+	    <div class="col-md-6">
+	    	{{ form_row(form.telephoneFixe, {'attr' : {'class' : 'input-telephone'}}) }}
+	    	{{ form_row(form.telephonePortable) }}
+			{{ form_row(form.telephoneAutres) }}
+	    	{{ form_row(form.fax, {'attr' : {'class' : 'input-fax'}}) }}
+	    	{{ form_row(form.email) }}
+			{{ form_row(form.email2) }}
+	    </div>
+	</div>
+	<div class="row">
+	    <div class="col-md-6">
+	    	{{ form_row(form.themes_interet) }}
+	    	{{ form_row(form.services_interet) }}
+	    </div>
+
+	    <div class="col-md-6">
+	    	{{ form_row(form.reseau) }}
+	  	 	{{ form_row(form.origine) }}
+	  	 	
+	    </div>
+    </div>
+
+    <div class="row">
+	    <div class="col-md-6">
+			{{ form_row(form.newsletter) }}
+			{{ form_row(form.carteVoeux) }}
+			{{ form_row(form.bounce) }}
+	    </div>
+	    <div class="col-md-6">
+	    	{{ form_row(form.rejetNewsletter) }}
+			{{ form_row(form.rejetEmail) }}
+	    </div>
+	</div>
+    <div class="row">
+     	<div class="col-md-12">
+     		{{ form_row(form.description) }}
+	    </div>
+    </div>
+
+    {% if form.delaiNum is defined %}
+	    <div class="row">
+	    	<div class="col-md-12">
+	    		<hr />
+	    		<p>Ajouter un suivi</p>
+	    	</div>
+	    </div>
+	    <div class="row">
+	        <div class="col-md-6">
+	       	 	{{ form_row(form.delaiNum) }}
+	        </div>
+	        <div class="col-md-6">
+	       	 	{{ form_row(form.delaiUnit) }}
+	        </div>
+	    </div>
+    {% endif %}
+
+    <input type="submit" value="Enregistrer" class="btn btn-success" id="btn-submit-form" />
+	{{ form_end(form) }}
+
+{% block additionalJS %}
+
+	
+
+	<script type="text/javascript">
+		var JqueryValidateFormName = $('form[name="{{ form.vars.id }}"]');
+	</script>
+	<script src="{{ asset('js/error.js') }}"></script>
+
+	<script type="text/javascript" src="{{ asset('js/jquery.ui.addresspicker.js') }}"></script>
+	<script type="text/javascript">
+		$(document).ready( function () {
+
+			{% if compte_name is defined %}
+				{% if compte is not null %}
+					$('#{{ form.compte.vars.id }}').val('{{ compte.nom }}');
+				{% endif %}
+			{% endif %}
+
+			var addresspickerMap = $( "#{{ form.addressPicker.vars.id }}" ).addresspicker({
+				updateCallback: function(geocodeResult, parsedGeocodeResult){
+						//console.log(parsedGeocodeResult);
+						//$('#callback_result').html(JSON.stringify(parsedGeocodeResult, null, 4));
+						var addressToField = ( parsedGeocodeResult.street_number ? parsedGeocodeResult.street_number + ', ' : '' ) + parsedGeocodeResult.route;
+						$('#{{ form.adresse.vars.id }}').val(addressToField);
+						//$('#callback_result').html(parsedGeocodeResult.street_number + ', ' +parsedGeocodeResult.route);
+					},
+				  elements: {
+					//map								: '',
+					postal_code						: '#{{ form.codePostal.vars.id }}',
+					administrative_area_level_1		: '#{{ form.region.vars.id }}',
+				   // locality						: '#locality',
+					country							: '#{{ form.pays.vars.id }}',
+					//route							: '#sdz_blogbundle_service_adresse',
+					locality						: '#{{ form.ville.vars.id }}',
+					target_field					: false,
+				  },
+			});
+
+			$('.typeahead-compte').typeahead({
+				order: "desc",
+				accent: true,
+				source: {
+					url: "{{ path('crm_compte_get_liste') }}"
+				},
+				callback: {
+					onClickAfter: function (node, a, item, event) {
+						$('.entity-compte').val(item.id);
+						changeAddress();
+					}
+				}
+
+			});
+
+		});
+
+		function changeAddress(compteId) {
+
+			if(compteId == null ){
+				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':$('.entity-compte').val()});
+			}
+			else{
+				var url = Routing.generate("crm_compte_get_coordonnees_by_id",{'id':compteId});
+			}
+			$.ajax({
+				type: "POST",
+				url: url,
+				success: function(data) {
+					if(data.secteur != ""){
+						var arr_childrens =  $(".input-secteur").children();
+						for(var i = 0; i < arr_childrens.length; i++){
+
+							if(arr_childrens[i].textContent  === data.secteur){
+								arr_childrens[i].setAttribute("selected","");
+							}
+
+						}
+					}
+					$(".input-adresse").val(data.adresse);
+					$(".input-codepostal").val(data.codePostal);
+					$(".input-ville").val(data.ville);
+					$(".input-region").val(data.region);
+					$(".input-pays").val(data.pays);
+					$(".input-telephone").val(data.telephone);
+					$(".input-fax").val(data.fax);
+				}
+			});
+		}
+	</script>
+
+{% endblock %}

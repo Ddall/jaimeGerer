@@ -1,0 +1,80 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>{{ compteComptable }}</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-3">
+			{{ form(form) }}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<table class="table table-bordered table-stripped">
+				<thead>
+					<th>Date</th>
+					<th>Libellé</th>
+					<th>Pièce</th>
+					<th class="align-right">Débit</th>
+					<th class="align-right">Crédit</th>
+					<th>Journal</th>
+					<th>Lettrage</th>
+					<th>Corriger</th>
+				</thead>
+				<tbody id="wrapper-ajax">
+				</tbody>
+			</table>
+			<p class="center" id="loader">
+				<img src="{{ asset('images/assets/dog_loader.gif') }}" alt="Chargement en cours" /><br />
+				<i>Chargement en cours...</i>
+			</p>
+		</div>
+	</div>
+
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {
+
+			loadTable();
+
+			$(".year-select").change(function(){
+				loadTable();
+			});
+
+			function loadTable(){
+
+				$("#loader").removeClass("hidden");
+				$("#wrapper-ajax").html("");
+
+				var year = $(".year-select").val();
+				var id = "{{ compteComptable.id }}";
+
+				$.ajax({
+					type: "POST",
+					url: Routing.generate('compta_compte_voir_annee', {'id' : id, 'year' : year}),
+					success: function(data) {
+						$("#loader").addClass("hidden");
+						$("#wrapper-ajax").html(data);
+					},
+					error: function(jqXHR, textStatus, errorThrown) {
+						$("#loader").addClass("hidden");
+					},
+				});
+
+			}
+
+
+		});
+
+	</script>
+{% endblock %}

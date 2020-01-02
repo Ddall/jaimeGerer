@@ -1,0 +1,171 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Campagnes de prospection</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<p>
+				<a data-toggle="modal" data-target="#modal" href="{{ path('crm_prospection_ajouter') }}" class="btn btn-success">
+					<span class="glyphicon glyphicon-plus"></span> Ajouter
+				</a>
+				<!--a href="#" class="btn btn-danger">
+                    <span class="glyphicon glyphicon-trash"></span> Supprimer
+                </a-->
+			</p>
+
+			<script>
+				$(document).ready(function() {
+
+					$("* [rel='tooltip']").tooltip({
+						html: true,
+						placement: 'top'
+					});
+
+				});
+			</script>
+
+
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<table id="table_contact_list" class="table table-bordered table-striped">
+				<thead>
+				<tr>
+					<th>Nom</th>
+					<th>Date de création</th>
+					<th>Créée par</th>
+					<th>Taille de la liste</th>
+					<th>Actions</th>
+				</tr>
+				</thead>
+
+			</table>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+		$(document).ready( function () {
+			$('#table_contact_list').DataTable({
+				"dom": 'T<"clear">lfrtip',
+				"oTableTools": {
+					"sSwfPath": "/web/lib/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+					"aButtons": [
+						{
+							"sExtends": "csv",
+							"sButtonText": "Excel",
+							"mColumns": [ 0, 1, 2, 3 ],
+							"sFileName": "contacts.csv"
+						},
+						{
+							"sExtends": "pdf",
+							"sButtonText": "PDF",
+							"mColumns": [ 0, 1, 2, 3 ],
+							"sFileName": "contacts.pdf",
+							"sTitle": "Contacts"
+						},
+
+					]
+				},
+				"language" : {
+					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
+				},
+				"responsive": true,
+				"processing": true,
+				"serverSide": true,
+				"ajax":{
+					url :"{{ path('crm_prospection_liste_ajax') }}", // json datasource
+					type: "post",  // method  , by default get
+				},
+				"columns": [
+					{ "data": "nom" },
+					{ "data": "dateCreation" },
+				],
+				fnDrawCallback: function () {
+					$( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn',
+					} );
+				},
+				fnInitComplete: function () {
+					$( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn',
+					} );
+				},
+				"columnDefs": [
+					{
+						"render": function ( data, type, row ) {
+							var s = '<a target="_blank" href="voir/'+row['id']+'">' ;
+							if(row['nom']){
+								s+= row['nom']+' ';
+							}
+
+							s+= '</a>';
+							return s;
+						},
+						"targets": 0
+					},
+					{
+						"render": function ( data, type, row ) {
+							var d = data.date;
+							var arr = d.split("-");
+							var y = arr[0];
+							var m = arr[1];
+							var arrj = arr[2].split(" ");
+							var j = arrj[0];
+							var res = j+"/"+m+"/"+y;
+							return res;
+						},
+						"targets": 1
+					},
+					{
+						"render": function ( data, type, row ) {
+							var s = '';
+							if(row['firstname'] && row['lastname']){
+								s+= row['firstname']+' '+row['lastname'];
+							}
+							return s;
+						},
+						"targets": 2
+					},
+					{
+						"render": function ( data, type, row ) {
+							var s=row['nbreContacts']+" personne" + (parseInt(row['nbreContacts']) > 1 ? 's' : '' ) ;
+							return s;
+						},
+						"targets": 3
+					},
+					{
+						// The `data` parameter refers to the data for the cell (defined by the
+						// `data` option, which defaults to the column being worked with, in
+						// this case `data: 0`.
+						"render": function ( data, type, row ) {
+							var s = (!row['nbreContacts'] || !row['nbreJour']) ? ' not-active' : '';
+							return "<a target='_blank' href=\"voir/"+row['id']+"\" class=\"btn btn-xs btn-info\" ​data-toggle=\"tooltip\" title=\"Voir\"><span class=\"glyphicon glyphicon-eye-open\"></span></a>" +" "+
+									"<a target='_blank' href=\"gerer_liste/"+row['id']+"\" class=\"btn btn-xs btn-warning\" ​data-toggle=\"tooltip\" title=\"Gérer la liste\"><span class=\"glyphicon glyphicon-list-alt\"></span></a>" +" "+
+									"<a target='_blank' href=\"phoning/"+row['id']+"\" class=\"btn btn-xs btn-success\" ​data-toggle=\"tooltip\" title=\"Suivi du phoning\"><span class=\"glyphicon glyphicon-earphone\"></span></a>"+" "+
+									"<a data-toggle=\"modal\" data-target=\"#modal\"  href=\"stats/"+row['id']+"\" class=\"btn btn-xs btn-info"+s+"\" ​data-toggle=\"tooltip\" title=\"Statistiques\"><span class=\"glyphicon glyphicon-stats\"></span></a>" +" "+
+									"<a target='_blank' href=\"supprimer/"+row['id']+"\" class=\"btn btn-xs btn-danger\" ​data-toggle=\"tooltip\" title=\"Supprimer\"><span class=\"glyphicon glyphicon-trash\"></span></a>";
+						},
+						"targets": 4
+					},
+					{ "visible": false,  "targets": [ 'id' ] }
+				]
+			});
+		});
+	</script>
+{% endblock %}

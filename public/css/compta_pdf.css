@@ -1,0 +1,126 @@
+@font-face {
+	font-family: 'gothic';
+	src: url('../fonts/gothic.eot');
+	src: local('gothic'), url('../fonts/gothic.woff') format('woff'), url('../fonts/gothic.ttf') format('truetype');
+}
+
+body, p, a, td, strong, h1, h2, h3, h4{
+	font-family: 'gothic';
+}
+
+h3, h4{
+	font-weight: bold;
+}
+
+strong{
+	font-size: 1.2em;
+}
+
+#logo{
+	max-width: 200px;
+	max-height: 200px;
+}
+
+#tampon{
+	max-width: 200px;
+	max-height: 200px;
+	margin-top: 10px;
+	margin-left: 600px; 
+}
+
+#tampon-apercu{
+	max-width: 200px;
+	max-height: 200px;
+	margin-top: 10px;
+	margin-left: 50px;
+}
+
+
+.align-center{
+	text-align: center;
+}
+
+.align-right{
+	text-align: right;
+}
+
+.produit-collection table{
+	width: 100%;
+}
+
+.produit-collection table td, .produit-collection table th{
+	border: 1px solid #000;
+	padding: 5px;
+	width: 25%;
+}
+
+.produit-collection table td.cheque-input-montant{
+	text-align: right;
+}
+
+.produit-collection table th{
+	text-align: center;
+}
+
+#cheque-calcul-wrapper{
+	font-weight: bold;
+	text-align: right;
+	width: 100%;
+}
+
+#signature{
+	border: solid 1px #000;
+	padding: 10px;
+	height: 100px;
+	margin-top: 20px;
+	text-decoration: underline;
+	margin-left: 600px;
+}
+
+#apercu-courrier{
+	border: 1px solid #000;
+	padding: 10px;
+	margin-bottom: 20px;
+}
+
+thead { 
+	display: table-header-group;
+}
+			
+tfoot { 
+	display: table-row-group;
+}
+			
+tr { 
+	page-break-inside: avoid; 
+	background: #FFF; 
+}
+
+#message p{
+	margin-bottom: 20px; 
+	padding-left: 20px;
+}
+#expediteur{ 
+	display: inline-block; 
+	width: 50%;
+}
+
+#destinataire{
+	display: inline-block; 
+	margin-top: 100px; 
+	width: 49%; 
+	vertical-align: top;
+}
+
+#destinataire-maileva{ 
+	display: inline-block; 
+	min-height: 280px; 
+	margin-top: 100px; 
+	width: 49%; 
+	vertical-align: top;
+}
+#date{ 
+	margin-bottom: 20px; 
+	margin-left: 600px; 
+}
+

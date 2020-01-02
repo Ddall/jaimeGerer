@@ -1,0 +1,135 @@
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">×</a>
+	<h3>{{ sous_poste }} {{ month}}/{{ year }}</h3>
+</div>
+
+<div class="modal-body">
+	{% if arr_details['lignes_depenses'] is defined %}
+		{% if arr_details['lignes_depenses']|length > 0 %}
+		  <h4>Dépenses</h4>
+		  <table class="table">
+				<thead>
+					<tr>
+						<th class="col-md-2">Date</th>
+						<th class="col-md-2">Numéro</th>
+						<th class="col-md-6">Libellé</th>
+						<th class="col-md-2">Montant</th>
+					</tr>
+				</thead>
+				<tbody>
+			  {% for ligne in arr_details['lignes_depenses'] %}
+			    <tr>
+						<td>{{ ligne.depense.date|date('d/m/Y') }}</td>
+						<td><a href="{{ path('compta_depense_voir', {'id' : ligne.depense.id}) }}" target="_blank">{{ ligne.depense.num }}</a></td>
+						<td>{{ ligne.depense.libelle }} - {{ ligne.nom }}</td>
+						<td class="align-right">{{ ligne.montant }} €</td>
+					</tr>
+			  {% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	{% endif %}
+
+	{% if arr_details['affectation_diverses'] is defined %}
+		{% if arr_details['affectation_diverses']|length > 0 %}
+
+			<h4>Affectation diverses</h4>
+			<table class="table">
+				<thead>
+					<tr>
+						<th class="col-md-2">Date</th>
+						<th class="col-md-8">Libellé</th>
+						<th class="col-md-2">Montant</th>
+					</tr>
+				</thead>
+				<tbody>
+			  {% for rapprochement in arr_details['affectation_diverses'] %}
+			    	<tr>
+						<td>{{ rapprochement.date|date('d/m/Y') }}</td>
+						<td>{{ rapprochement.affectationDiverse.nom }} : {{ rapprochement.mouvementBancaire.libelle }}</td>
+						<td class="align-right">{{ rapprochement.mouvementBancaire.montant }} €</td>
+					</tr>
+			  {% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	{% endif %}
+
+	{% if arr_details['opportunites'] is defined %}
+		{% if arr_details['opportunites']|length > 0 %}
+		  <h4>Opportunités</h4>
+		  <table class="table">
+				<thead>
+					<tr>
+						<th class="col-md-4">Organisation</th>
+						<th class="col-md-6">Libellé</th>
+						<th class="col-md-2">Montant</th>
+					</tr>
+				</thead>
+				<tbody>
+			  {% for opportunite in arr_details['opportunites'] %}
+			    <tr>
+						<td>{{ opportunite.compte }}</td>
+						<td>{{ opportunite.nom }}</td>
+						<td class="align-right">{{ opportunite.montant|number_format(2, ',', ' ') }} €</td>
+					</tr>
+			  {% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+	{% endif %}
+
+
+	{% if arr_details['lissees'] is defined %}
+		<h4>Lissées sur le trimestre</h4>
+		{% if arr_details['lissees']['depenses'] is defined %}
+			{% if arr_details['lissees']['depenses']|length > 0 %}
+			  	
+			  <table class="table">
+					<thead>
+						<tr>
+							<th class="col-md-2">Date</th>
+							<th class="col-md-2">Numéro</th>
+							<th class="col-md-6">Libellé</th>
+							<th class="col-md-2">Montant</th>
+						</tr>
+					</thead>
+					<tbody>
+				  {% for depense in arr_details['depenses']['lissees'] %}
+				    <tr>
+							<td>{{ depense.date|date('d/m/Y') }}</td>
+							<td>{{ depense.num }}</td>
+							<td>{{ depense.libelle }}</td>
+							<td class="align-right">{{ (depense.totalHT/3)|number_format(0, ',', ' ') }} €</td>
+						</tr>
+				  {% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
+		{% endif %}
+
+		{% if arr_details['lissees']['affectation_diverses'] is defined %}
+			{% if arr_details['lissees']['affectation_diverses']|length > 0 %}
+			  	
+			  <table class="table">
+					<thead>
+						<tr>
+							<th class="col-md-4">Organisation</th>
+							<th class="col-md-6">Libellé</th>
+							<th class="col-md-2">Montant</th>
+						</tr>
+					</thead>
+					<tbody>
+					  {% for rapprochement in arr_details['lissees']['affectation_diverses'] %}
+					    <tr>
+							<td>{{ rapprochement.date|date('d/m/Y') }}</td>
+							<td>{{ rapprochement.affectationDiverse.nom }} : {{ rapprochement.mouvementBancaire.libelle }}</td>
+							<td class="align-right">{{ (rapprochement.mouvementBancaire.montant/3)|number_format(0, ',', ' ') }} €</td>
+						</tr>
+					  {% endfor %}
+					</tbody>
+				</table>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+</div>

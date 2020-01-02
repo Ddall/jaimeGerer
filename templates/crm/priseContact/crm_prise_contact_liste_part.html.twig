@@ -1,0 +1,120 @@
+{% block content %}
+	<div class="row" id="prises_contact">
+		<div class="col-md-12">
+			<h3>Historique des prises de contact</h3>
+			{% if readOnly is not defined %}
+				<p>
+					<a target='_blank' href="{{ path('crm_prise_contact_ajouter', {'id' : contact.id, 'screen' : 'contact' }) }}" class="btn btn-xs btn-success"  data-toggle="modal" data-target="#modal_prise_contact">
+						<span class="glyphicon glyphicon-plus"></span> Ajouter
+					</a>
+				</p>
+			{% endif %}
+			<table id="table_prises_contact" class="table table-bordered table-striped">
+				<thead>
+				<tr>
+					<th>Contacté par</th>
+					<th>Date</th>
+					<th class="hidden-xs">Type</th>
+					<th >Infos</th>
+				</tr>
+				</thead>
+				<tbody>
+				{% for prise_contact in contact.priseContacts %}
+					<tr>
+						<td>
+							{{ prise_contact.user }}
+						</td>
+						<td>
+							{{ prise_contact.date|date('d/m/Y') }}
+						</td>
+						<td class="hidden-xs">
+							{% if prise_contact.type == "PHONE" %}
+								Téléphone
+							{% elseif prise_contact.type == "RDV" %}
+								Rendez-vous
+							{% elseif prise_contact.type == "EMAIL" %}
+								Email
+							{% elseif prise_contact.type == "LETTRE" %}
+								Lettre
+							{% elseif prise_contact.type == "SOCIAL" %}
+								Réseaux sociaux
+							{% elseif prise_contact.type == "DEVIS" %}
+								Envoi d'un devis
+							{% elseif prise_contact.type == "FACTURE" %}
+								Envoi d'une facture
+							{% endif %}
+
+						</td>
+						<td>
+							{{ prise_contact.description|raw }}
+							{% if prise_contact.documentPrix is not null %}
+								{% if prise_contact.documentPrix.type == "DEVIS" %}
+									<a target='_blank' href="{{ path('crm_devis_voir', { 'id' : prise_contact.documentPrix.id }) }}">{{ prise_contact.documentPrix.num }}</a>
+								{% elseif prise_contact.documentPrix.type == "FACTURE" %}
+									<a target='_blank' href="{{ path('crm_facture_voir', { 'id' : prise_contact.documentPrix.id }) }}">{{ prise_contact.documentPrix.num }}</a>
+								{% endif %}
+							{% endif %}
+
+							{% if prise_contact.message is not empty %}
+								<br />
+								<a class="btn btn-xs btn-primary" role="button" data-toggle="collapse" href="#collapseMessage{{ prise_contact.id }}" aria-expanded="false" aria-controls="collapseMessage{{ prise_contact.id }}">
+									<span class="glyphicon glyphicon-eye-open"></span>
+								</a>
+								<div class="collapse" id="collapseMessage{{ prise_contact.id }}">
+									<div class="well">
+										{{ prise_contact.message|raw }}
+									</div>
+								</div>
+							{% endif %}
+
+						</td>
+					</tr>
+				{% endfor %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	<!-- wrapper for modal -->
+	<div class="modal" id="modal_prise_contact">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+		$(document).ready( function () {
+			$('#table_prises_contact').DataTable({
+				language : {
+					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"
+				},
+				paging : false,
+				info: false,
+				searching: false,
+				order: [[ 1, "desc" ]],
+				columnDefs: [
+					{ type: 'date-eu', targets: 1 }
+				],
+				fnDrawCallback: function () {
+					$( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn btn-default',
+					} );
+				},
+				fnInitComplete: function () {
+					$( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn btn-default',
+					} );
+				},
+			});
+		});
+	</script>
+{% endblock %}

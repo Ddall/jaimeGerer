@@ -1,0 +1,13 @@
+{% block submenu %}
+    <ul class="nav nav-tabs">
+      <li {% if app.request.pathInfo == "/crm/opportunite/liste/ONGOING"  %} class="active" {% endif %}>
+          <a href="{{ path('crm_opportunite_liste', {'etat' : 'ONGOING'}) }}">Opportunités en cours</a>
+      </li>
+      <li {% if app.request.pathInfo == "/crm/opportunite/liste/WON"  %} class="active" {% endif %}>
+            <a href="{{ path('crm_opportunite_liste', {'etat' : 'WON'}) }}">Opportunités gagnées</a>
+      </li>
+      <li {% if app.request.pathInfo == "/crm/opportunite/liste/LOST"  %} class="active" {% endif %}>
+            <a href="{{ path('crm_opportunite_liste', {'etat' : 'LOST'}) }}">Opportunités perdues</a>
+      </li>
+    </ul>
+{% endblock %}

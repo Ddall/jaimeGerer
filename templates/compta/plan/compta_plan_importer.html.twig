@@ -1,0 +1,16 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Importer des comptes comptables</h1>	
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-md-12"
+			<p>Vous pouvez importer un fichier Excel comportant les numéros de compte en colonne A et les libellés en colonne B.
+			{{ form(form, {'action': path('compta_compte_importer') } ) }}
+		</div>
+	</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+<?php
+
+namespace App\Service\Compta;
+
+use App\Entity\Compta\MouvementBancaire;
+use Doctrine\ORM\EntityManagerInterface;
+
+class ReleveBancaireService {
+
+  protected $em;
+  protected $path;
+
+  public function __construct(string $rootDir = '', EntityManagerInterface $em)
+  {
+    $this->path = $rootDir.'/../web/upload/compta/releve_bancaire/';
+    $this->em = $em;
+  }
+
+
+  public function parseReleveCSV($colDate, $colLibelle, $colDebit, $colCredit, $dateFormat, $filename, $compteBancaire){
+
+  	$total = 0;
+  	$arr_mouvements = array();
+
+  	//parsing du CSV
+	$csv = new \ParseCsv\Csv();
+	$csv->delimiter = ";";
+	$csv->encoding('ISO-8859-1', 'UTF-8');
+	$csv->parse($this->path.$filename);
+
+	//parsing ligne par ligne
+	foreach($csv->data as $data){
+
+		if($data[$colDate] == "" || $data[$colDate] == null){
+			continue;
+		}
+
+		if(array_key_exists($colLibelle, $data) && array_key_exists($colCredit, $data) && array_key_exists($colDebit, $data) && array_key_exists($colDate, $data) ){
+
+			//creation et hydratation du mouvement bancaire
+			$mouvement = new MouvementBancaire();
+			$mouvement->setCompteBancaire($compteBancaire);
+			$libelle = $data[$colLibelle];
+			$libelleNoCarriageReturn = preg_replace('/[\r\n]+/',' - ', $libelle);
+			$mouvement->setLibelle($libelleNoCarriageReturn);
+
+			$date = \DateTime::createFromFormat($dateFormat, $data[$colDate]);
+			$mouvement->setDate($date);
+
+			$credit = str_replace(',','.',$data[$colCredit]);
+
+			if($credit > 0){
+				$montant = $credit;
+				$montant = preg_replace('/\s+/u', '', $montant);
+
+			} else {
+				$montant = $data[$colDebit];
+				$montant = str_replace(',','.',$montant);
+				$montant = preg_replace('/\s+/u', '', $montant);
+				if($montant > 0){
+					$montant= -$montant;
+				}
+			}
+
+			$mouvement->setMontant($montant);
+			$arr_mouvements[] = $mouvement;
+			$total+=$montant;
+		}
+
+	}
+
+	return array(
+		'total' => $total,
+		'arr_mouvements' => $arr_mouvements
+	);
+
+  }
+
+  
+
+  
+
+
+}

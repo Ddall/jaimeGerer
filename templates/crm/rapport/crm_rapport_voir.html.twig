@@ -1,0 +1,398 @@
+{% extends 'crm/crm_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>
+				Rapport : {{ rapport.nom }}
+				{% if bounce == true %}
+					- Bounces
+				{% elseif warning == true %}
+					- Warning bounces
+				{% endif %}
+
+			</h1>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+				<li {% if bounce == false and warning == false  %} class="active" {% endif %}>
+					<a href="{{ path('crm_rapport_voir', {'id' : rapport.id }) }}">Rapport</a>
+				</li> 
+				<li {% if bounce == true and warning == false  %} class="active" {% endif %}>
+					<a href="{{ path('crm_rapport_voir', {'id' : rapport.id, 'bounce' : 1 }) }}">Bounces</a>
+				</li>
+				<li {% if bounce == false and warning == true  %} class="active" {% endif %}>
+					<a href="{{ path('crm_rapport_voir', {'id' : rapport.id, 'warning' : 1 }) }}">Warning</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="row spacer-top">
+		<div class="col-md-12">
+			<a class="btn btn-xs btn-success" id="btn-check-all">Tout cocher</a>
+			<a class="btn btn-xs btn-danger" id="btn-uncheck-all">Tout décocher</a>
+		</div>
+	</div>
+	
+	<div class="row" id="checkboxes-wrapper">
+		{% for key,header in arr_headers  %}
+			<div class="col-md-3">
+		 		<input type="checkbox" name="{{ key }}" value="{{ loop.index0 }}" id="checkbox-{{ key }}" checked class="filter"/>
+		 		<label for="checkbox-{{ key }}">{{ header }}</label>
+		 	</div>
+		{% endfor %}
+	</div>
+		
+	<div class="row">
+		<div class="col-md-12">
+			<form id="newColForm" novalidate >
+				<input type="text" id="new-col-name" required />
+				<input type="submit" id="add_column_button" class="btn btn-info btn-xs" value="Ajouter une colonne" />
+			</form>	
+			<hr />
+		</div>
+	</div>
+	
+	{% if bounce == false and warning == false  %}
+		<div class="row">
+			<div class="col-md-12 center">
+				<a href="{{ path('crm_rapport_editer', {'id' : rapport.id } ) }}" 
+					class="btn btn-warning" ​
+					data-toggle="tooltip-btn-xs" 
+					title="Editer">
+					Editer le rapport
+				</a>
+
+				{% if rapport.type == "contact" and app.user.company.zeroBounceApiKey is not empty %}
+					<a href="{{ path('crm_rapport_verifier_bounces', {'id' : rapport.id } ) }}" 
+						class="btn btn-info" ​>
+						Vérifier les bounces
+					</a>
+				{% endif %}
+
+				{% if type == "contact" %}
+					<button id="saveProspection" onclick="saveProspection()" class="btn btn-primary {% if rapport.data == null %}disabled{% endif %}"  title="prospection">
+						<span id="iconPhone" class="glyphicon glyphicon-earphone"></span>
+						Exporter vers prospection
+					</button>
+				{% endif %}
+				<div id="alert-save-success" class="alert alert-success hidden">  Les modifications ont bien été enregistrées.  </div>
+				<hr />
+			</div>
+		</div>
+	{% endif %}
+
+
+	<div id="modaleMautic" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-offset-4 col-md-4">
+							<h4>Import en cours </h4>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-offset-5 col-md-4">
+							<img src="{{ asset('images/assets/spinner_loader.gif') }}" alt="loader">
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+	<div id="modaleProspection" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<!-- Modal content-->
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Exporter vers la prospection</h4>
+				</div>
+				<div class="modal-body">
+					<div class="row">
+						<div class="col-md-offset-4 col-md-4">
+							<h4 id="textContent"></h4>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-offset-5 col-md-4">
+							<span id="spanGlyphicon" class="glyphicon"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+
+
+	<div class="row">
+		<div class="col-md-12">
+			<div id="table"></div>
+		</div>
+	</div>
+
+	<!--link rel="stylesheet" media="screen" href="http://handsontable.com/dist/handsontable.full.css"-->
+	
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+	$(document).ready( function () {    
+
+		/**
+		* Check all the filters checkboxes
+		**/
+		$('#btn-check-all').click(function(){
+			$('.filter').each(function(){
+				$(this).prop('checked', true);
+				onCheckboxChange(this);
+			});
+		});
+			
+		/**
+		* Uncheck all the filters checkboxes
+		**/
+		$('#btn-uncheck-all').click(function(){
+			$('.filter').each(function(){
+				$(this).prop('checked', false);
+				onCheckboxChange(this);
+			});
+		});
+
+		function buttonSaveRenderer (instance, td, row, col, prop, value, cellProperties) {
+       	  	var $buttonSave = $('<a class="btn btn-xs btn-success"><span class="glyphicon glyphicon-floppy-disk"></span></a>');
+       	  	$(td).empty().append($buttonSave); //empty is needed because you are rendering to an existing cell
+
+       	  	$buttonSave.click(function() {
+       	  		var hotData = { data: hot.getSourceDataAtRow(row), type: "{{ rapport.type }}" };
+		       	$.ajax({
+				   url: Routing.generate('crm_rapport_row_maj'),
+				   method: 'POST',
+				   data: hotData,
+				   dataType : 'json',
+				   success : function(d, statut){ 
+					   var $span = $('<span class="green glyphicon glyphicon-ok"></span>');
+					   $(td).empty().append($span);  
+				  	}
+		 		});
+	       	});
+
+       	 	var $buttonRemoveWarningBounce = $('<a class="btn btn-xs btn-info"><span class="glyphicon glyphicon-check"></span></a>');
+       	 	$($buttonRemoveWarningBounce).insertAfter($buttonSave); 
+
+       	  	$buttonRemoveWarningBounce.click(function() {
+	       	  	var hotData = { data: hot.getSourceDataAtRow(row), type: "{{ rapport.type }}" };
+		       	$.ajax({
+				   url: Routing.generate('crm_contact_set_bounce', {'id' : hotData.data.id, 'bounce' : 'VALID'}),
+				   method: 'POST',
+				   success : function(d, statut){ 
+					   var $span = $('<span class="green glyphicon glyphicon-ok"></span>');
+					   $(td).empty().append($span);  
+				  	}
+		 		});
+	       	});
+			
+			return td;
+        };
+
+
+
+		
+		var globalHeaders = {{ arr_headers|json_encode|raw }};
+ 		globalHeaders.push('');
+		
+		var globalColumns = {{ arr_columns|json_encode|raw }};
+		globalColumns.push({ data: "action", renderer: buttonSaveRenderer, editor: false });
+		
+		
+		var data = {{ arr_obj|json_encode|raw }};
+		
+		var colsToHide = [];
+		
+		var container = document.getElementById('table');
+		container.style.width = "100%";
+		container.style.height = "500px";
+		container.style.overflow = "hidden";
+        var hot = new Handsontable(container, { 
+            data: data,
+            rowHeaders: true,
+            contextMenu: true,
+            columnSorting: true,
+            autoColumnSize: true,
+        	colHeaders: globalHeaders,
+            className: "htCenter htMiddle",
+			scrollToCell: true,
+            manualColumnResize: true,
+            manualRowResize: true,
+            manualColumnMove: true,
+            manualRowMove: true,
+            comments: true,
+            columns: globalColumns,
+            viewportRowRenderingOffset: 100,
+            copyPaste: { rowsLimit: 10000 }
+           
+          });
+
+        {% if rapport.cols is not null %}
+	        var colsRapport = {{ rapport.cols|raw }};
+			for(var i=0; i<colsRapport.length; i++){
+				var col = colsRapport[i];
+				
+				if(col[i] == "false"){
+					var checkbox_id = '#checkbox-'+i;
+					$(checkbox_id).attr('checked', false);
+					colsToHide.push(i);
+				}
+			}
+			updateSettings();
+		{% endif %}
+        
+		$('#newColForm').submit(function(event){
+			 event.preventDefault();
+		});
+        
+        $('#add_column_button').click(function(){
+
+              var index = globalColumns.length-1;
+              var colName = $('#new-col-name').val();
+
+              if(colName == ""){
+                 $('#newColForm').removeAttr('novalidate');
+            	 $('#newColForm').find(':submit').click();
+              } else {
+	        	  globalColumns.splice(index,0,{
+	                  data: globalColumns.length-1,
+	                  type: 'text',
+	                });
+	
+		            globalHeaders.splice(index,0,colName);
+		            $('#new-col-name').val("");
+		      
+		        	  hot.updateSettings({
+		  	            columns: globalColumns,
+		  	          	colHeaders: globalHeaders
+		  	        }); 
+		
+		
+		        	var html = '<div class="col-md-3">'
+		            	+'<input type="checkbox" name="'+index+'" value="'+index+'" id="checkbox-'+index+'" checked class="filter"/>'
+				 		+' <label for="checkbox-'+index+'">'+colName+'</label>'
+				 		+'</div>';
+		
+				 	$('#checkboxes-wrapper').append(html);
+				 	$('#checkbox-'+index).on("change", function(e) {
+			        	onCheckboxChange(this);
+			        });
+
+				 	 $('#newColForm').attr('novalidate', true);
+					
+		        	updateSettings();
+				}
+              
+      	});  
+
+	
+        $(":checkbox").on("change", function(e) {
+        	onCheckboxChange(this);
+        });
+
+
+        function onCheckboxChange(checkbox) {
+        	var val = checkbox.value;
+  		    var intVal = parseInt(val);
+ 		   
+  		    if (intVal >= 0) {
+
+ 			  if($(checkbox).is(':checked')){
+ 				  var indexToRemove = colsToHide.indexOf(intVal);
+ 		          if (~indexToRemove) {
+ 		              colsToHide.splice(indexToRemove, 1);
+ 		           }
+ 			  } else {
+ 				  if (colsToHide.indexOf(intVal) === -1) {
+ 					 colsToHide.push(intVal);
+ 				  }
+ 			  }
+
+  		   }
+  		   updateSettings();
+        }
+
+        function updateSettings() {
+	        var newCols = [];
+	        var newHeaders = [];
+
+	        for (var i = 0; i < globalColumns.length; i++) {
+	            if (colsToHide.indexOf(i) === -1) {
+	                newCols.push(globalColumns[i]);
+	                newHeaders.push(globalHeaders[i]);
+	            }
+	        }
+
+	        hot.updateSettings({
+	            columns: newCols,
+	            colHeaders: newHeaders
+	        });
+	    }	
+
+
+	});
+
+	
+	function saveProspection(){
+
+
+        var data = {{ arr_obj|json_encode|raw }};
+        var strData = JSON.stringify(data);
+        var sentData = { id: "{{ rapport.id }}" };
+        sentData =  JSON.stringify(sentData);
+
+
+        var spanIcn = document.getElementById('spanGlyphicon');
+        var divContent = document.getElementById('textContent');
+
+        $.ajax({
+            url: "{{ path('crm_change_rapport') }}",
+            method: 'POST',
+            data: sentData,
+            dataType : 'json',
+            success : function(data, statut){
+
+                spanIcn.classList.remove('glyphicon-remove');
+                spanIcn.classList.add('glyphicon-ok');
+                console.log(divContent);
+                divContent.textContent = "Export effectué avec succès";
+
+                $('#modaleProspection').modal('show');
+            },
+            error : function(){
+
+                spanIcn.classList.remove('glyphicon-ok');
+                spanIcn.classList.add('glyphicon-remove');
+                divContent.textContent = "Une erreur s'est produite durant l'export";
+
+                $('#modaleProspection').modal('show');
+
+            }
+        });
+
+	}
+
+
+	</script>
+{% endblock %}	          

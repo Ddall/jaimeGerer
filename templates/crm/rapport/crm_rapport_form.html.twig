@@ -1,0 +1,233 @@
+{% block content %}
+
+	<div class="alert alert-info">
+		<p>En ajoutant des <strong>filtres</strong>, vous créez des conditions. Seuls les contacts répondant à ces conditions seront visibles dans le rapport.<br />
+			En ajoutant des <strong>séparateurs</strong>, vous précisez l'ordre de priorité de vos filtres.
+		</p>
+		<p>Exemple : vous souhaitez afficher tous les RH se trouvant soit à Lyon, soit à Paris.<br />
+		Vous créez trois filtres et un séparateur :</p>
+		<ul>
+			<li>Titre - contient - RH</li>
+			<li>Séparateur</li>
+			<li>Et - Ville - est - Lyon</li>
+			<li>Ou - Ville - est - Paris</li>
+		</ul>
+
+		<p>Si vous filtrez sur une date, indiquez la date au format AAAA-MM-JJ (par exemple "2018-06-01" pour le 1er juin 2018).</p>
+	</div>
+
+{{ form_start(form, { 'attr': {'class': 'form-inline form-filter'}}) }}
+
+	<div class="row">
+		<div class="col-md-12">
+			{{ form_label(form.nom) }}<br />
+			{{ form_widget(form.nom) }}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			{{ form_label(form.description) }}<br />
+			{{ form_widget(form.description) }}
+		</div>
+	
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<hr />
+		    <h3>Filtres</h3>
+		    <ul id="collectionContainer" class="filters" data-prototype="
+				{% filter escape %}
+				    {{ include('crm/rapport/crm_rapport_filtre_form.html.twig', { 'form':  form.filtres.vars.prototype }) }}
+			    {% endfilter %}">
+			    {% for filterField in form.filtres %}
+			        <li>
+				    	{{ include('crm/rapport/crm_rapport_filtre_form.html.twig', { 'form': filterField }) }}
+			        </li>
+			    {% endfor %}
+			</ul>
+		 </div>
+	</div>
+
+	
+	<div class="row">
+		<div class="col-md-12">
+			<p>
+			<a href="#" class="add_filter_link btn btn-xs btn-success">
+				<span class="glyphicon glyphicon-plus"></span> Ajouter un filtre
+			</a>
+			</p>
+		</div>
+	</div>
+
+
+	{% if type == "contact" %}
+		<div class="row spacer-top">
+			<div class="col-md-12">
+				<hr />
+				{{ form_row(form.emailing) }}<br />
+				{{ form_row(form.excludeWarnings) }}
+			</div>
+		</div>
+	{% endif %}
+
+	{{ form_rest(form) }}
+	<div class="row">
+		<div class="col-md-12 center">
+			<input type="submit" value="Créer le rapport" class="btn btn-success" />
+		</div>
+	</div>
+	{{ form_end(form) }}
+
+{% endblock %}
+
+
+{% block javascripts %}
+
+	<script type="text/javascript">
+
+		// ajoute un lien « add a filter »
+		 //var $addFilterLink = $('<a href="#" class="add_filter_link btn btn-xs btn-success"><span class="glyphicon glyphicon-plus"</a>');
+		 var $newFilterLi = $('<li></li>');
+	
+		$(document).ready( function () {    
+
+			// Récupère le div qui contient la collection de tags
+			var collectionHolder = $('ul.filters');
+			// ajoute l'ancre « ajouter un tag » et li à la balise ul
+			collectionHolder.append($newFilterLi);
+			// Récupèrer le nombre de produits pour l'incrémenter et éviter le bug du jeu de suppression
+			indexNewCollection = collectionHolder.children().length;
+			
+			{% if rapport is not defined %}
+				addFilterForm(collectionHolder, $newFilterLi);
+				$('.select_andor').addClass('visibility-hidden');
+			{% endif %}
+			
+			
+			
+
+		    function addFilterForm(collectionHolder, $newFilterLi) {
+		        // Récupère l'élément ayant l'attribut data-prototype comme expliqué plus tôt
+		        var prototype = collectionHolder.attr('data-prototype');
+
+		        // Remplace '__name__' dans le HTML du prototype par un nombre basé sur
+		        // la longueur de la collection courante
+		        var newForm = prototype.replace(/__name__/g, collectionHolder.children().length);
+
+		        // Affiche le formulaire dans la page dans un li, avant le lien "ajouter un tag"
+		        var $newFormLi = $('<li></li>').append(newForm);
+		        $newFilterLi.before($newFormLi);
+
+		        $('.select_action').change(function() {
+					if($(this).val() == 'EMPTY' || $(this).val() == 'NOT_EMPTY' || $(this).val() == 'IS_TRUE' || $(this).val() == 'IS_FALSE'){
+						$(this).parent().next().find('.input_valeur').prop('disabled', true);
+					} else {
+						$(this).parent().next().find('.input_valeur').prop('disabled', false);
+					}
+				});
+		    }
+
+
+		    $("body").on("click", ".btn-remove-filter", function(e){
+	            // empêche le lien de créer un « # » dans l'URL
+	            e.preventDefault();
+	            // supprimele filtre
+		        $(this).parents('li').remove();
+
+		    });
+
+		    $("body").on("click", ".btn-rapport-add-separateur", function(e){
+	            // empêche le lien de créer un « # » dans l'URL
+	            e.preventDefault();
+	            // supprimele filtre
+		        $(this).parents('li').append('<hr />');
+	            $(this).parents('li').find('.end-group-hidden').val(1);
+
+		    });
+
+		    $('.add_filter_link').on('click', function(e) {
+				// empêche le lien de créer un « # » dans l'URL
+				e.preventDefault();
+			    // ajoute un nouveau formulaire tag (voir le prochain bloc de code)
+			    addFilterForm(collectionHolder, $newFilterLi);
+
+			});
+
+			function change(e){
+				var probabilites = [];
+				{% for opportunite in opportuniteList %}
+				probabilites.push("{{ opportunite.valeur }}");
+				{% endfor %}
+				var input2 = e.target;
+				var input3 = e.target.parentNode.parentNode.childNodes[2].getElementsByClassName("select_action")[0];
+				var input4 = e.target.parentNode.parentNode.childNodes[3].getElementsByClassName("input_valeur")[0];
+				var radioDiv = e.target.parentNode.parentNode.childNodes[3];
+
+				if (input2.value == "probabilite" && radioDiv.childNodes.length === 3){
+
+					var input3_Options = input3.getElementsByTagName("option");
+					for(var l = 0; l <input3_Options.length; l++){
+						if(l > 1 ) {
+							input3_Options[l].setAttribute("disabled", "");
+						}
+					}
+
+					input4.style.display = "none";
+					for(var i in probabilites){
+						var input = document.createElement('input');
+						var spanText = document.createElement('span');
+						var text = document.createTextNode(probabilites[i]);
+						input.setAttribute("class",input4.getAttribute("class"));
+						input.setAttribute("type","radio");
+						input.setAttribute("id",input4.getAttribute("id"));
+						input.setAttribute("name",input4.getAttribute("name"));
+						input.setAttribute("value", probabilites[i]);
+						input.classList.add("radio");
+						spanText.classList.add("radio");
+						spanText.style.paddingRight = "15px";
+						radioDiv.appendChild(input);
+						spanText.appendChild(text);
+						radioDiv.appendChild(spanText);
+
+					}
+
+				}
+
+				else if(input2.value == "probabilite" && radioDiv.childNodes.length !== 3){
+
+					var input3_Options = input3.getElementsByTagName("option");
+					for(var l = 0; l <input3_Options.length; l++){
+						if(l > 1 ) {
+							input3_Options[l].setAttribute("disabled","");
+						}
+					}
+
+					input4.style.display = "none";
+					var radioInput = radioDiv.getElementsByClassName("radio");
+					for(var j = 0; j < radioInput.length; j++){
+						radioInput[j].style.display = "inline-block";
+					}
+				}
+
+				else if(input2.value != "probabilite"){
+
+					var input3_Options = input3.getElementsByTagName("option");
+					for(var l = 0; l <input3_Options.length; l++){
+						if(l > 1 ) {
+							input3_Options[l].removeAttribute("disabled");
+						}
+					}
+					hu
+					input4.style.display = "inline-block";
+					var radioInput = radioDiv.getElementsByClassName("radio");
+					for(var j = 0; j < radioInput.length; j++){
+						radioInput[j].style.display = "none";
+					}
+				}
+			}
+		});
+	</script>
+
+{% endblock %}

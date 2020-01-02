@@ -1,0 +1,107 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Importation des dépenses non rapprochées</h3>
+	</div>
+	<div class="modal-body">
+
+		<p>Faites correspondre les colonnes de votre fichier aux données à importer.</p>
+		{{ form_start(form,  { 'action': path('compta_depense_importer_historique_mapping', {'initialisation' : true }), 'attr': {'data-async': '', 'data-target' : '#modal-lg' } }) }}
+		
+		{{ form_errors(form) }}
+		
+		<div class="row">
+			<div class="form-group col-md-6">
+				{{ form_label(form.dateFormat) }}<br />
+			    {{ form_errors(form.dateFormat) }}
+			    {{ form_widget(form.dateFormat) }}  
+			</div>
+		</div>
+		<p><strong>Dépense</strong></p>
+
+		<div class="row">
+		<div class="form-group col-md-3">
+			{{ form_label(form.compte) }}<br />
+		    {{ form_errors(form.compte) }}
+		    {{ form_widget(form.compte) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.num) }}<br />
+		    {{ form_errors(form.num) }}
+		    {{ form_widget(form.num) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.taxe) }}<br />
+		    {{ form_errors(form.taxe) }}
+		    {{ form_widget(form.taxe) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.analytique) }}<br />
+		    {{ form_errors(form.analytique) }}
+		    {{ form_widget(form.analytique) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.date) }}<br />
+		    {{ form_errors(form.date) }}
+		    {{ form_widget(form.date) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.etat) }}<br />
+		    {{ form_errors(form.etat) }}
+		    {{ form_widget(form.etat) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.modePaiement) }}<br />
+		    {{ form_errors(form.modePaiement) }}
+		    {{ form_widget(form.modePaiement) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.dateCreation) }}<br />
+		    {{ form_errors(form.dateCreation) }}
+		    {{ form_widget(form.dateCreation) }}  
+		</div>
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.user) }}<br />
+		    {{ form_errors(form.user) }}
+		    {{ form_widget(form.user) }}  
+		</div>
+	</div>
+	
+	<p><strong>Produits</strong></p>
+		
+	
+	<div class="row">
+		
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.produitNom) }}<br />
+		    {{ form_errors(form.produitNom) }}
+		    {{ form_widget(form.produitNom) }}  
+		</div>
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.produitTarif) }}<br />
+		    {{ form_errors(form.produitTarif) }}
+		    {{ form_widget(form.produitTarif) }}  
+		</div>
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.produitTaxe) }}<br />
+		    {{ form_errors(form.produitTaxe) }}
+		    {{ form_widget(form.produitTaxe) }}  
+		</div>
+		<div class="form-group col-md-3">
+		   	{{ form_label(form.produitCompteComptable) }}<br />
+		    {{ form_errors(form.produitCompteComptable) }}
+		    {{ form_widget(form.produitCompteComptable) }}  
+		</div>
+	</div>
+	{{ form_widget(form.submit) }} 
+	{{ form_end(form) }}
+	</div>
+</div>

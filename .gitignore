@@ -1,11 +1,11 @@
 .idea/*
+.env
+
 vendor
-app/config/parameters.yml
-app/config/config_dev.php
-app/logs/*
-app/cache/*
-web/bundles/*
-web/files/compta/*
+var/log/
+var/cache/
+public/bundles/
+public/files/compta/*
 composer.lock
 composer.phar
 README.md

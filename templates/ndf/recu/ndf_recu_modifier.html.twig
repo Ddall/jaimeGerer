@@ -1,0 +1,58 @@
+{% extends 'ndf/ndf_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Modifier un reçu</h1>
+		</div>
+	</div>
+
+	{% include 'ndf/recu/ndf_recu_form.html.twig' %}
+
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script type="text/javascript">
+
+		$(document).ready( function () {
+
+			console.log('ready');
+
+			$('.montant-ht').change(function(){
+				console.log('change');
+				updateMontants();
+			});
+			$('.montant-tva').change(function(){
+				updateMontants();
+			});
+			$('.montant-ttc').change(function(){
+				updateMontants();
+			});
+
+			function updateMontants(){
+				console.log("update");
+				var ht = $('.montant-ht').val();
+				ht = ht.replace(",", ".");
+				$('.montant-ht').val(ht);
+
+				var tva = $('.montant-tva').val();
+				tva = tva.replace(",", ".");
+				$('.montant-tva').val(tva);
+
+				var ttc = $('.montant-ttc').val();
+				ttc = ttc.replace(",", ".");
+				$('.montant-ttc').val(ttc);
+
+				if(tva != 0){
+					var ttc = +ht + +tva;
+					$('.montant-ttc').val(ttc.toFixed(2));
+				} else {
+					$('.montant-ttc').val(ht);
+				}
+			}
+
+		});
+
+	</script>
+{% endblock %}

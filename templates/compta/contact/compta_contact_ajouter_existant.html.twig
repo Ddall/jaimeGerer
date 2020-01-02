@@ -1,0 +1,68 @@
+{% extends 'compta/compta_layout.html.twig' %}
+
+{% block content %}
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Ajouter un {{ type|lower }} depuis <span class="jaimelecommercial">J'aime le Commercial</span></h1>
+		</div>
+	</div>
+
+	{{ form_start(form) }}
+
+	<div class="row">
+		<div class="col-md-6">
+			{{ form_errors(form) }}
+			<div class="form-group">
+				{{ form_label(form.compte_name) }}
+				{{ form_errors(form.compte_name) }}
+				<div class="typeahead-container">
+					<div class="typeahead-field">
+		        		<span class="typeahead-query">
+							{{ form_widget(form.compte_name, {'attr' : {'class' : 'typeahead-compte input-compte-name'}}) }}
+							{{ form_row(form.compte) }}
+						</span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6">
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12">
+	 		<input type="submit" value="Enregistrer" class="btn btn-success" />
+	 	</div>
+	 </div>	
+	{{ form_rest(form) }}
+	{{ form_end(form) }}
+
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script type="text/javascript">
+$(document).ready( function () {
+
+	$('.typeahead-compte').typeahead({
+		order: "desc",
+		accent: true,
+		source: {
+			url: Routing.generate('crm_compte_get_liste')
+		},
+		callback: {
+			onInit: function (node) {
+				console.log('Typeahead Initiated on ' + node.selector);
+			},
+			onClickAfter: function (node, a, item, event) {
+				$('.entity-compte').val(item.id);
+
+			}
+		},
+		debug: true
+
+	});
+
+});
+</script>
+{% endblock %}

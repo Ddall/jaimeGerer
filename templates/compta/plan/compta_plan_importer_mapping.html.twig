@@ -1,0 +1,144 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Importation du plan comptable</h3>
+	</div>
+	<div class="modal-body">
+
+		<h1>Importer des comptes comptables</h1>	
+		<p>Affectez les comptes 411 et 401 aux clients et fournisseurs de votre CRM.</p>
+
+		{{ form_start(form,  { 'action': path('compta_compte_importer_mapping_clients_fournisseurs', {'initialisation' : true }), 'attr': {'data-async': '', 'data-target' : '#modal-lg' } }) }}
+		
+		{% if arr_clients|length > 0 %}
+			<h2>Comptes clients</h2>
+			<table class="table table-striped">
+				<tbody>
+					{% for key, compteClient in arr_clients %}
+						<tr>
+							<td><strong>{{ compteClient }} - {{ key }}</strong></td>
+							<td>
+								{{ form_widget(attribute(form, compteClient~'-radio')) }}
+							</td>
+							<td>
+								<div class="typeahead-container">
+							    	<div class="typeahead-field">
+							        	<span class="typeahead-query">
+							        		{{ form_label(attribute(form, compteClient~'-name')) }}
+											{{ form_widget(attribute(form, compteClient~'-name'), {'attr' : {'class' : 'typeahead-compte input-compte-name'}}) }}
+			  								{{ form_row(attribute(form, compteClient~'-compte')) }}
+			  								{{ form_row(attribute(form, compteClient~'-label')) }}
+										</span> 
+							        </div>
+							    </div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+				
+		{% endif %}
+		
+		{% if arr_fournisseurs|length > 0 %}
+			<h2>Comptes fournisseurs</h2>
+			<table class="table table-striped">
+				<tbody>
+					{% for key, compteFournisseur in arr_fournisseurs %}
+						<tr>
+							<td><strong>{{ compteFournisseur }} - {{ key }}</strong></td>
+							<td>
+								{{ form_widget(attribute(form, compteFournisseur~'-radio')) }}
+							</td>
+							<td>
+								<div class="typeahead-container">
+							    	<div class="typeahead-field">
+							        	<span class="typeahead-query">
+							        		{{ form_label(attribute(form, compteFournisseur~'-name')) }}
+											{{ form_widget(attribute(form, compteFournisseur~'-name'), {'attr' : {'class' : 'typeahead-compte input-compte-name'}}) }}
+			  								{{ form_row(attribute(form, compteFournisseur~'-compte')) }}
+			  								{{ form_row(attribute(form, compteFournisseur~'-label')) }}
+										</span> 
+							        </div>
+							    </div>
+							</td>
+						</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+		{% endif %}
+			
+		{{ form_widget(form.submit) }} 
+		
+		{{ form_errors(form) }}
+		{{ form_end(form) }}
+			
+	</div>
+
+{% block javascripts %}
+
+	<script type="text/javascript">
+	
+		$(document).ready( function () {   
+
+			{% for compteFournisseur in arr_fournisseurs %}
+				var selector = "#form_{{ compteFournisseur }}-name";
+				$(selector).typeahead({
+				    order: "desc",
+				    accent: true,
+				    source: {
+				        url: "/web/app_dev.php/crm/compte/get-comptes-and-contacts"
+				    },
+				    callback: {
+				        onInit: function (node) {
+				            console.log('Typeahead Initiated on ' + node.selector);
+				        },
+				        onClickAfter: function (node, a, item, event) {
+							$("#form_{{ compteFournisseur }}-compte").val(item.id);
+						}
+				    },
+				    debug: true
+				});
+				
+			{% endfor %}
+
+			{% for compteClient in arr_clients %}
+				var selector = "#form_{{ compteClient }}-name";
+				$(selector).typeahead({
+				    order: "desc",
+				    accent: true,
+				    source: {
+				        url: "/web/app_dev.php/crm/compte/get-comptes-and-contacts"
+				    },
+				    callback: {
+				        onInit: function (node) {
+				            console.log('Typeahead Initiated on ' + node.selector);
+				        },
+				        onClickAfter: function (node, a, item, event) {
+							$("#form_{{ compteClient }}-compte").val(item.id);
+						}
+				    },
+				    debug: true
+				});
+			{% endfor %}
+
+			$('.input-compte-name').each(function(){
+				if($(this).val() != ''){
+					$(this).attr('disabled', false);
+				} else {
+					$(this).attr('disabled', true);
+				}
+			});
+			
+			//activer ou désactiver le textinput selon l'option choisie
+			$('input:radio').click(function(){
+				
+				if($(this).val() == "existing"){
+					$(this).parents('td').next().find('.input-compte-name').attr('disabled', false);
+				} else {
+					$(this).parents('td').next().find('.input-compte-name').attr('disabled', true);
+				}
+			});
+			
+		});
+	</script>
+{% endblock %}

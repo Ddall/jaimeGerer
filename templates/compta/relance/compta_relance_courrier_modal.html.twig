@@ -1,0 +1,91 @@
+{% block stylesheets %}
+	<link rel="stylesheet" type="text/css" href="{{ app.request.schemeAndHttpHost ~ asset('css/compta_pdf.css') }}" />
+{% endblock %}
+
+<div class="modal-header">
+	<a class="close" data-dismiss="modal">×</a>
+	<h3>Relancer par courrier</h3>
+</div>
+<div class="modal-body">
+	<p><strong>Votre courrier : </strong></p>
+	{{ form_start(form, {'action': path('compta_facture_relancer_courrier', {'id' : facture.id })} ) }}
+	<div id="apercu-courrier">
+		<div id="expediteur">
+			<p>
+				{% if app.user.company.logo is not empty %}
+					<img src="{{ app.request.schemeAndHttpHost }}/web/upload/logo/{{ app.user.company.logo }}" alt="{{ app.user.company.nom }}" id="logo"/><br />
+				{% endif %}
+				{{ app.user.company.adresse }}<br />
+				{{ app.user.company.codePostal }} {{ app.user.company.ville|upper }}<br />
+				{{ app.user.company.pays }}
+			</p>
+			<p>
+				<span class="glyphicon glyphicon-earphone"></span> {{ app.user.company.telephone }}<br />
+				Contact administratif : {{ contact_admin }} <br />
+				Gestionnaire de projet : {{ facture.userGestion }}
+
+			</p>
+		</div>
+		<div id="destinataire">
+			{{ facture.compte }}<br />
+			{{ facture.adresse }}<br />
+			{{ facture.codePostal }} {{ facture.ville|upper }}<br />
+			{{ facture.pays }}
+
+			<p style="margin-top: 20px;">
+				{{ app.user.company.ville }}, le {{ today|date('d/m/Y') }}
+			</p>
+		</div>
+
+		<div class="center">
+			{{ form_widget(form.message) }}
+		</div>
+
+		<div>
+			{% if app.user.company.tampon is not empty %}
+				<img src="{{ app.request.schemeAndHttpHost }}/web/upload/tampon/{{ app.user.company.tampon }}" alt="{{ app.user.company.nom }}" id="tampon"/>
+			{% endif %}
+		</div>
+
+	</div>
+
+	<p><strong>Options d'envoi</strong></p>
+	<p>Si vous ne cochez aucune des options ci-dessous, votre courrier sera envoyé en Ecopli. </p>
+	{{ form_label(form.recommande) }}
+	{{ form_errors(form.recommande) }}
+	{% if app.user.company.credits < 6.8 %}
+		<p><i class="red"> Vous n'avez pas assez de crédit pour envoyer en recommandé avec accusé de réception.</i><br />
+		<a href="{{ path('payment_credits_choose') }}">Acheter du crédit</a></p>
+	{% endif %}
+	{{ form_widget(form.recommande) }}
+
+
+	<div class="center">
+		{{ form_row(form.submit) }}
+	</div>
+
+	{{ form_rest(form) }}
+	{{ form_end(form) }}
+	<div class="center">
+		<p id="loading-message" class="hidden">
+			<i>Votre message est en cours d'envoi. Pour patienter, voici un petit chat qui danse :</i><br />
+			<img src="{{ asset('images/assets/cat_loader.gif') }}" alt="Patientez..." />
+		</p>
+	</div>
+</div>
+
+{{ tinymce_init({
+	'theme': {'simple': {'height': 400}}
+	})
+}}
+
+<script type="text/javascript">
+$(document).ready( function () {
+	$('form').submit(function(){
+		$('input').attr('readonly', true);
+		$('textarea').attr('readonly', true);
+		$('#form_submit').addClass("hidden");
+		$("#loading-message").removeClass("hidden");
+	});
+});
+</script>

@@ -1,0 +1,101 @@
+{% block content %}
+	<div class="row" id="relances">
+	  	<div class="col-md-12">
+	  		<h3>Historique des relances</h3>
+	  		<p>
+	  			
+		  			<a href="{{ path('compta_facture_relancer', {'id' : facture.id }) }}" class="btn btn-xs {% if facture.contact %} btn-success {% else %}btn-default not-active{% endif %}" data-toggle="modal" data-target="#modal-relance">
+			    		<span class="glyphicon glyphicon-envelope"></span> Relancer
+			   	 	</a>
+		   	</p>
+    		<table id="table_relances" class="table table-bordered table-striped">
+	  			<thead>        
+		    		<tr>            
+		    			<th>Envoyée par</th>
+		    			<th>Date</th>            
+		    			<th>Type</th>  
+		    			<th>Infos</th>
+		    		</tr>    
+			    </thead>    
+			    <tbody>
+	  			{% for relance in listRelances %}
+	  				<tr>
+	  					<td>
+			    			{{ relance.user }}
+	  					</td>
+	  					<td>
+			    			{{ relance.date|date('d/m/Y') }}
+	  					</td>
+	  					<td>
+		  					{% if relance.type == "EMAIL" %}
+		  						Email
+		  					{% elseif relance.type == "COURRIER" %}
+		  						Courrier
+		  					{% endif %}
+			    		</td>
+	  					<td>
+							Relance n°{{ relance.num }}
+							
+							{% if relance.message is not empty %}
+							<br />
+							<a class="btn btn-xs btn-primary" role="button" data-toggle="collapse" href="#collapseMessage{{ relance.id }}" aria-expanded="false" aria-controls="collapseMessage{{ relance.id }}">
+	  							<span class="glyphicon glyphicon-eye-open"></span>
+	  						</a>
+	  						<div class="collapse" id="collapseMessage{{ relance.id }}">
+							  <div class="well">
+							    {{ relance.message|raw }}
+							  </div>
+							</div>
+							{% endif %}
+							
+	  					</td>
+	  				</tr>
+	  			{% endfor %}
+	  			</tbody>
+	  		</table>
+	  	</div>
+	  </div>
+	  
+	  <!-- wrapper for modal -->
+	<div class="modal" id="modal-relance">
+  		<div class="modal-dialog">
+    		<div class="modal-content">
+    		</div>
+  		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	<script type="text/javascript">
+	$(document).ready( function () {    
+		$('#table_relances').DataTable({
+				language : {                
+					"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"            
+				},
+				paging : false,
+			    info: false,
+			    searching: false,
+			    order: [[ 1, "desc" ]],
+			    columnDefs: [
+			    	{ type: 'date-eu', targets: 1 }
+			    ],
+				fnDrawCallback: function () {
+				  $( 'a', this.fnGetNodes() ).tooltip( {
+					"delay": 0,
+					"track": true,
+					"fade": 250,
+					"tooltipClass": 'btn btn-default',
+				  } );
+				},
+                fnInitComplete: function () {
+				  $( 'a', this.fnGetNodes() ).tooltip( {
+					"delay": 0,
+					"track": true,
+					"fade": 250,
+					"tooltipClass": 'btn btn-default',
+				  } );
+				},
+		});
+	});
+	</script>
+{% endblock %}

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+        <title>Relance</title>
+        
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+		<link rel="stylesheet" type="text/css" href="{{ app.request.schemeAndHttpHost ~ asset('css/compta_pdf.css') }}" />
+		
+		<style>
+			#echeance{ color: {{ app.user.company.color }} }
+			#produits_table tr th{ 
+				background-color: {{ app.user.company.color }}; 
+				color: #FFFFFF;
+				padding: 5px;
+				text-align: right; 
+			}
+			#devis-remise, #facture-remise{ {{ app.user.company.color }} }
+			#rib{ font-size: 0.8em; font-weight: bold; color: {{ app.user.company.color }}; }
+			#pub{ border: 2px dashed  {{ app.user.company.color }}; padding: 10px; margin-top: 30px; margin-bottom: 30px; }
+		</style>
+      </head>
+      <body>
+		
+		<div id="expediteur">
+				<p>
+					{% if app.user.company.logo is not empty %}
+						<img src="{{ app.request.schemeAndHttpHost }}/web/upload/{{ app.user.company.logo }}" alt="{{ app.user.company.nom }}" id="logo"/><br />
+					{% endif %}
+					{{ app.user.company.adresse }}<br />
+					{{ app.user.company.codePostal }} {{ app.user.company.ville|upper }}<br />
+					{{ app.user.company.pays }}
+				</p>
+				<p>
+					<span class="glyphicon glyphicon-earphone"></span> {{ app.user.company.telephone }}<br />
+					Contact administratif : {{ contact_admin }} <br />
+					Gestionnaire de projet : {{ facture.userGestion }}
+					
+				</p>
+		</div>
+		
+		<div id="destinataire-maileva"></div>
+		
+		<div id="date">
+			<p>
+				{{ app.user.company.ville }}, le {{ today|date('d/m/Y') }}
+			</p>
+		</div>
+		<div id="message">
+			{{ message|raw }}
+		</div>
+		
+		<div>
+			{% if app.user.company.tampon is not empty %}
+				<img src="{{ app.request.schemeAndHttpHost }}/web/upload/{{ app.user.company.tampon }}" alt="{{ app.user.company.nom }}" id="tampon"/>
+			{% endif %}
+		</div>
+	</body>
+</html>

@@ -1,0 +1,112 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Importation des factures non rapprochées</h3>
+	</div>
+	<div class="modal-body">
+
+		<p>Faites correspondre les colonnes de votre fichier aux données à importer.</p>
+		
+		{{ form_start(form,  { 'action': path('compta_facture_importer_historique_mapping', {'initialisation' : true }), 'attr': {'data-async': '', 'data-target' : '#modal-lg' } }) }}
+		
+		
+		{{ form_errors(form) }}
+		<p><strong>Facture</strong></p>
+		
+		<div class="row">
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.objet) }}<br />
+			    {{ form_errors(form.objet) }}
+			    {{ form_widget(form.objet) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.num) }}<br />
+			    {{ form_errors(form.num) }}
+			    {{ form_widget(form.num) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.compte) }}<br />
+			    {{ form_errors(form.compte) }}
+			    {{ form_widget(form.compte) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.date) }}<br />
+			    {{ form_errors(form.date) }}
+			    {{ form_widget(form.date) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.echeance) }}<br />
+			    {{ form_errors(form.echeance) }}
+			    {{ form_widget(form.echeance) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.tva) }}<br />
+			    {{ form_errors(form.tva) }}
+			    {{ form_widget(form.tva) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.tauxTVA) }}<br />
+			    {{ form_errors(form.tauxTVA) }}
+			    {{ form_widget(form.tauxTVA) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.remise) }}<br />
+			    {{ form_errors(form.remise) }}
+			    {{ form_widget(form.remise) }}  
+			</div>
+			
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.description) }}<br />
+			    {{ form_errors(form.description) }}
+			    {{ form_widget(form.description) }}  
+			</div>
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.etat) }}<br />
+			    {{ form_errors(form.etat) }}
+			    {{ form_widget(form.etat) }}  
+			</div>
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.user) }}<br />
+			    {{ form_errors(form.user) }}
+			    {{ form_widget(form.user) }}  
+			</div>
+		</div>
+		<p><strong>Produits</strong></p>
+		<div class="row">
+			<div class="form-group col-md-3">
+				{{ form_label(form.produitType) }}<br />
+			    {{ form_errors(form.produitType) }}
+			    {{ form_widget(form.produitType) }}  
+			</div>
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.produitNom) }}<br />
+			    {{ form_errors(form.produitNom) }}
+			    {{ form_widget(form.produitNom) }}  
+			</div>
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.produitDescription) }}<br />
+			    {{ form_errors(form.produitDescription) }}
+			    {{ form_widget(form.produitDescription) }}  
+			</div>
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.produitTarif) }}<br />
+			    {{ form_errors(form.produitTarif) }}
+			    {{ form_widget(form.produitTarif) }}  
+			</div>
+			<div class="form-group col-md-3">
+			   	{{ form_label(form.produitQuantite) }}<br />
+			    {{ form_errors(form.produitQuantite) }}
+			    {{ form_widget(form.produitQuantite) }}  
+			</div>
+		</div>
+	{{ form_widget(form.submit) }} 
+	{{ form_end(form) }}
+	</div>
+</div>

@@ -1,0 +1,12 @@
+shtumi_useful:
+  autocomplete_entities:
+    comptes:
+      class: App:CRM\Compte
+      role: IS_AUTHENTICATED_ANONYMOUSLY
+      property: nom
+      search: contains
+    contacts:
+      class: App:CRM\Contact
+      role: IS_AUTHENTICATED_ANONYMOUSLY
+      property: nom
+      search: contains

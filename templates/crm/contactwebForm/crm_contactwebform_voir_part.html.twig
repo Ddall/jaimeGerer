@@ -1,0 +1,470 @@
+<style>
+	table.contact-view-table td{ white-space : nowrap}
+</style>
+     <div class="row">
+	    	<div class="col-md-12">
+	    		<p>
+	    			<a href="#champs">Champs</a> - 
+	    			<a href="#defaut">Valeurs par défaut</a> - 
+	    			<a href="#impulsion">Suivi</a> - 
+	    			<a href="#code_form">Code du formulaire</a>
+	    		</p>
+	    	</div>
+	    </div>
+	    
+	    <div class="row">
+		<div class="col-md-12">
+			{% for flashMessage in app.session.flashbag.get('success') %}
+			    <div class="alert alert-success">
+			        {{ flashMessage }}
+			    </div>
+			{% endfor %}
+			{% for flashMessage in app.session.flashbag.get('danger') %}
+			    <div class="alert alert-danger">
+			        {{ flashMessage }}
+			    </div>
+			{% endfor %}
+		</div>
+	</div>
+<hr />
+		<div class="row" id='code_form'>
+			<div class="col-md-12">
+				<h1>Champs du formulaire</h1>
+			</div>
+			<div class="col-md-12">
+	    		<table class="contact-view-table">
+	    			<tbody>
+		    			<tr>
+		    				<td>CrmWebFormContent
+		    				<textarea id="">
+								<div id="crmWebForm">
+									<form  accept-charset="UTF-8" action="" method="post">
+										<table class="contact-view-table">
+											<tbody>
+											{% if contactwebform.nomCompte is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.nomCompte }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[nomCompte]" id="contactwebform_nomCompte" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.prenomContact is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.prenomContact }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[prenomContact]" id="contactwebform_prenomContact" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.nomContact is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.nomContact }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[nomContact]" id="contactwebform_nomContact" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.adresse is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.adresse }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[adresse]" id="contactwebform_adresse" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.codePostal is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.codePostal }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[codePostal]" id="contactwebform_codePostal" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.ville is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.ville }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[ville]" id="contactwebform_ville" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.region is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.region }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[region]" id="contactwebform_region" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.pays is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.pays }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[pays]" id="contactwebform_pays" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.telephoneFixe is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.telephoneFixe }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[telephoneFixe]" id="contactwebform_telephoneFixe" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.telephonePortable is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.telephonePortable }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[telephonePortable]" id="contactwebform_telephonePortable" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.email is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.email }}
+													</td>
+													<td>
+														<input type="email" name="contactwebform[email]" id="contactwebform_email" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.fax is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.fax }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[fax]" id="contactwebform_fax" />
+													</td>
+												</tr>
+											{% endif %}
+											{% if contactwebform.url is not empty %}
+												<tr>
+													<td>
+														{{ contactwebform.url }}
+													</td>
+													<td>
+														<input type="text" name="contactwebform[url]" id="contactwebform_url" />
+													</td>
+												</tr>
+											{% endif %}
+											</tbody>
+										</table>
+										<input type="hidden" name="contactwebform[id]" id="contactwebform_id" value="{{ contactwebform.id }}" />
+									</form>
+								</div>
+								</textarea>
+		    				</td>
+		    			</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="row" id='champs'>
+			<div class="col-md-12">
+				<h1>Champs du formulaire</h1>
+			</div>
+	    	<div class="col-md-6">
+	    		<table class="contact-view-table">
+	    			<tbody>
+		    			<tr>
+		    				<td>
+								Prénom du Contact : 
+							</td>
+		    				<td>
+								{% if contactwebform.prenomContact is empty %}-{% else %}{{ contactwebform.prenomContact }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Nom du Contact : 
+							</td>
+		    				<td>
+								{% if contactwebform.nomContact is empty %}-{% else %}{{ contactwebform.nomContact }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Adresse : 
+							</td>
+		    				<td>
+								{% if contactwebform.adresse is empty %}-{% else %}{{ contactwebform.adresse }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Code postal : 
+							</td>
+		    				<td>
+								{% if contactwebform.codePostal is empty %}-{% else %}{{ contactwebform.codePostal }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Ville : 
+							</td>
+		    				<td>
+								{% if contactwebform.ville is empty %}-{% else %}{{ contactwebform.ville }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Région : 
+							</td>
+		    				<td>
+								{% if contactwebform.region is empty %}-{% else %}{{ contactwebform.region }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Pays : 
+							</td>
+		    				<td>
+								{% if contactwebform.pays is empty %}-{% else %}{{ contactwebform.pays }}{% endif %}
+		    				</td>
+		    			</tr>
+	    			</tbody>
+	    		</table>
+	    	</div>
+	    	<div class="col-md-6">
+	    		<table class="contact-view-table">
+	    			<tbody>
+		    			<tr>
+		    				<td>
+								Nom de l'organisation : 		    				
+							</td>
+		    				<td>
+								{% if contactwebform.nomCompte is empty %}-{% else %}{{ contactwebform.nomCompte }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Téléphone fixe : 
+							</td>
+		    				<td>
+								{% if contactwebform.telephoneFixe is empty %}-{% else %}{{ contactwebform.telephoneFixe }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Tél. portable pro : 
+							</td>
+		    				<td>
+								{% if contactwebform.telephonePortable is empty %}-{% else %}{{ contactwebform.telephonePortable }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Email : 
+							</td>
+		    				<td>
+								{% if contactwebform.email is empty %}-{% else %}{{ contactwebform.email }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								Fax : 
+							</td>
+		    				<td>
+								{% if contactwebform.fax is empty %}-{% else %}{{ contactwebform.fax }}{% endif %}
+		    				</td>
+		    			</tr>
+		    			<tr>
+		    				<td>
+								URL du site web : 
+							</td>
+		    				<td>
+								{% if contactwebform.url is empty %}-{% else %}{{ contactwebform.url }}{% endif %}
+		    				</td>
+		    			</tr>
+	    			</tbody>
+	    		</table>
+	    	</div>
+		</div>
+
+
+<hr />
+
+
+		<div class="row" id="defaut">
+			<div class="col-md-12">
+				<h1>Valeurs par défaut d'un nouveau contact</h1>
+			</div>
+			<div class="col-md-12">
+				<table class="contact-view-table">
+					<tbody>
+						<tr>
+							<td>
+								Gestionnaire du contact : 
+							</td>
+							<td>
+								{{ contactwebform.userGestion }}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Type de relation commerciale
+							</td>  
+							<td>
+								<ul>
+								{% for type in contactwebform.settings if type.parametre == 'TYPE' %}
+									<li>{{ type.valeur }}</li>  				
+								{% endfor %}  
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-6">
+				<table class="contact-view-table">
+					<tbody>
+						<tr>
+							<td>
+								Réseau : 
+							</td>
+							<td>
+								{% if contactwebform.reseau is empty %}
+									-
+								{% else %}
+									{{ contactwebform.reseau.valeur }}
+								{% endif %}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Carte de voeux :
+							</td>  
+							<td>
+							{% if contactwebform.carteVoeux == true %}
+								<span class="glyphicon glyphicon-ok"></span>
+							{% endif %}	    	
+							</td>
+						</tr>
+						<tr>
+							<td>Thèmes d'intérêt</td> 
+							<td>
+								<ul>
+								{% for theme in contactwebform.settings if theme.parametre == 'THEME_INTERET' %}
+									<li>{{ theme.valeur }}</li>
+								{% endfor %}
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="col-md-6">
+				<table class="contact-view-table">
+					<tbody>
+						<tr>
+							<td>
+								Origine : 
+							</td>
+							<td>
+								{% for type in contactwebform.settings if type.parametre == 'TYPE' %}
+								
+								{% endfor %}
+								{% if contactwebform.origine is empty %}
+									-
+								{% else %}
+									{{ contactwebform.origine.valeur }}	
+								{% endif %}
+							</td>
+						</tr>
+						<tr>
+							<td>Newsletter</td>  
+							<td>
+								{% if contactwebform.newsletter == true %}
+									<span class="glyphicon glyphicon-ok"></span>
+								{% endif %}	    	
+							</td> 
+						</tr>
+						<tr>
+							<td>
+								Services d'intérêt
+							</td>  
+							<td>
+								<ul>
+								{% for service in contactwebform.settings if service.parametre == 'SERVICE_INTERET' %}
+									<li>{{ service.valeur }}</li>
+								{% endfor %} 
+								</ul>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+<hr />
+		<div class="row" id="impulsion">
+			<div class="col-md-12">
+				<h1>Suivi à ajouter</h1>
+			</div>
+			<div class="col-md-12">
+				<table class="contact-view-table">
+					<tbody>
+						<tr>
+							<td>
+								Gestionnaire du suivi : 
+							</td>
+							<td>
+								{% if contactwebform.userGestion is empty %}
+										-
+								{% else %}
+									{{ contactwebform.userGestion }}
+								{% endif %}
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+					    		  <p>
+					    		  	<span class="glyphicon glyphicon-time"></span>
+									{% if contactwebform.delaiUnit is not null and contactwebform.delaiNum is not null %}
+									    {% if contactwebform.delaiUnit == "WEEK" %}
+					    					Toutes
+					    				{% else %}
+					    					Tous
+					    				{% endif %}
+					    				les {{ contactwebform.delaiNum }}
+					    				{% if contactwebform.delaiUnit == "DAY" %}
+					    					jours
+					    				{% elseif contactwebform.delaiUnit == "WEEK" %}
+					    					semaines
+					    				{% else %}
+					    					mois
+					    				{% endif %}
+					    			{% else %}
+					    				Pas de suivi
+								    {% endif %}
+							    </p>
+							</td>  
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+

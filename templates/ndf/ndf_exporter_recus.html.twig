@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+      <title>Note de frais</title>
+
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" />
+      <link rel="stylesheet" type="text/css" href="{{ app.request.schemeAndHttpHost ~ asset('css/ndf_pdf.css') }}" />
+
+      <style>
+				thead { display: table-header-group }
+				tfoot { display: table-row-group }
+				tr { page-break-inside: avoid }
+				#recus_table tr th{
+					background-color: {{ app.user.company.color }};
+					color: #FFFFFF;
+				}
+
+			</style>
+
+  </head>
+  <body>
+
+		{% for recu in ndf.recus %}
+			<h2>Reçu #{{ recu.id }}</h2>
+			{% if recu.fileType == "pdf" %}
+			{% set whole = recu.path~'/'~recu.file %}
+		  <img src="{{ asset('images/logo-couleur-500px.png') }}" width="100" />
+
+
+			{% else %}
+				<p class="center">
+					<img src="/{{ recu.path }}/{{ recu.file }}" alt="" />
+				</p>
+			{% endif %}
+
+			<span class="break"></span>
+		{% endfor %}
+
+	</body>
+</html>
