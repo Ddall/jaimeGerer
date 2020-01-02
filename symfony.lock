@@ -225,9 +225,6 @@
             "config/packages/sensio_framework_extra.yaml"
         ]
     },
-    "shtumi/useful-bundle": {
-        "version": "dev-master"
-    },
     "stfalcon/tinymce-bundle": {
         "version": "v2.5.0"
     },

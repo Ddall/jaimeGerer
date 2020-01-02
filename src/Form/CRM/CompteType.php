@@ -2,8 +2,10 @@
 
 namespace App\Form\CRM;
 
+use App\Entity\CRM\Compte;
+use App\Entity\Settings;
+use App\Entity\User;
 use Doctrine\ORM\EntityRepository;
-use Shtumi\UsefulBundle\Form\Type\AjaxAutocompleteType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -70,7 +72,7 @@ class CompteType extends AbstractType
         	))
             ->add('pays', TextType::class, array(
             	'required' => false,
-            	'label' => 'Pays'        	
+            	'label' => 'Pays'
             ))
             ->add('nomFacturation', TextType::class, array(
                 'required' => false,
@@ -94,16 +96,16 @@ class CompteType extends AbstractType
             ))
             ->add('paysFacturation', TextType::class, array(
                 'required' => false,
-                'label' => 'Pays (facturation)' ,        
+                'label' => 'Pays (facturation)',
             ))
             ->add('description', TextareaType::class, array(
             	'required' => false,
             	'label' => 'Description'
         	))
-            ->add('compteParent', AjaxAutocompleteType::class, array(
-            		'entity_alias'=>'comptes',
-            		'required' => false,
-            		'label' => 'Organisation parente'
+            ->add('compteParent', EntityType::class, array(
+                'class' => Compte::class,
+                'required' => false,
+                'label' => 'Organisation parente'
            	))
             ->add('secteurActivite', EntityType::class, array(
                 'class'=>'App:Settings',
@@ -155,7 +157,8 @@ class CompteType extends AbstractType
                     'PUBLIC' => 'Public',
                     'PRIVE' => 'Privé'
                 )
-            ));
+            ))
+        ;
 
     }
 

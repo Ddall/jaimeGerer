@@ -13,7 +13,6 @@
         "parsecsv/php-parsecsv": "^1.1",
         "phpoffice/phpexcel": "^1.8",
         "sensio/framework-extra-bundle": "^5.5",
-        "shtumi/useful-bundle": "dev-master",
         "stfalcon/tinymce-bundle": "^2.5",
         "symfony/asset": "4.4.*",
         "symfony/console": "4.4.*",

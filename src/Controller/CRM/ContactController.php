@@ -15,6 +15,7 @@ use PHPExcel_IOFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -153,7 +154,7 @@ class ContactController extends AbstractController
 			$form->remove('ville');
 			$form->remove('region');
 			$form->remove('pays');
-            $form->add('compte_name', \Symfony\Component\Form\Extension\Core\Type\TextType::class, array(
+            $form->add('compte_name', TextType::class, array(
                 'required' => true,
                 'mapped' => false,
                 'label' => 'Organisation',

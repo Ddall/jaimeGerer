@@ -8,6 +8,8 @@ use App\Form\Compta\UploadReleveBancaireType;
 use App\Util\DependancyInjectionTrait\ReleveBancaireServiceTrait;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -55,21 +57,21 @@ class ReleveBancaireController extends AbstractController
 				'choices' => $arr_comptesBancaires,
 				'attr' => array('class' => 'compte-select')
 			))
-			->add('year', \Symfony\Component\Form\Extension\Core\Type\ChoiceType::class, array(
+			->add('year', ChoiceType::class, array(
 				'required' => true,
 				'label' => 'Année',
 				'choices' => $arr_years,
 				'attr' => array('class' => 'month-select'),
 				'data' => $currentYear
 			))
-			->add('month', \Symfony\Component\Form\Extension\Core\Type\ChoiceType::class, array(
+			->add('month', ChoiceType::class, array(
 				'required' => true,
 				'label' => 'Mois',
 				'choices' => $arr_months,
 				'attr' => array('class' => 'year-select'),
 				'data' => $currentMonth
 			))
-			->add('submit', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class, array(
+			->add('submit', SubmitType::class, array(
 				'attr' => array('class' => 'btn btn-success'),
 				'label' => 'Afficher'
 			));

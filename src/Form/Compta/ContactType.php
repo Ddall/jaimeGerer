@@ -2,8 +2,8 @@
 
 namespace App\Form\Compta;
 
+use App\Entity\CRM\Compte;
 use Doctrine\ORM\EntityRepository;
-use Shtumi\UsefulBundle\Form\Type\AjaxAutocompleteType;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -78,8 +78,8 @@ class ContactType extends AbstractType
             	'required' => false,
             	'label' => 'Description'
         	))
-            ->add('compteParent', AjaxAutocompleteType::class, array(
-            		'entity_alias'=>'comptes',
+            ->add('compteParent', EntityType::class, array(
+            		'class' => Compte::class,
             		'required' => false,
             		'label' => 'Organisation parente'
            	))
