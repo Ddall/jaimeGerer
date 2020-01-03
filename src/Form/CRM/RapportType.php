@@ -13,12 +13,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class RapportType extends AbstractType
 {
 
+    protected $type;
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $this->type = $options['type'];
+
         $builder
             ->add('nom', TextType::class, array(
         		'label' => 'Nom du rapport',
