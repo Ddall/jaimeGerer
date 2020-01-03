@@ -451,7 +451,7 @@ class NDFController extends AbstractController
 				$ndf->addDepense($depense);
 
 				//ecrire dans le journal des achats
-				$this->journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
+				$this->journalAchatService->journalAchatsAjouterDepenseAction(null, $depense);
 			}
 
 			$this->numService->updateDepenseNum($ndf->getUser()->getCompany(), $currentNum);
@@ -597,7 +597,7 @@ class NDFController extends AbstractController
 				}
 
 				//ecrire dans le journal des achats
-				$this->journalAchatsService->journalAchatsAjouterDepenseAction(null, $depense);
+				$this->journalAchatService->journalAchatsAjouterDepenseAction(null, $depense);
 			}
 
 			$em->persist($ndf);

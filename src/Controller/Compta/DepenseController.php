@@ -294,7 +294,7 @@ class DepenseController extends AbstractController
 
 				$settingsRepository = $em->getRepository('App:Settings');
 				$settingsNum = $settingsRepository->findOneBy(array('module' => 'COMPTA', 'parametre' => 'NUMERO_DEPENSE', 'company'=>$this->getUser()->getCompany()));
-				if( count($settingsNum) == 0)
+				if(is_null($settingsNum) || (is_countable($settingsNum) && count($settingsNum) == 0))
 				{
 					$settingsNum = new Settings();
 					$settingsNum->setModule('COMPTA');
@@ -409,7 +409,7 @@ class DepenseController extends AbstractController
 				$em->flush();
 
 				//ecrire dans le journal des achats
-				$this->journalAchatsService ->journalAchatsAjouterDepenseAction(null, $depense);
+				$this->journalAchatService->journalAchatsAjouterDepenseAction(null, $depense);
 				
 				if(count($depense->getSousTraitances()) > 1){
 					return $this->redirect($this->generateUrl(
@@ -576,7 +576,7 @@ class DepenseController extends AbstractController
 
 			$settingsRepository = $em->getRepository('App:Settings');
 			$settingsNum = $settingsRepository->findOneBy(array('module' => 'COMPTA', 'parametre' => 'NUMERO_DEPENSE', 'company'=>$this->getUser()->getCompany()));
-			if( count($settingsNum) == 0)
+			if(is_null($settingsNum) || (is_countable($settingsNum) && count($settingsNum) == 0))
 			{
 				$settingsNum = new Settings();
 				$settingsNum->setModule('COMPTA');
@@ -640,7 +640,7 @@ class DepenseController extends AbstractController
 
 			$em->flush();
 
-			$this->journalAchatsService ->journalAchatsAjouterDepenseAction(null, $depense);
+			$this->journalAchatService ->journalAchatsAjouterDepenseAction(null, $depense);
 
 
 			return new JsonResponse(array(
@@ -809,7 +809,7 @@ class DepenseController extends AbstractController
 			}
 
 			//ecrire dans le journal des achats
-			$this->journalAchatsService ->journalAchatsAjouterDepenseAction($numEcriture, $depense);
+			$this->journalAchatService ->journalAchatsAjouterDepenseAction($numEcriture, $depense);
 
 			$em->flush();
 
@@ -880,7 +880,7 @@ class DepenseController extends AbstractController
 			}
 
 			//ecrire dans le journal des achats
-			$this->journalAchatsService ->journalAchatsAjouterDepenseAction($numEcriture, $depense);
+			$this->journalAchatService ->journalAchatsAjouterDepenseAction($numEcriture, $depense);
 
 			$em->flush();
 
@@ -923,7 +923,8 @@ class DepenseController extends AbstractController
 
 			$numEcriture = $this->numService->getNumEcriture($this->getUser()->getCompany());
 			$numEcriture--;
-			$numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
+
+			$this->numService->updateNumEcriture($this->getUser()->getCompany(), $numEcriture);
 
 			return $this->redirect($this->generateUrl(
 					'compta_depense_liste'
@@ -1408,7 +1409,7 @@ class DepenseController extends AbstractController
 		foreach($arr_depenses as $depense){
 
 			//ecrire dans le journal des achats
-			$this->journalAchatsService ->journalAchatsAjouterDepenseAction(null, $depense);
+			$this->journalAchatService ->journalAchatsAjouterDepenseAction(null, $depense);
 		}
 
 		//suppression du fichier temporaire
@@ -1596,8 +1597,8 @@ class DepenseController extends AbstractController
 // 			}
 
 // 			//ecrire dans le journal des achats
-// 			$this->journalAchatsService  = $this->get('appbundle.compta_journal_achats_controller');
-// 			$this->journalAchatsService ->journalAchatsAjouterDepenseAction(null, $depense);
+// 			$this->journalAchatService  = $this->get('appbundle.compta_journal_achats_controller');
+// 			$this->journalAchatService ->journalAchatsAjouterDepenseAction(null, $depense);
 
 // 		}
 
@@ -1634,7 +1635,7 @@ class DepenseController extends AbstractController
 // 			}
 
 // 			//ecrire dans le journal des achats
-// 			$this->journalAchatsService ->journalAchatsAjouterAvoirAction(null, $avoir);
+// 			$this->journalAchatService ->journalAchatsAjouterAvoirAction(null, $avoir);
 
 // 		}
 

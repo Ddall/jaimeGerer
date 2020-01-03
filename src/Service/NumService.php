@@ -29,7 +29,7 @@ class NumService {
                 ));
 
                 //initialize num if it doens't exist
-                if(is_null($settingsNum) || count($settingsNum) == 0) {
+                if(is_null($settingsNum) || (is_countable($settingsNum) && count($settingsNum) == 0)) {
                     $settingsNum = new Settings();
                     $settingsNum->setModule('COMPTA');
                     $settingsNum->setParametre('NUMERO_DEPENSE');
@@ -75,7 +75,7 @@ class NumService {
             'company'=> $company
         ));
 
-        if( count($settingsNum) == 0) {
+        if(is_null($settingsNum) || (is_countable($settingsNum) && count($settingsNum) == 0)) {
             $settingsNum = new Settings();
             $settingsNum->setModule('COMPTA');
             $settingsNum->setParametre('NUMERO_DEPENSE');
@@ -150,7 +150,7 @@ class NumService {
             'company'=> $company
         ));
 
-        if( is_null($settingsNum) || count($settingsNum) == 0) {
+        if(is_null($settingsNum) || (is_countable($settingsNum) && count($settingsNum) == 0)) {
             $settingsNum = new Settings();
             $settingsNum->setModule('COMPTA');
             $settingsNum->setParametre('NUMERO_ECRITURE');
