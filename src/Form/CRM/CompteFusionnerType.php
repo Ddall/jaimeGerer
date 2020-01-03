@@ -16,6 +16,7 @@ class CompteFusionnerType extends AbstractType
 
     protected $compteA;
     protected $compteB;
+    protected $builder;
 
     /**
      * @param FormBuilderInterface $builder

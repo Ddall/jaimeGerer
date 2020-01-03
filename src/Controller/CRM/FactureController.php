@@ -328,7 +328,7 @@ class FactureController extends AbstractController
 				}
 
 				//ecrire dans le journal de vente
-				$this->journalVenteService->journalVentesAjouterFactureAction(null, $facture);
+				$this->journalVentesService->journalVentesAjouterFactureAction(null, $facture);
 			}
 
 			return $this->redirect($this->generateUrl(
@@ -381,7 +381,7 @@ class FactureController extends AbstractController
 			$em->flush();
 
 			//ecrire dans le journal de vente
-			$this->journalVenteService->journalVentesAjouterFactureAction(null, $facture);
+			$this->journalVentesService->journalVentesAjouterFactureAction(null, $facture);
 
 			return $this->redirect($this->generateUrl(
 				'crm_facture_voir', 
@@ -465,7 +465,7 @@ class FactureController extends AbstractController
 					$em->remove($ligne);
 				}
 				//ecrire dans le journal de vente
-				$result = $this->journalVenteService->journalVentesAjouterFactureAction($numEcriture, $facture);
+				$result = $this->journalVentesService->journalVentesAjouterFactureAction($numEcriture, $facture);
 			}
 
 			$em->flush();
@@ -769,7 +769,7 @@ class FactureController extends AbstractController
 
 		if($activationCompta){
 			//ecrire dans le journal de vente
-			$result = $this->journalVenteService->journalVentesAjouterFactureAction(null, $newFacture);
+			$result = $this->journalVentesService->journalVentesAjouterFactureAction(null, $newFacture);
 		}
 
 		$em->flush();

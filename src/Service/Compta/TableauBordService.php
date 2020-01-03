@@ -3,6 +3,7 @@
 namespace App\Service\Compta;
 
 use App\Entity\Compta\PrevTableauBord;
+use App\Service\LegacyExcelFactory;
 use App\Service\UtilsService;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -24,15 +25,17 @@ class TableauBordService{
   protected $arr_totaux;
   protected $arr_depenses_next_year;
   protected $arr_repartitionCoutsParCompteComptable;
+  protected $phpExcel;
 
     /**
      * TableauBordService constructor.
      * @upgrade-nodes removed @phpexcel from this
      */
-  public function __construct(EntityManagerInterface $em, UtilsService $utilsService)
+  public function __construct(EntityManagerInterface $em, UtilsService $utilsService, LegacyExcelFactory $phpExcel)
   {
     $this->em = $em;
     $this->utilsService = $utilsService;
+    $this->phpExcel = $phpExcel;
 
     $this->arr_postes = array(
       'actions_commerciales' => 'Actions commerciales',
@@ -1347,8 +1350,7 @@ class TableauBordService{
     $path = __DIR__.'/../../../../web/files/compta/tableau_bord/';
 	$fileName = 'fichier_import_tableau_bord_previsionnel.xlsx';
 
-
-	// $objPHPExcel = $this->phpExcel->createPHPExcelObject($path.$fileName); // @todo replace phpexcel
+    $objPHPExcel = $this->phpExcel->createPHPExcelObject($path.$fileName); // @todo replace phpexcel
     $tableauPrevisonnel = $this->creerTableauPrevisionnel(date('Y'), $company);
 
     //actions commerciales

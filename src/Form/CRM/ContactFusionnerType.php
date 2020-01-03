@@ -17,6 +17,7 @@ class ContactFusionnerType extends AbstractType
 	
     protected $contactA;
     protected $contactB;
+    protected $builder;
 
     /**
      * @param FormBuilderInterface $builder

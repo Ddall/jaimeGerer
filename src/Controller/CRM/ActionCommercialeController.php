@@ -1150,7 +1150,7 @@ class ActionCommercialeController extends AbstractController
 				}
 
 				//ecrire dans le journal de vente
-				$this->journalVenteService->journalVentesAjouterFactureAction(null, $facture);
+				$this->journalVentesService->journalVentesAjouterFactureAction(null, $facture);
 			}
 
 			$em->flush();
@@ -1331,7 +1331,7 @@ class ActionCommercialeController extends AbstractController
 					}
 
 					//ecrire dans le journal de vente
-					$this->journalVenteService->journalVentesAjouterFactureAction(null, $facture);
+					$this->journalVentesService->journalVentesAjouterFactureAction(null, $facture);
 				}
 
 				$em->flush();

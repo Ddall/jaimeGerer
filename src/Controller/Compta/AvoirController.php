@@ -6,6 +6,7 @@ use App\Entity\Compta\Avoir;
 use App\Entity\CRM\PriseContact;
 use App\Form\Compta\AvoirType;
 use App\Util\DependancyInjectionTrait\JournalAchatsTrait;
+use App\Util\DependancyInjectionTrait\JournalVentesTrait;
 use App\Util\DependancyInjectionTrait\NumServiceTrait;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +21,7 @@ class AvoirController extends AbstractController
 
     use NumServiceTrait;
     use JournalAchatsTrait;
-    use JournalAchatsTrait;
+    use JournalVentesTrait;
     
 
     /**
@@ -235,7 +236,7 @@ class AvoirController extends AbstractController
 						$em->remove($ligne);
 					}
 					//ecrire dans le journal de vente
-					$result = $this->journalVenteService->journalVentesAjouterAvoirAction($numEcriture, $avoir);
+					$result = $this->journalVentesService->journalVentesAjouterAvoirAction($numEcriture, $avoir);
 				} else {
 					foreach($avoir->getJournalAchats() as $ligne){
 						$numEcriture = $ligne->getNumEcriture();
