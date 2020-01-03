@@ -7,7 +7,7 @@ services:
     # build stages
     php:
         build:
-            context: .
+            context: ./docker/php
             target: php_dev
         volumes:
             - ./:/var/www/symfony:delegated
