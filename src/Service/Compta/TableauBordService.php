@@ -25,7 +25,6 @@ class TableauBordService{
   protected $arr_totaux;
   protected $arr_depenses_next_year;
   protected $arr_repartitionCoutsParCompteComptable;
-  protected $phpExcel;
 
     /**
      * TableauBordService constructor.

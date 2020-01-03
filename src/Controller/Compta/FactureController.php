@@ -487,7 +487,7 @@ class FactureController extends AbstractController
 				'required' => false,
 				'label' => 'Recevoir une copie de l\'email'
 		));
-		$form->add('submit', \Symfony\Component\Form\Extension\Core\Type\SubmitType::class, array(
+		$form->add('submit', SubmitType::class, array(
 				'label' => 'Envoyer',
 				'attr' => array('class' => 'btn btn-success')
 		));
