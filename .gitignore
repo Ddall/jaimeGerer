@@ -6,7 +6,6 @@ var/log/
 var/cache/
 public/bundles/
 public/files/compta/*
-composer.lock
 composer.phar
 README.md
 web/upload/*
