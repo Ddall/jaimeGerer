@@ -28,7 +28,6 @@ class TableauBordService{
 
     /**
      * TableauBordService constructor.
-     * @upgrade-nodes removed @phpexcel from this
      */
   public function __construct(EntityManagerInterface $em, UtilsService $utilsService, LegacyExcelFactory $phpExcel)
   {
