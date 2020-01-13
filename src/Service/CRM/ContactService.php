@@ -57,7 +57,7 @@ class ContactService
         $contactRepo = $this->em->getRepository('App:CRM\Contact');
         $settingsRepo = $this->em->getRepository('App:Settings');
 
-        $path = $this->rootDir . '/../web/upload/crm/contact_import';
+        $path = $this->rootDir . '/../public/upload/crm/contact_import';
         $filename = $session->get('validation_import_contact_filename');
 
         // charger PHPEXCEL de choisir le reader adéquat
@@ -217,7 +217,7 @@ class ContactService
         $contactRepo = $this->em->getRepository('App:CRM\Contact');
         $settingsRepo = $this->em->getRepository('App:Settings');
 
-        $path = $this->rootDir . '/../web/upload/crm/contact_import';
+        $path = $this->rootDir . '/../public/upload/crm/contact_import';
         $filename = $session->get('validation_import_contact_filename');
 
         // charger PHPEXCEL de choisir le reader adéquat

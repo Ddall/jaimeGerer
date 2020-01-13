@@ -296,7 +296,7 @@ class CompteComptableController extends AbstractController
 
 		//enregistrement temporaire du fichier uploadé
 		$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/plan_comptable';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/plan_comptable';
 		$file->move($path, $filename);
 
 		//enregistrement en session du chemin vers le fichier temporaire
@@ -635,7 +635,7 @@ class CompteComptableController extends AbstractController
 
 			//enregistrement temporaire du fichier uploadé
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/plan_comptable';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/plan_comptable';
 			$file->move($path, $filename);
 
 			//enregistrement en session du chemin vers le fichier temporaire

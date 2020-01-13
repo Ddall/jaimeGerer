@@ -315,7 +315,7 @@ class SettingsController extends AbstractController
 
 		//enregistrement du fichier uploadé
 		$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/pub_facture/';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/pub_facture/';
 		$file->move($path, $filename);
 
 		$settingsRepo = $em->getRepository('App:Settings');

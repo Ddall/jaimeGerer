@@ -537,7 +537,7 @@ class CompteController extends AbstractController
 
 			//enregistrement temporaire du fichier uploadé
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/import_comptes';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/import_comptes';
 			$file->move($path, $filename);
 			$session = $request->getSession();
 			$session->set('import_comptes_filename', $filename);
@@ -559,7 +559,7 @@ class CompteController extends AbstractController
 		$session = $request->getSession();
 
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/import_comptes';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/import_comptes';
 		$filename = $session->get('import_comptes_filename');
 		$fh = fopen($path.'/'.$filename, 'r+');
 

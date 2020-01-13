@@ -83,7 +83,7 @@ class CompanyAdminController extends AbstractController
 
     //enregistrement temporaire du fichier uploadé
     $filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-    $path =  $this->get('kernel')->getRootDir().'/../web/upload/tampon/';
+    $path =  $this->get('kernel')->getRootDir().'/../public/upload/tampon/';
     $file->move($path, $filename);
 
     $oldTampon = null;
@@ -120,7 +120,7 @@ class CompanyAdminController extends AbstractController
 
     //enregistrement temporaire du fichier uploadé
     $filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-    $path =  $this->get('kernel')->getRootDir().'/../web/upload/logo/';
+    $path =  $this->get('kernel')->getRootDir().'/../public/upload/logo/';
     $file->move($path, $filename);
 
     $oldLogo = null;

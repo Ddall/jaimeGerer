@@ -366,7 +366,7 @@ class UserController extends AbstractController
 
         //enregistrement temporaire du fichier uploadé
         $filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-        $path =  $this->get('kernel')->getRootDir().'/../web/upload/signature/'.$user->getId().'/';
+        $path =  $this->get('kernel')->getRootDir().'/../public/upload/signature/'.$user->getId().'/';
         $file->move($path, $filename);
 
         $oldSignature = null;

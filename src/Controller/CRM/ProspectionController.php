@@ -30,7 +30,7 @@ class ProspectionController extends AbstractController
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
 			$arr_filenames[] = array('nom_original' => $file->getClientOriginalName(),
 									 'nouveau_nom'  => $filename);
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/prospection_contact_import';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/prospection_contact_import';
 			$file->move($path, $filename);
 
 		}
@@ -62,7 +62,7 @@ class ProspectionController extends AbstractController
 		//~ var_dump($files); exit;
 		$output = array();
 		//~ $form_mapping = array();
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/prospection_contact_import';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/prospection_contact_import';
 		$headers = array();
 		$contactData = array();
 		$enteteFichierImport = array();
@@ -464,7 +464,7 @@ class ProspectionController extends AbstractController
             $this->prospectionService->checkIfProspectList($newContacts, $this->getUser(), $prospection);
 
 			$filenames = $session->get('prospection_import_contacts_filename');
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/prospection_contact_import';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/prospection_contact_import';
 			foreach( $filenames as $k=>$v )
 			{
 				//suppression du fichier temporaire

@@ -279,7 +279,7 @@ class User extends BaseUser
     }
 
     public function getAvatarPath(){
-        return '/web/upload/avatar/'.$this->id.'/'.$this->avatar;
+        return '/public/upload/avatar/'.$this->id.'/'.$this->avatar;
     }
 
     /**

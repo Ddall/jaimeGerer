@@ -945,7 +945,7 @@ class DepenseController extends AbstractController
 		$session = $request->getSession();
 
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_depenses';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_depenses';
 		$filename = $session->get('import_historique_depense_filename');
 		$fh = fopen($path.'/'.$filename, 'r+');
 
@@ -1025,7 +1025,7 @@ class DepenseController extends AbstractController
 		$contactRepo = $this->getDoctrine()->getManager()->getRepository('App:CRM\Contact');
 
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_depenses';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_depenses';
 		$filename = $session->get('import_historique_depense_filename');
 
 		//recuperation du mapping
@@ -1268,7 +1268,7 @@ class DepenseController extends AbstractController
 		$arr_nums = $compteComptableRepo->findAllNumForCompany($this->getUser()->getCompany());
 
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_depenses';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_depenses';
 		$filename = $session->get('import_historique_depense_filename');
 
 		//recuperation du mapping
@@ -1437,7 +1437,7 @@ class DepenseController extends AbstractController
 		$file = $arr_files["files"][0];
 		//enregistrement temporaire du fichier uploadé
 		$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_depenses';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_depenses';
 		$file->move($path, $filename);
 
 		$session = $requestData->getSession();
@@ -1479,7 +1479,7 @@ class DepenseController extends AbstractController
 
 			//enregistrement temporaire du fichier uploadé
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_depenses';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_depenses';
 			$file->move($path, $filename);
 			$session = $request->getSession();
 			$session->set('import_historique_depense_filename', $filename);

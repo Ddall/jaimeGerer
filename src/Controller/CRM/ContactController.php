@@ -573,7 +573,7 @@ class ContactController extends AbstractController
 			
 			//enregistrement temporaire du fichier uploadé
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-validation_import_contact-'.$file->getClientOriginalName();
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/contact_import';
 			$file->move($path, $filename);
 
 			$session = $request->getSession();
@@ -639,7 +639,7 @@ class ContactController extends AbstractController
 		$arr_results = $this->contactService->importFile($this->getUser(), $update);
 
 		//supprimer fichier import
-        $path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
+        $path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/contact_import';
 		$filename = $session->get('validation_import_contact_filename');
 		// unlink($path.DIRECTORY_SEPARATOR.$filename);
 
@@ -662,7 +662,7 @@ class ContactController extends AbstractController
 		$compteRepo = $em->getRepository('App:CRM\Compte');
 		$contactRepo = $em->getRepository('App:CRM\Contact');
 
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/crm/contact_import';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/crm/contact_import';
 		$filename = $session->get('validation_import_contact_filename');
 
 		// charger PHPEXCEL de choisir le reader adéquat

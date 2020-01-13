@@ -880,7 +880,7 @@ class FactureController extends AbstractController
 		$file = $arr_files["files"][0];
 		///enregistrement temporaire du fichier uploadé
 		$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_factures';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_factures';
 		$file->move($path, $filename);
 		$session = $requestData->getSession();
 		$session->set('import_historique_facture_filename', $filename);
@@ -914,7 +914,7 @@ class FactureController extends AbstractController
 
 			//enregistrement temporaire du fichier uploadé
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_factures';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_factures';
 			$file->move($path, $filename);
 			$session = $request->getSession();
 			$session->set('import_historique_facture_filename', $filename);
@@ -936,7 +936,7 @@ class FactureController extends AbstractController
 		$session = $request->getSession();
 
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_factures';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_factures';
 		$filename = $session->get('import_historique_facture_filename');
 		$fh = fopen($path.'/'.$filename, 'r+');
 
@@ -1010,7 +1010,7 @@ class FactureController extends AbstractController
 		$userRepo = $this->getDoctrine()->getManager()->getRepository('App:User');
 
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_factures';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_factures';
 		$filename = $session->get('import_historique_facture_filename');
 
 		//recuperation du mapping
@@ -1147,7 +1147,7 @@ class FactureController extends AbstractController
 		$settingsRepo = $em->getRepository('App:Settings');
 
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/historique_factures';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/historique_factures';
 		$filename = $session->get('import_historique_facture_filename');
 
 		//recuperation du mapping

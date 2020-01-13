@@ -12,7 +12,7 @@ class ReleveBancaireService {
 
   public function __construct(string $rootDir = '', EntityManagerInterface $em)
   {
-    $this->path = $rootDir.'/../web/upload/compta/releve_bancaire/';
+    $this->path = $rootDir.'/../public/upload/compta/releve_bancaire/';
     $this->em = $em;
   }
 

@@ -89,7 +89,7 @@ class ComptaController extends AbstractController
 		$file = $arr_files["files"][0];
 		//enregistrement temporaire du fichier uploadé
 		$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$file->getClientOriginalName();
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/reports_a_nouveau';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/reports_a_nouveau';
 		$file->move($path, $filename);
 
 		//lecture du fichier Excel

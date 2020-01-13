@@ -134,7 +134,7 @@ class ReleveBancaireController extends AbstractController
 
 			//enregistrement temporaire du fichier uploadé
 			$filename = date('Ymdhms').'-'.$this->getUser()->getId().'-'.$compteBancaire->getId().'-'.$file->getClientOriginalName();
-			$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/releve_bancaire';
+			$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/releve_bancaire';
 			$file->move($path, $filename);
 
 			$session = $request->getSession();
@@ -172,7 +172,7 @@ class ReleveBancaireController extends AbstractController
 		$em = $this->getDoctrine()->getManager();
 		
 		//recuperation et ouverture du fichier temporaire uploadé
-		$path =  $this->get('kernel')->getRootDir().'/../web/upload/compta/releve_bancaire';
+		$path =  $this->get('kernel')->getRootDir().'/../public/upload/compta/releve_bancaire';
 		$filename = $session->get('import_releve_filename');
 		$fh = fopen($path.'/'.$filename, 'r+');
 
