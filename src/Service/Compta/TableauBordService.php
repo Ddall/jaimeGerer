@@ -1345,7 +1345,7 @@ class TableauBordService{
      * @return mixed
      */
   public function exportImportPrevisionnelExcel($company){
-    $path = __DIR__.'/../../../../web/files/compta/tableau_bord/';
+    $path = __DIR__.'/../../../../public/files/compta/tableau_bord/';
 	$fileName = 'fichier_import_tableau_bord_previsionnel.xlsx';
 
     $objPHPExcel = $this->phpExcel->createPHPExcelObject($path.$fileName); // @todo replace phpexcel

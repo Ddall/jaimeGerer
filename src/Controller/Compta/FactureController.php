@@ -733,7 +733,7 @@ class FactureController extends AbstractController
 			$this->_relanceCreatePDF($facture, $message, $numRelance);
 
 			/*ENVOI COURRIER VIA MAILEVA*/
-			$path = $this->container->getParameter('kernel.root_dir').'/../web/files/compta/'.$this->getUser()->getCompany()->getId().'/relance/';
+			$path = $this->container->getParameter('kernel.root_dir').'/../public/files/compta/'.$this->getUser()->getCompany()->getId().'/relance/';
 			$nomClient = strtolower(str_ireplace(' ','', $facture->getCompte()->getNom()));
 			$accents = array('á','à','â','ä','ã','å','ç','é','è','ê','ë','í','ì','î','ï','ñ','ó','ò','ô','ö','õ','ú','ù','û','ü','ý','ÿ');
 			$sans_accents = array('a','a','a','a','a','a','c','e','e','e','e','i','i','i','i','n','o','o','o','o','o','u','u','u','u','y','y');
@@ -833,7 +833,7 @@ class FactureController extends AbstractController
 				'RIB' => $rib
 		));
 
-		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/crm/'.$this->getUser()->getCompany()->getId().'/facture/';
+		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../public/files/crm/'.$this->getUser()->getCompany()->getId().'/facture/';
 
 		$nomClient = strtolower(str_ireplace(' ','', $facture->getCompte()->getNom()));
 		$accents = array('á','à','â','ä','ã','å','ç','é','è','ê','ë','í','ì','î','ï','ñ','ó','ò','ô','ö','õ','ú','ù','û','ü','ý','ÿ', '-');
@@ -859,7 +859,7 @@ class FactureController extends AbstractController
 				'today' => $today
 		));
 
-		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/compta/'.$this->getUser()->getCompany()->getId().'/relance/';
+		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../public/files/compta/'.$this->getUser()->getCompany()->getId().'/relance/';
 
 		$nomClient = strtolower(str_ireplace(' ','', $facture->getCompte()->getNom()));
 		$accents = array('á','à','â','ä','ã','å','ç','é','è','ê','ë','í','ì','î','ï','ñ','ó','ò','ô','ö','õ','ú','ù','û','ü','ý','ÿ');

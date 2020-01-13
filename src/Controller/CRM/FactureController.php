@@ -600,7 +600,7 @@ class FactureController extends AbstractController
 				'RIB' => $rib
 		));
 
-		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/crm/'.$this->getUser()->getCompany()->getId().'/facture/';
+		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../public/files/crm/'.$this->getUser()->getCompany()->getId().'/facture/';
 
 		$nomClient = $this->utilsService->removeSpecialChars($facture->getCompte()->getNom());
 		$fileName =$pdfFolder.$facture->getNum().'.'.$nomClient.'.pdf';
@@ -815,7 +815,7 @@ class FactureController extends AbstractController
 				$arr_codesEvoliz[] = $arr_codeReq['codeEvoliz'];
 			}
 
-			$path = __DIR__.'/../../../../web/files/crm/facture/';
+			$path = __DIR__.'/../../../../public/files/crm/facture/';
 
 			/***
 			 * Creation du fichier d'import des clients dans Evoliz - on met les nouveaux en haut de la liste

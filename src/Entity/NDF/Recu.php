@@ -529,7 +529,7 @@ class Recu
     }
 
     public function getPath(){
-      return 'web/upload/ndf/'.$this->user->getCompany()->getId().'/'.$this->user->getId();
+      return 'public/upload/ndf/'.$this->user->getCompany()->getId().'/'.$this->user->getId();
     }
 
     public function getFileType(){

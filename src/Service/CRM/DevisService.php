@@ -122,7 +122,7 @@ class DevisService {
 
         $filename = 'devis_'.$devis->getNum().'.pdf';
 
-        $pdfFolder = $this->kernelRootDir.'/../web/files/crm/'.$devis->getUserCreation()->getCompany()->getId().'/devis/';
+        $pdfFolder = $this->kernelRootDir.'/../public/files/crm/'.$devis->getUserCreation()->getCompany()->getId().'/devis/';
         $nomClient = $this->utilsService->removeSpecialChars($devis->getCompte()->getNom());
         $fileName =$pdfFolder.$devis->getNum().'.'.$nomClient.'.pdf';
 

@@ -360,7 +360,7 @@ class AvoirController extends AbstractController
 				'contact_admin' => $contactAdmin->getValeur(),
 		));
 
-		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/compta/'.$this->getUser()->getCompany()->getId().'/avoir/';
+		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../public/files/compta/'.$this->getUser()->getCompany()->getId().'/avoir/';
 
 		$nomClient = strtolower(str_ireplace(' ','', $avoir->getFacture()->getCompte()->getNom()));
 		$fileName =$pdfFolder.$avoir->getNum().'.'.$nomClient.'.pdf';

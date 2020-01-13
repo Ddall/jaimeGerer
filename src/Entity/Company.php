@@ -467,7 +467,7 @@ class Company
     
     protected function getLogoUploadRootDir()
     {
-    	return __DIR__.'/../../../web/'.$this->getLogoUploadDir();
+    	return __DIR__.'/../../../public/'.$this->getLogoUploadDir();
     }
     
     /**

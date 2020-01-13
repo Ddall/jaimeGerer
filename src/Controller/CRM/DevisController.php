@@ -346,7 +346,7 @@ class DevisController extends AbstractController
 
 		$filename = 'devis_'.$devis->getNum().'.pdf';
 
-		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../web/files/crm/'.$this->getUser()->getCompany()->getId().'/devis/';
+		$pdfFolder = $this->container->getParameter('kernel.root_dir').'/../public/files/crm/'.$this->getUser()->getCompany()->getId().'/devis/';
 		$nomClient = $this->utilsService->removeSpecialChars($devis->getCompte()->getNom());
 		$fileName =$pdfFolder.$devis->getNum().'.'.$nomClient.'.pdf';
 
