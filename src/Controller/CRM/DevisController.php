@@ -8,6 +8,7 @@ use App\Entity\CRM\DocumentPrix;
 use App\Entity\CRM\Impulsion;
 use App\Entity\CRM\PriseContact;
 use App\Form\CRM\DevisType;
+use App\Util\DependancyInjectionTrait\KnpSnappyPDFTrait;
 use App\Util\DependancyInjectionTrait\OpportuniteServiceTrait;
 use App\Util\DependancyInjectionTrait\UtilsServiceTrait;
 use Swift_Attachment;
@@ -27,6 +28,7 @@ class DevisController extends AbstractController
 
     use UtilsServiceTrait;
     use OpportuniteServiceTrait;
+    use KnpSnappyPDFTrait;
 
 	/**
 	 * @Route("/crm/devis/liste/ajax/{etat}",
@@ -310,7 +312,7 @@ class DevisController extends AbstractController
 		$filename = $devis->getNum().'.'.$nomClient.'.pdf';
 
 		return new Response(
-				$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+				$this->getKnpSnappyPdf()->getOutputFromHtml($html,
 						array(
 								'margin-bottom' => '10mm',
 								'margin-top' => '10mm',
@@ -348,7 +350,7 @@ class DevisController extends AbstractController
 		$nomClient = $this->utilsService->removeSpecialChars($devis->getCompte()->getNom());
 		$fileName =$pdfFolder.$devis->getNum().'.'.$nomClient.'.pdf';
 
-		$this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
+		$this->getKnpSnappyPdf()->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
 
 		return $fileName;
 	}

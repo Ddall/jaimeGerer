@@ -7,6 +7,7 @@ use App\Entity\Compta\OperationDiverse;
 use App\Entity\Compta\RemiseCheque;
 use App\Form\Compta\RemiseChequeType;
 use App\Service\NumService;
+use App\Util\DependancyInjectionTrait\KnpSnappyPDFTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,6 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class RemiseChequeController extends AbstractController
 {
+
+    use KnpSnappyPDFTrait;
+
 	/**
 	 * @Route("/compta/remise-cheque", name="compta_remise_cheque_liste")
 	 */
@@ -421,7 +425,7 @@ class RemiseChequeController extends AbstractController
 
 		//$filename = $facture->getNum().'.'.$nomClient.'.pdf';
 		return new Response(
-				$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+				$this->getKnpSnappyPdf()->getOutputFromHtml($html,
 						array(
 								'margin-bottom' => '10mm',
 								'margin-top' => '10mm',

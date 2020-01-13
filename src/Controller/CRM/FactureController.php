@@ -12,6 +12,7 @@ use App\Service\Compta\CompteComptableService;
 use App\Service\LegacyExcelFactory as Factory;
 use App\Service\UtilsService;
 use App\Util\DependancyInjectionTrait\JournalVentesTrait;
+use App\Util\DependancyInjectionTrait\KnpSnappyPDFTrait;
 use App\Util\DependancyInjectionTrait\NumServiceTrait;
 use App\Util\DependancyInjectionTrait\UtilsServiceTrait;
 use PHPExcel;
@@ -33,6 +34,7 @@ class FactureController extends AbstractController
 	use UtilsServiceTrait;
 	use NumServiceTrait;
 	use JournalVentesTrait;
+	use KnpSnappyPDFTrait;
 
 	/**
 	 * @Route("/crm/facture/liste", name="crm_facture_liste")
@@ -559,7 +561,7 @@ class FactureController extends AbstractController
 		
 		$filename = $facture->getNum().'.'.$nomClient.'.pdf';
 		return new Response(
-				$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+				$this->getKnpSnappyPdf()->getOutputFromHtml($html,
 						array(
 								'margin-bottom' => '10mm',
 								'margin-top' => '10mm',
@@ -603,7 +605,7 @@ class FactureController extends AbstractController
 		$nomClient = $this->utilsService->removeSpecialChars($facture->getCompte()->getNom());
 		$fileName =$pdfFolder.$facture->getNum().'.'.$nomClient.'.pdf';
 
-		$this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
+		$this->getKnpSnappyPdf()->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
 
 		return $fileName;
 	}

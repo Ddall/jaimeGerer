@@ -9,6 +9,7 @@ use App\Entity\CRM\Produit;
 use App\Form\Compta\UploadHistoriqueFactureMappingType;
 use App\Form\Compta\UploadHistoriqueFactureType;
 use App\Service\MailevaService;
+use App\Util\DependancyInjectionTrait\KnpSnappyPDFTrait;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -21,6 +22,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class FactureController extends AbstractController
 {
+
+    use KnpSnappyPDFTrait;
 
 	// /**
 	//  * @Route("/compta/facture/analytique", name="compta_facture_analytique")
@@ -838,7 +841,7 @@ class FactureController extends AbstractController
 		$nomClient=str_ireplace($accents, $sans_accents, $nomClient);
 		$fileName =$pdfFolder.$facture->getNum().'.'.$nomClient.'.pdf';
 
-		$this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
+		$this->getKnpSnappyPdf()->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
 
 		return $fileName;
 	}
@@ -865,7 +868,7 @@ class FactureController extends AbstractController
 		$fileName = str_replace('-', '', $numRelance.$facture->getNum());
 		$fileName = $pdfFolder.'relance'.$fileName.'.001';
 
-		$this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
+		$this->getKnpSnappyPdf()->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
 
 		return $fileName;
 	}

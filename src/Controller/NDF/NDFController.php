@@ -10,6 +10,7 @@ use App\Form\NDF\NoteFraisType;
 use App\Form\NDF\RecuType;
 use App\Service\Compta\LettrageService;
 use App\Util\DependancyInjectionTrait\JournalAchatsTrait;
+use App\Util\DependancyInjectionTrait\KnpSnappyPDFTrait;
 use App\Util\DependancyInjectionTrait\NumServiceTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -24,6 +25,7 @@ class NDFController extends AbstractController
 
     use NumServiceTrait;
     use JournalAchatsTrait;
+    use KnpSnappyPDFTrait;
 
 	/**
 	 * @Route("/ndf/recu/upload", name="ndf_recu_upload")
@@ -749,7 +751,7 @@ class NDFController extends AbstractController
 			$filename = $ndf->getLibelle().'.pdf';
 
 			return new Response(
-					$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+					$this->getKnpSnappyPdf()->getOutputFromHtml($html,
 							array(
 									'margin-bottom' => '10mm',
 									'margin-top' => '10mm',
@@ -786,7 +788,7 @@ class NDFController extends AbstractController
 		// 	$filename = 'recus_'.$ndf->getLibelle().'.pdf';
 
 		// 	return new Response(
-		// 			$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+		// 			$this->getKnpSnappyPdf()->getOutputFromHtml($html,
 		// 					array(
 		// 							'margin-bottom' => '10mm',
 		// 							'margin-top' => '10mm',

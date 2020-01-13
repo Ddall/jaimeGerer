@@ -7,6 +7,7 @@ use App\Service\LegacyExcelFactory as Factory;
 use App\Service\UtilsService;
 use App\Util\DependancyInjectionTrait\BalanceGeneraleServiceTrait;
 use App\Util\DependancyInjectionTrait\GrandLivreServiceTrait;
+use App\Util\DependancyInjectionTrait\KnpSnappyPDFTrait;
 use App\Util\DependancyInjectionTrait\TableauBordServiceTrait;
 use App\Util\DependancyInjectionTrait\TableauTresorerieServiceTrait;
 use App\Util\DependancyInjectionTrait\TableauTVAServiceTrait;
@@ -29,6 +30,7 @@ class RapportController extends AbstractController
     use BalanceGeneraleServiceTrait;
     use TableauTVAServiceTrait;
     use GrandLivreServiceTrait;
+    use KnpSnappyPDFTrait;
 
 	/**
 	 * @Route("/compta/rapport/tva",
@@ -129,7 +131,7 @@ class RapportController extends AbstractController
 		$filename = 'tva-'.$this->getUser()->getCompany()->getNom().'.pdf';
 
 		return new Response(
-				$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+				$this->getKnpSnappyPdf()->getOutputFromHtml($html,
 						array(
 								'margin-bottom' => '10mm',
 								'margin-top' => '10mm',

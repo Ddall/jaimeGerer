@@ -7,6 +7,7 @@ use App\Entity\CRM\PriseContact;
 use App\Form\Compta\AvoirType;
 use App\Util\DependancyInjectionTrait\JournalAchatsTrait;
 use App\Util\DependancyInjectionTrait\JournalVentesTrait;
+use App\Util\DependancyInjectionTrait\KnpSnappyPDFTrait;
 use App\Util\DependancyInjectionTrait\NumServiceTrait;
 use Swift_Attachment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,6 +23,7 @@ class AvoirController extends AbstractController
     use NumServiceTrait;
     use JournalAchatsTrait;
     use JournalVentesTrait;
+    use KnpSnappyPDFTrait;
     
 
     /**
@@ -329,7 +331,7 @@ class AvoirController extends AbstractController
 		$filename = $avoir->getNum().'.'.$nomClient.'.pdf';
 
 		return new Response(
-				$this->get('knp_snappy.pdf')->getOutputFromHtml($html,
+				$this->getKnpSnappyPdf()->getOutputFromHtml($html,
 						array(
 								'margin-bottom' => '10mm',
 								'margin-top' => '10mm',
@@ -363,7 +365,7 @@ class AvoirController extends AbstractController
 		$nomClient = strtolower(str_ireplace(' ','', $avoir->getFacture()->getCompte()->getNom()));
 		$fileName =$pdfFolder.$avoir->getNum().'.'.$nomClient.'.pdf';
 
-		$this->get('knp_snappy.pdf')->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
+		$this->getKnpSnappyPdf()->generateFromHtml($html, $fileName, array('javascript-delay' => 60), true);
 
 		return $fileName;
 	}
