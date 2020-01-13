@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\Exception\ExceptionInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RapportFilterType extends AbstractType
@@ -142,6 +143,7 @@ class RapportFilterType extends AbstractType
     			);
     			break;
     	}
+        $arr_champs = array_flip($arr_champs);
 
     	$arr_action = array(
     			'EQUALS' => 'Est',
@@ -159,11 +161,13 @@ class RapportFilterType extends AbstractType
                 'MORE_OR_EQUALS' => '>=',
     			'LESS_OR_EQUALS' => '<='
     	);
+        $arr_action = array_flip($arr_action);
 
     	$arr_andor = array(
     			'AND' => 'Et',
     			'OR' => 'Ou',
     	);
+        $arr_andor = array_flip($arr_andor);
 
     	$builder
     		->add('andor', ChoiceType::class, array(
@@ -199,7 +203,7 @@ class RapportFilterType extends AbstractType
     }
 
  /**
-     * @param OptionsResolverInterface $resolver
+     * @param ExceptionInterface $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {

@@ -3,6 +3,7 @@
 namespace App\Controller\CRM;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -57,22 +58,22 @@ class BonCommandeController extends AbstractController
 
 		$formBuilder = $this->createFormBuilder();
 		$formBuilder
-			->add('year', \Symfony\Component\Form\Extension\Core\Type\ChoiceType::class, array(
+			->add('year', ChoiceType::class, array(
 					'required' => true,
 					'label' => 'Année',
-					'choices' => $arr_years,
+					'choices' => array_flip($arr_years),
 					'attr' => array('class' => 'year-select'),
 					'data' => 'all'
 			))
-			->add('etat', \Symfony\Component\Form\Extension\Core\Type\ChoiceType::class, array(
+			->add('etat', ChoiceType::class, array(
 					'required' => true,
 					'label' => 'Etat',
-					'choices' => array(
+					'choices' => array_flip(array(
 						'all' => 'Tous',
 						'ok' => 'OK',
 						'current' => 'En cours',
 						'ko' => 'Problème'
-					),
+					)),
 					'attr' => array('class' => 'etat-radio'),
 					'expanded' => true,
 					'data' => 'all'
