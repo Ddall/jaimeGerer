@@ -49,7 +49,7 @@ class MerciType extends AbstractType
         }
 
         $builder
-            ->add(\Symfony\Component\Form\Extension\Core\Type\TextType::class, TextType::class, array(
+            ->add('text', TextType::class, array(
                 'label' => 'Pour',
                 'required' => true
             ))
