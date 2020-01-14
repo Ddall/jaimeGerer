@@ -496,7 +496,7 @@ class ComptaController extends AbstractController
 		$row = 1;
 		$col = 'A';
 		foreach($arr_header as $header){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$header);
 				$col++;
 		}
 
@@ -527,16 +527,16 @@ class ComptaController extends AbstractController
 								$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
 								$col++;
 
-								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligneJournal->getLibelle());
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligneJournal->getLibelle());
 								$col++;
 
-								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $mouvement->getMontant());
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$mouvement->getMontant());
 								$col++;
 
-								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $rapprochement->getAffectationDiverse()->getCompteComptable()->getNum());
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$rapprochement->getAffectationDiverse()->getCompteComptable()->getNum());
 								$col++;
 
-								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $compteComptable->getNum());
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$compteComptable->getNum());
 								$col++;
 
 

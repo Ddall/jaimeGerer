@@ -861,19 +861,19 @@ class FactureController extends AbstractController
 					}
 
 					//code
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('A'.$line, $compte->getCodeEvoliz());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('A'.$line, (string)$compte->getCodeEvoliz());
 					//nom
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('B'.$line, $compte->getNom());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('B'.$line, (string)$compte->getNom());
 					//adresse
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('K'.$line, $compte->getAdresse());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('K'.$line, (string)$compte->getAdresse());
 					//code postal
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('M'.$line, $compte->getCodePostal());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('M'.$line, (string)$compte->getCodePostal());
 					//ville
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('N'.$line, $compte->getVille());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('N'.$line, (string)$compte->getVille());
 					//pays
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('O'.$line, $compte->getPays());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('O'.$line, (string)$compte->getPays());
 					//telephone
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('V'.$line, $compte->getTelephone());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('V'.$line, (string)$compte->getTelephone());
 
 					$arr_contacts[] = $compte->getId();
 
@@ -899,31 +899,31 @@ class FactureController extends AbstractController
 				$arr_produits = $facture->getProduits();
 				foreach($arr_produits as $produit){
 					//num facture
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('A'.$line, $facture->getNum());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('A'.$line, (string)$facture->getNum());
 					//date facture
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('B'.$line, ($facture->getDateCreation()->format('d/m/Y')));
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('B'.$line, (string)($facture->getDateCreation()->format('d/m/Y')));
 					//code client
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('C'.$line, $facture->getCompte()->getCodeEvoliz());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('C'.$line, (string)$facture->getCompte()->getCodeEvoliz());
 					//code métier Evoliz
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('D'.$line, ($produit->getType()->getValeur()));
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('D'.$line, (string)($produit->getType()->getValeur()));
 					//conditions de règlement
 					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('R'.$line, "30 jours");
 					//ref
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AA'.$line, ($produit->getType()->getValeur()));
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AA'.$line, (string)($produit->getType()->getValeur()));
 					//designation
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AB'.$line, strip_tags($produit->getDescription()));
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AB'.$line, (string)strip_tags($produit->getDescription()));
 					//quantité
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AC'.$line, $produit->getQuantite());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AC'.$line, (string)$produit->getQuantite());
 					//tarif
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AE'.$line, $produit->getTarifUnitaire());
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AE'.$line, (string)$produit->getTarifUnitaire());
 					//remise
 					$remise = $produit->getRemise();
 					if($produit->getRemise() == null){
 						$remise = 0;
 					}
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AF'.$line, $remise);
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AF'.$line, (string)$remise);
 					//TVA
-					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AG'.$line, ($facture->getTaxePercent()*100));
+					$phpExcelObject->setActiveSheetIndex(0)->setCellValue('AG'.$line, (string)($facture->getTaxePercent()*100));
 
 					$line++;
 				}
@@ -986,7 +986,7 @@ class FactureController extends AbstractController
 		$row = 1;
 		$col = 'A';
 		foreach($arr_header as $header){
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$header);
 			$col++;
 		}
 		
@@ -995,22 +995,22 @@ class FactureController extends AbstractController
 			$col = 'A';
 			$row++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getNum());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$facture->getNum());
 			$col++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getDateCreation()->format('d/m/Y'));
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$facture->getDateCreation()->format('d/m/Y'));
 			$col++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getCompte()->getNom());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$facture->getCompte()->getNom());
 			$col++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getAnalytique()->getValeur());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$facture->getAnalytique()->getValeur());
 			$col++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getTotalTTC());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$facture->getTotalTTC());
 			$col++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $facture->getObjet());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$facture->getObjet());
 			$col++;
 
 		}

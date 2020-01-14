@@ -326,7 +326,7 @@ class JournalAchatsController extends AbstractController
 		$row = 1;
 		$col = 'A';
 		foreach($arr_header as $header){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$header);
 				$col++;
 		}
 
@@ -334,20 +334,20 @@ class JournalAchatsController extends AbstractController
 			$col = 'A';
 			$row++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCodeJournal());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCodeJournal());
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)PHPExcel_Shared_Date::PHPToExcel( $ligne->getDate()) );
 			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, substr($ligne->getCompteComptable()->getNum(),0,3));
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCompteComptable()->getNum());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCompteComptable()->getNum());
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getLibelleWithoutNum());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getLibelleWithoutNum());
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDebit());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getDebit());
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCredit());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCredit());
 			$col++;
 			$settingsAnalytique = $ligne->getAnalytique();
 			if(!$settingsAnalytique){
@@ -355,9 +355,9 @@ class JournalAchatsController extends AbstractController
 			} else {
 				$analytique = $settingsAnalytique->getValeur();
 			}
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $analytique);
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$analytique);
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCommentaire());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCommentaire());
 	  }
 
 		//set column width

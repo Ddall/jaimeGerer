@@ -181,7 +181,7 @@ class OperationDiverseController extends AbstractController
 		$row = 1;
 		$col = 'A';
 		foreach($arr_header as $header){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$header);
 				$col++;
 		}
 
@@ -189,40 +189,40 @@ class OperationDiverseController extends AbstractController
 			$col = 'A';
 			$row++;
 
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCodeJournal());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCodeJournal());
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)PHPExcel_Shared_Date::PHPToExcel( $ligne->getDate()) );
 			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, substr($ligne->getCompteComptable()->getNum(),0,3));
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCompteComptable()->getNum());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCompteComptable()->getNum());
 			$col++;
 			if($ligne->getFacture()){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getFacture()->getNum());
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getFacture()->getNum());
 			} else if($ligne->getDepense()){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDepense()->getNum());
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getDepense()->getNum());
 			} else if ($ligne->getAvoir()){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getAvoir()->getNum());
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getAvoir()->getNum());
 			}
 			$col++;
 			if($ligne->getFacture()){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getFacture()->getCompte());
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getFacture()->getCompte());
 			} else if($ligne->getDepense()){
-				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDepense()->getCompte());
+				$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getDepense()->getCompte());
 			} else if ($ligne->getAvoir()){
 				if($ligne->getAvoir()->getType() == "CLIENT"){
-					$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getAvoir()->getFacture()->getCompte());
+					$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getAvoir()->getFacture()->getCompte());
 				} else {
-					$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getAvoir()->getDepense()->getCompte());
+					$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getAvoir()->getDepense()->getCompte());
 				}
 			}
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDebit());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getDebit());
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCredit());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCredit());
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCommentaire());
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCommentaire());
 	  	}
 
 		//set column width

@@ -1359,7 +1359,7 @@ class TableauBordService{
 
         for($mois = 1; $mois <= 12; $mois++){
           $montant = $arr_sousPoste[$mois];
-          $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $montant);
+          $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$montant);
           $col++;
         }
 

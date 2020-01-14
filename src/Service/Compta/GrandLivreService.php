@@ -52,7 +52,7 @@ class GrandLivreService  {
     $row = 1;
     $col = 'A';
     foreach($arr_header as $header){
-        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $header);
+        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$header);
         $col++;
     }
     $objPHPExcel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
@@ -63,26 +63,26 @@ class GrandLivreService  {
       $col = 'A';
       $cc = $arr['cc'];
 
-      $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $cc->__toString());
+      $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$cc->__toString());
       $objPHPExcel->getActiveSheet()->getStyle($col.$row)->getFont()->setBold(true);
 
       foreach($arr['lignes'] as $ligne){
         $row++;
         $col = 'A';
-        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDate()->format('d/m/Y'));
+        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getDate()->format('d/m/Y'));
         $col++;
-        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCodeJournal());
+        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCodeJournal());
         $col++;
-        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getPiece());
+        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getPiece());
         $col++;
-        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getLibelle());
+        $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getLibelle());
         $col++;
         if($ligne->getDebit() > 0){
-            $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getDebit());
+            $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getDebit());
         }
         $col++;
         if($ligne->getCredit() > 0){
-          $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCredit());
+          $objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)$ligne->getCredit());
         }
       }
 
