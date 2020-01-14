@@ -998,7 +998,7 @@ class JournalBanqueController extends AbstractController
 
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, $ligne->getCodeJournal());
 			$col++;
-			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, PHPExcel_Shared_Date::PHPToExcel( $ligne->getDate()) );
+			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)PHPExcel_Shared_Date::PHPToExcel( $ligne->getDate()) );
 			$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
 			$col++;
 			$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, substr($ligne->getCompteComptable()->getNum(),0,3));

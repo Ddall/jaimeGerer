@@ -523,7 +523,7 @@ class ComptaController extends AbstractController
 								$col = 'A';
 								$row++;
 
-								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, PHPExcel_Shared_Date::PHPToExcel($ligneJournal->getDate()));
+								$objPHPExcel->getActiveSheet ()->setCellValue ($col.$row, (string)PHPExcel_Shared_Date::PHPToExcel($ligneJournal->getDate()));
 								$objPHPExcel->getActiveSheet()->getStyle($col.$row)->getNumberFormat()->setFormatCode('dd/mm/yyyy');
 								$col++;
 
