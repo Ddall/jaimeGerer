@@ -19,7 +19,6 @@
           <th class="col-md-1">Activé</th>
           <th class="col-md-2">Accès aux outils</th>
           <th class="col-md-1">Administrateur</th>
-          <th class="col-md-1">ID Receipt Bank</th>
           <th class="col-md-1">Actions</th>
         </tr>
       </thead>
@@ -72,13 +71,6 @@
                 data-id="{{ user.id }}"
                 {{ app.user.id == user.id ? 'disabled' : '' }}
               >
-            </td>
-            <td>
-              {% if user.receiptBankId is not null %}
-                {{ user.receiptBankId }}
-              {% else %}
-                -
-              {% endif %}
             </td>
             <td>
               <a class="btn btn-xs btn-warning"><span class="glyphicon glyphicon-pencil"></span></a>

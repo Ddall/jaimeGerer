@@ -19,46 +19,44 @@
                 <strong>Email</strong><br />{{ user.email }}
             </div>
         </div>
-        <div class="row spacer-top">
-            <hr />
-            <div class="col-md-6">
-                <strong>Taux horaire</strong><br />{{ user.tauxHoraire }} €
-            </div>
-            <div class="col-md-6">
-                <strong>Compte comptable notes de frais</strong><br />{{ user.compteComptableNoteFrais }}
-            </div>
-        </div>
 
-         <div class="row">
-            <div class="col-md-12">
+        {% if app.user.company.hasAccesFonctionnalite('NDF') %}
+            <div class="row spacer-top">
                 <hr />
-                <strong>Véhicule personnel</strong><br />
-                <i>Ces informations permettent de préremplir automatiquement les frais de déplacement dans <span class="jaimelesnotesdefrais">J'aime les notes de frais</span></i>
+                <div class="col-md-6">
+                    <strong>Taux horaire</strong><br />{{ user.tauxHoraire }} €
+                </div>
+                <div class="col-md-6">
+                    <strong>Compte comptable notes de frais</strong><br />{{ user.compteComptableNoteFrais }}
+                </div>
             </div>
-        </div>
 
-        <div class="row spacer-top"> 
-            <div class="col-md-6">
-                <strong>Marque</strong><br />{{ user.marqueVoiture }}
+             <div class="row">
+                <div class="col-md-12">
+                    <hr />
+                    <strong>Véhicule personnel</strong><br />
+                    <i>Ces informations permettent de préremplir automatiquement les frais de déplacement dans <span class="jaimelesnotesdefrais">J'aime les notes de frais</span></i>
+                </div>
             </div>
-            <div class="col-md-6">
-                <strong>Modèle</strong><br />{{ user.modeleVoiture }}
-            </div>
-            <div class="col-md-6">
-                <strong>Immatriculation</strong><br />{{ user.immatriculationVoiture }}
-            </div>
-            <div class="col-md-6">
-                <strong>Puissance fiscale</strong><br />{{ user.puissanceVoiture }} CV
-            </div>
-        </div>
 
+            <div class="row spacer-top"> 
+                <div class="col-md-6">
+                    <strong>Marque</strong><br />{{ user.marqueVoiture }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Modèle</strong><br />{{ user.modeleVoiture }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Immatriculation</strong><br />{{ user.immatriculationVoiture }}
+                </div>
+                <div class="col-md-6">
+                    <strong>Puissance fiscale</strong><br />{{ user.puissanceVoiture }} CV
+                </div>
+            </div>
+        {% endif %}
 
     </div>
 
-
-
 </div>
-
-
 
 {% endblock %}

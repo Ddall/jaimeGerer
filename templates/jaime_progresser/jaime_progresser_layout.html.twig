@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/jaime_progresser.css') }}" type="text/css" />
+{% endblock %}
+
+{% block mobiletitle %}
+    <div id="titre-mobile-wrapper" class="jaime_progresser">
+        <a href="{{ path('jaime_progresser_mission_liste') }}">
+            <img src="{{ asset('images/assets/jaime_progresser.png') }}" alt="logo J'aime progresser" />
+            <span class="title">J'aime progresser</span>
+        </a>
+    </div>
+{% endblock %}
+
+{% block mobile_menu_bottom_dropdown %}
+    <li role="presentation">
+        <a href="{{ path('jaime_progresser_mission_liste') }}">
+            <span class="glyphicon glyphicon-envelope menu-icon"></span>
+            Campagnes
+        </a>
+    </li>
+{% endblock %}
+
+{% block body %}
+	<div class="row full-height-minus-userbar">
+		<div class="col-md-1 aside full-height hidden-xs">
+	    	<ul>
+	    		<li id="link-emailing">
+	    		    <a href="{{ path('jaime_progresser_mission_liste') }}">
+	    		      <span class="glyphicon glyphicon-home" style="font-size: 2em;"></span>
+	    		        <div class="tooltoop">Accueil</div>
+	    		    </a>
+	    		</li> 
+	    		<li id="link-campagne">
+	    			<a href="{{ path('jaime_progresser_mission_liste') }}">
+	    				<span class="glyphicon glyphicon-envelope" style="font-size: 2em;"></span> 
+	    				<div class="tooltoop">Missions</div>
+	    			</a>
+	    		</li>
+	    	</ul>
+	    </div>
+	    		
+	    <div class="col-md-11 col-xs-12 fit wrap-content wrap-content-emailing">
+	     	<div class="titre titre-emailing hidden-xs">
+				<h1>J'aime Progresser</h1>
+			</div>
+
+			<div class="row">
+			    <div class="col-md-12">
+			        {% for flashMessage in app.session.flashbag.get('success') %}
+			            <div class="alert alert-success">
+			                {{ flashMessage }}
+			            </div>
+			        {% endfor %}
+			        {% for flashMessage in app.session.flashbag.get('danger') %}
+			            <div class="alert alert-danger">
+			                {{ flashMessage }}
+			            </div>
+			        {% endfor %}
+			    </div>
+			</div>
+
+	    	{% block content %} 
+	    	{% endblock %}
+	    </div>
+
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+   <script type="text/javascript">
+	   /* Add class "current" on the right menu item by checking the page URL */
+	   $(document).ready(function() {
+			var arr_links = ['jaime_progresser'];
+		    var arr_param = window.location.href.split("/"); 
+		    var index;
+		    for (index = 0; index < arr_param.length; ++index) {
+		    	if($.inArray(arr_param[index], arr_links) != -1){
+		    		$('#link-'+arr_links[$.inArray(arr_param[index], arr_links)]).addClass('current');
+		    		break;
+			    }
+		    }
+		});
+	</script>
+{% endblock %}

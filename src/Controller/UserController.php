@@ -103,7 +103,7 @@ class UserController extends AbstractController
         $user = $this->userManager->createUser();
 
         $form = $this->createForm(UserType::class, $user, array(
-           'company_id' => $this->getUser()->getCompany()->getId(),
+           'company' => $this->getUser()->getCompany(),
         ));;
 
         $form->handleRequest($request);

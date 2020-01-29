@@ -25,13 +25,6 @@ class User extends BaseUser
     private $company;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="receipt_bank_id", type="string", length=255, nullable=true)
-     */
-    private $receiptBankId;
-
-    /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Compta\CompteComptable")
      * @ORM\JoinColumn(nullable=true, name="compteComptableNoteFrais_id")
      */
@@ -185,29 +178,6 @@ class User extends BaseUser
 	    parent::setEmail($email);
 	    $this->setUsername($email);
 	}
-
-    /**
-     * Set receiptBankId
-     *
-     * @param string $receiptBankId
-     * @return User
-     */
-    public function setReceiptBankId($receiptBankId)
-    {
-        $this->receiptBankId = $receiptBankId;
-
-        return $this;
-    }
-
-    /**
-     * Get receiptBankId
-     *
-     * @return string
-     */
-    public function getReceiptBankId()
-    {
-        return $this->receiptBankId;
-    }
 
     /**
      * Set compteComptableNoteFrais

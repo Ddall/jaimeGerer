@@ -1,0 +1,44 @@
+{% extends 'jaime_progresser/jaime_progresser_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Nouvelle mission à évaluer</h1>	 
+		</div>
+	</div>
+
+	<div class="row">
+        <div class="col-md-12 mission-form">
+    		{{ include('jaime_progresser/mission/_form.html.twig') }}
+    	</div>
+    </div>
+{% endblock %}
+
+
+{% block javascripts %}
+	{{ parent() }}
+	 <script src="https://cdn.rawgit.com/digitalBush/jquery.maskedinput/1.4.1/dist/jquery.maskedinput.min.js"></script>
+	<script src="{{ asset('lib/jquery-ui-month-picker/src/MonthPicker.js') }}"></script>
+
+	<script type="text/javascript">
+
+		$(document).ready( function () {
+
+			/* autocomplete */
+			$('.typeahead-projet').typeahead({
+				order: "desc",
+				accent: true,
+				source: {
+					url: Routing.generate('crm_bon_commande_search')
+				},
+				callback: {
+					onClickAfter: function (node, a, item, event) {
+						$('.entity-projet').val(item.id);
+					}
+				},
+			});
+
+		});
+
+	</script>
+{% endblock %}

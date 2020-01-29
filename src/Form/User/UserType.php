@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class UserType extends AbstractType
 {
 
-    protected $companyId;
+    protected $company;
 
     /**
      * @param FormBuilderInterface $builder
@@ -26,7 +26,7 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $this->companyId = $options['company_id'];
+        $this->company = $options['company'];
 
         $builder
             ->add('firstName', TextType::class, array(
@@ -63,22 +63,35 @@ class UserType extends AbstractType
                     'data-on'=> "Oui",
                     'data-off'=> "Non"
                 )
-            ))
-            ->add('permissions', ChoiceType::class, array(
-                'mapped' => false,
-                'multiple' => true,
-                'expanded' => true,
-                'label' => 'Peut utiliser :',
-                'choices' => array(
-                    'ROLE_COMMERCIAL' => 'J\'aime le commercial',
-                    'ROLE_COMPTA' => 'J\'aime la compta',
-                    'ROLE_COMMUNICATION' => 'J\'aime communiquer',
-                    //'ROLE_RH' => 'J\'aime le recrutement',
-                    'ROLE_NDF' => 'J\'aime les notes de frais',
-                    'ROLE_TIMETRACKER' => 'J\'aime compter mon temps',
-                )
-            ))
-            ->add('tauxHoraire', IntegerType::class, array(
+            ));
+
+        $permissions = [];
+        if($this->company->hasAccesFonctionnalite('CRM')){
+            $permissions['J\'aime le commercial'] = 'ROLE_COMMERCIAL';
+        }
+        if($this->company->hasAccesFonctionnalite('COMPTA')){
+            $permissions['J\'aime la compta'] = 'ROLE_COMPTA';
+        }
+        if($this->company->hasAccesFonctionnalite('EMAILING')){
+            $permissions['J\'aime communiquer'] = 'ROLE_EMAILING';
+        }
+        if($this->company->hasAccesFonctionnalite('NDF')){
+            $permissions['J\'aime les notes de frais'] = 'ROLE_NDF';
+        }
+        if($this->company->hasAccesFonctionnalite('TIME_TRACKER')){
+            $permissions['J\'aime compter mon temps'] = 'ROLE_TIMETRACKER';
+        }
+           
+        $builder->add('permissions', ChoiceType::class, array(
+            'mapped' => false,
+            'multiple' => true,
+            'expanded' => true,
+            'label' => 'Peut utiliser :',
+            'choices' => $permissions
+        ));
+
+        if($this->company->hasAccesFonctionnalite('NDF')){
+            $builder->add('tauxHoraire', IntegerType::class, array(
                 'required' => false,
                 'label' => 'Taux horaire'
             ))
@@ -91,7 +104,7 @@ class UserType extends AbstractType
                     return $er->createQueryBuilder('c')
                       ->where('c.company = :company')
                       ->andWhere('c.num LIKE :num')
-                      ->setParameter('company', $this->companyId)
+                      ->setParameter('company', $this->company->getId())
                       ->setParameter('num', '62510%')
                       ->orderBy('c.nom', 'ASC');
                 },
@@ -118,8 +131,10 @@ class UserType extends AbstractType
                     6 => '6 CV',
                     7 => '7 CV et plus'
                 )
-            ))
-            ->add('submit', SubmitType::class, array(
+            ));
+        }
+        
+        $builder->add('submit', SubmitType::class, array(
               'label' => 'Enregistrer',
               'attr' => array('class' => 'btn btn-success')
             ))
@@ -133,7 +148,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults(array(
             'data_class' => 'App\Entity\User',
-            'company_id' => null,
+            'company' => null,
         ));
     }
 

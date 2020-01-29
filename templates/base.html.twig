@@ -143,29 +143,66 @@
                                         </a>
                                     </div>
                                     <div id="menu-secondary-hover" class="hidden-xs">
-                                        <a href="{{ path('crm_index') }}" class="active">
-                                            <img src="{{ asset('images/assets/commercial.png') }}" alt="CRM"/>
-                                        </a>
-                                        <a href="{{ path('emailing_index') }}" class="active">
-                                            <img src="{{ asset('images/assets/communication.png') }}" alt="Emailing"/>
-                                        </a>
-                                        <a href="{{ path('compta_index') }}" class="active">
-                                            <img src="{{ asset('images/assets/comptabilite.png') }}" alt="Comptabilité"/>
-                                        </a>
+
+                                        {% if app.user.company.hasAccesFonctionnalite('CRM') %}
+                                            <a href="{{ path('crm_index') }}" class="active">
+                                                <img src="{{ asset('images/assets/commercial.png') }}" alt="CRM"/>
+                                            </a>
+                                        {% else %}
+                                            <a href="#" class="inactive">
+                                                <img src="{{ asset('images/assets/commercial.png') }}" alt="CRM"/>
+                                            </a>
+                                        {% endif %}
+
+                                        {% if app.user.company.hasAccesFonctionnalite('EMAILING') %}
+                                            <a href="{{ path('emailing_index') }}" class="active">
+                                                <img src="{{ asset('images/assets/communication.png') }}" alt="Emailing"/>
+                                            </a>
+                                        {% else %}
+                                            <a href="#" class="inactive">
+                                                <img src="{{ asset('images/assets/communication.png') }}" alt="Emailing"/>
+                                            </a>
+                                        {% endif %}
+
+                                        {% if app.user.company.hasAccesFonctionnalite('COMPTA') %}
+                                            <a href="{{ path('compta_index') }}" class="active">
+                                                <img src="{{ asset('images/assets/comptabilite.png') }}" alt="Comptabilité"/>
+                                            </a>
+                                        {% else %}
+                                            <a href="#" class="inactive">
+                                                <img src="{{ asset('images/assets/comptabilite.png') }}" alt="Comptabilité"/>
+                                            </a>
+                                        {% endif %}
+
                                         <a href="#" class="inactive">
                                             <img src="{{ asset('images/assets/recrutement.png') }}" alt="Recrutement"/>
                                         </a>
-                                        <a href="{{ path('ndf_recus_liste') }}" class="active">
-                                            <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
-                                        </a>
+
+                                        {% if app.user.company.hasAccesFonctionnalite('NDF') %}
+                                            <a href="{{ path('ndf_recus_liste') }}" class="active">
+                                                <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
+                                            </a>
+                                        {% else %}
+                                            <a href="#" class="inactive">
+                                                <img src="{{ asset('images/assets/ndf.png') }}" alt="Notes de frais"/>
+                                            </a>
+                                        {% endif %}
+
                                         {% if app.user.company.isNicomak %}
                                             <a href="{{ path('social_index') }}" class="active">
                                                 <img src="{{ asset('images/assets/jaimenicomak-colors.png') }}" alt="J\'aime {{ app.user.company.nom }}"/>
                                             </a>
                                         {% endif %}
-                                        <a href="{{ path('time_tracker_index') }}" class="active">
-                                           <img src="{{ asset('images/assets/jaimecomptermontemps.png') }}" alt="Compter mon temps"/>
-                                       </a>
+
+                                        {% if app.user.company.hasAccesFonctionnalite('TIME_TRACKER') %}
+                                            <a href="{{ path('time_tracker_index') }}" class="active">
+                                               <img src="{{ asset('images/assets/jaimecomptermontemps.png') }}" alt="Compter mon temps"/>
+                                           </a>
+                                        {% else %}
+                                            <a href="#" class="inactive">
+                                                <img src="{{ asset('images/assets/jaimecomptermontemps.png') }}" alt="Compter mon temps"/>
+                                            </a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             {% endif %}    
@@ -177,11 +214,13 @@
                                 {{ app.user.username }}
                                 <br/>
                                 {% if app.user.company is not null %}
-                                    <a href="" id="displayCredits">
-                                        Crédit :
-                                        {{ app.user.company.credits|number_format(2, ',') }}
-                                        €
-                                    </a>
+                                    {% if app.user.company.hasAccesFonctionnalite('COMPTABILITE') %}
+                                        <a href="" id="displayCredits">
+                                            Crédit :
+                                            {{ app.user.company.credits|number_format(2, ',') }}
+                                            €
+                                        </a>
+                                    {% endif %}
                                 {% endif %}
                              {% endif %}
                         </p>

@@ -5,11 +5,11 @@
 		</div>
 		<div class="col-md-3 col-md-offset-2 well center">
 			<h4>Taux d'ouverture</h4>
-			<p class="xl center">{{ contact.openRate }} %</p>
+			<p class="xl center">{{ contact.openRate|number_format() }} %</p>
 		</div>
 		<div class="col-md-3 col-md-offset-2 well center">
 			<h4>Taux de clic</h4>
-			<p class="xl center">{{ contact.clickRate }} %</p>
+			<p class="xl center">{{ contact.clickRate|number_format() }} %</p>
 		</div>
 		<div class="col-md-12">
 			<table id="table_emailing" class="table table-bordered table-striped">

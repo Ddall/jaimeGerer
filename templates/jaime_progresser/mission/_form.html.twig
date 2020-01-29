@@ -1,0 +1,46 @@
+{{ form_start(form) }}
+
+	<div class="row">
+	    <div class="form-group col-md-12">
+	    	<div class="typeahead-container">
+			    <div class="typeahead-field">
+			        <span class="typeahead-query">
+			        	{{ form_label(form.projet_name) }}<br />
+			        	<span class="form-help">N° du bon de commande, nom du projet ou du client</span>
+			        	<div class="input-group">
+			        	    {{ form_widget(form.projet_name) }}
+			        	    <div class="input-group-addon"><span class="glyphicon glyphicon-search"></span></div>
+			        	</div>
+			            {{ form_row(form.projet_entity) }}
+			        </span>
+			    </div>
+			</div>
+	    	
+	    </div>
+	</div>
+
+	<div class="row">
+	    <div class="form-group col-md-6">
+	    	{{ form_row(form.typeMission) }}
+	    </div>
+
+	    <div class="form-group col-md-6">
+	    	{{ form_row(form.themes) }}
+	    </div>
+	</div>	
+
+    <div class="row">
+    	<hr />
+        <div class="col-md-6 text-right">
+        	<a href="{{ path('jaime_progresser_mission_liste') }}" class="btn btn-outline-secondary">
+	    		<i class="fas fa-chevron-left"></i> Annuler
+	    	</a>
+    	</div>
+    	<div class="col-md-6 text-left">
+	    	<button class="btn btn-info">
+	    		<i class="fas fa-save"></i> Enregistrer
+	    	</button>
+	    </div>
+    </div>
+
+{{ form_end(form) }}

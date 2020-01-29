@@ -36,9 +36,17 @@
 	     <div class="row hidden-xs">
 		    	<div class="col-md-12">
 		    		<p>
-		    			<a href="#contacts">Contacts de cette organisation</a> - 
-		    			<a href="#opportunites">Actions commerciales de cette organisation</a> - 
-		    			<a href="#factures">Factures pour cette organisation</a>
+		    			{% if app.user.company.hasAccesFonctionnalite('CRM_CONTACT') %}
+		    				<a href="#contacts">Contacts de cette organisation</a> - 
+		    			{% endif %}
+		    			
+		    			{% if app.user.company.hasAccesFonctionnalite('CRM_ACTION_COMMERCIALE') %}
+		    				<a href="#opportunites">Actions commerciales de cette organisation</a> - 
+		    			{% endif %}
+
+		    			{% if app.user.company.hasAccesFonctionnalite('CRM_FACTURE') %}
+		    				<a href="#factures">Factures pour cette organisation</a>
+		    			{% endif %}
 		    		</p>
 		    	</div>
 		    </div>
@@ -318,10 +326,17 @@
 	    	</div>
 	    </div>
 
-	  
-	  {{ include('crm/contact/crm_contact_liste_part.html.twig', {'arr_contacts': arr_contacts, 'div_id': 'table_contacts'}) }}
-	  {{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites'}) }}
-	  {{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
+	  	{% if app.user.company.hasAccesFonctionnalite('CRM_CONTACT') %}
+	  		{{ include('crm/contact/crm_contact_liste_part.html.twig', {'arr_contacts': arr_contacts, 'div_id': 'table_contacts'}) }}
+	  	{% endif %}
+	 	
+	 	{% if app.user.company.hasAccesFonctionnalite('CRM_ACTION_COMMERCIALE') %}
+	 		{{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites'}) }}
+	 	{% endif %}
+	  	
+	  	{% if app.user.company.hasAccesFonctionnalite('CRM_FACTURE') %}
+	  		{{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
+	  	{% endif %}
       
 {% endblock %}
 

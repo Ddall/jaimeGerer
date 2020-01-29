@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -148,6 +150,16 @@ class Company
      * @ORM\Column(name="is_nicomak", type="boolean", nullable=false)
      */
     private $isNicomak = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\AccesFonctionnalite", mappedBy="company")
+     */
+    private $accesFonctionnalites;
+
+    public function __construct()
+    {
+        $this->accesFonctionnalites = new ArrayCollection();
+    }
 
     /**
      * Set id
@@ -669,5 +681,45 @@ class Company
 
     public function isNicomak(){
         return $this->isNicomak;
+    }
+
+    /**
+     * @return Collection|AccesFonctionnalite[]
+     */
+    public function getAccesFonctionnalites(): Collection
+    {
+        return $this->accesFonctionnalites;
+    }
+
+    public function addAccesFonctionnalite(AccesFonctionnalite $accesFonctionnalite): self
+    {
+        if (!$this->accesFonctionnalites->contains($accesFonctionnalite)) {
+            $this->accesFonctionnalites[] = $accesFonctionnalite;
+            $accesFonctionnalite->setCompany($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAccesFonctionnalite(AccesFonctionnalite $accesFonctionnalite): self
+    {
+        if ($this->accesFonctionnalites->contains($accesFonctionnalite)) {
+            $this->accesFonctionnalites->removeElement($accesFonctionnalite);
+            // set the owning side to null (unless already changed)
+            if ($accesFonctionnalite->getCompany() === $this) {
+                $accesFonctionnalite->setCompany(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function hasAccesFonctionnalite($fonctionnalite){
+        foreach($this->accesFonctionnalites as $accesFonctionnalite){
+            if(strtoupper($accesFonctionnalite->getFonctionnalite()) == strtoupper($fonctionnalite)){
+                return true;
+            }
+        }
+        return false;
     }
 }

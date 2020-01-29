@@ -931,7 +931,7 @@ class CompteComptableController extends AbstractController
 		}
 
 		//max 8 characters
-		while(in_array($num, $arr_existings_nums) && $nbChars<=5) {
+		while(in_array($num, $arr_existings_nums) && $nbChars<5) {
 			$nbChars++;
 			$num = $baseNum;
 			$num.= strtoupper(substr($nom,0,$nbChars));

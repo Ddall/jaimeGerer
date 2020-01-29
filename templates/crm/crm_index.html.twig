@@ -17,42 +17,48 @@
 		<div class="col-md-3 center">
 			<h3 class="bold">ACTIONS RAPIDES</h3>
 		
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-search xl"></span>
-				</p>
-				<p><strong>Je cherche les coordonnées de quelqu'un</strong></p>
-				<input type="text" placeholder="Nom" id="contact-search-input" />
-				<p class="spacer-top">
-					<a class="btn btn-info" id="contact-search-button">
-						Rechercher un contact
-					</a>
-				</p>
-			</div>
+			{% if app.user.company.hasAccesFonctionnalite('CRM_CONTACT') %}
+				<div class="center crm-homepage-block well">
+					<p>
+						<span class="glyphicon glyphicon-search xl"></span>
+					</p>
+					<p><strong>Je cherche les coordonnées de quelqu'un</strong></p>
+					<input type="text" placeholder="Nom" id="contact-search-input" />
+					<p class="spacer-top">
+						<a class="btn btn-info" id="contact-search-button">
+							Rechercher un contact
+						</a>
+					</p>
+				</div>
+			{% endif %}
 		
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-user xl"></span>
-				</p>
-				<p><strong>J'ai rencontré une nouvelle personne</strong></p>
-				<p>
-					<a class="btn btn-info" href="{{ path('crm_contact_ajouter') }}">
-						Ajouter un contact
-					</a>
-				</p>
-			</div>
+			{% if app.user.company.hasAccesFonctionnalite('CRM_CONTACT') %}
+				<div class="center crm-homepage-block well">
+					<p>
+						<span class="glyphicon glyphicon-user xl"></span>
+					</p>
+					<p><strong>J'ai rencontré une nouvelle personne</strong></p>
+					<p>
+						<a class="btn btn-info" href="{{ path('crm_contact_ajouter') }}">
+							Ajouter un contact
+						</a>
+					</p>
+				</div>
+			{% endif %}
 		
-			<div class="center crm-homepage-block well">
-				<p>
-					<span class="glyphicon glyphicon-euro xl"></span>
-				</p>
-				<p><strong>J'ai fait un rendez-vous commercial</strong></p>
-				<p>
-					<a class="btn btn-info" href="{{ path('crm_action_commerciale_ajouter') }}">
-						Créer une action commerciale
-					</a>
-				</p>
-			</div>
+			{% if app.user.company.hasAccesFonctionnalite('CRM_ACTION_COMMERCIALE') %}
+				<div class="center crm-homepage-block well">
+					<p>
+						<span class="glyphicon glyphicon-euro xl"></span>
+					</p>
+					<p><strong>J'ai fait un rendez-vous commercial</strong></p>
+					<p>
+						<a class="btn btn-info" href="{{ path('crm_action_commerciale_ajouter') }}">
+							Créer une action commerciale
+						</a>
+					</p>
+				</div>
+			{% endif %}
 		</div>
 
 		<div class="col-md-9">

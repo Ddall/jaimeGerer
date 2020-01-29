@@ -1,0 +1,243 @@
+{% extends 'jaime_progresser/jaime_progresser_layout.html.twig' %}
+
+{% block content %}
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Missions évaluées</h1>	 
+		</div>
+	</div>
+		
+	<div class="row">
+		<div class="col-md-12">
+		    <p>
+		    	<a href="{{ path('jaime_progresser_mission_ajouter') }}" class="btn btn-success">
+		    		<span class="glyphicon glyphicon-plus"></span> Ajouter une mission à évaluer
+		    	</a>
+		    </p>
+
+		</div>
+    </div>
+    
+	<div class="row">
+    	<div class="col-md-12">
+		    <table  data-toggle="table" 
+                data-sortable="true" 
+                data-search="true" 
+                data-locale="fr-FR" 
+                data-pagination="true"
+                data-pagination-loop="true"
+                data-page-size="50"
+                 class="table table-bordered table-striped">
+	            <thead>
+	                <tr>
+	                    <th data-sortable="true" data-searchable="true">Type</th>
+	                    <th data-sortable="true" data-searchable="true">Thèmes</th>
+	                    <th data-sortable="true" data-searchable="true">Nom</th>
+	                    <th data-sortable="true" data-searchable="true">Client</th>
+	                    {# <th data-sortable="true" data-sorter="dateSorter">Date</th> #}
+	                    <th>Actions</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                {% for mission in missions %}
+	                    <tr>
+	                        <td>
+	                            <span class="badge badge-secondary">
+	                                {{ mission.typeMission.icone|raw }} {{ mission.typeMission }}
+	                            </span>
+	                        </td>
+	                        <td>
+	                            {% for theme in mission.themes %}
+	                                <span class="badge badge-info" style="background-color: {{ theme.color }};">
+	                                    {{ theme }}
+	                                </span>
+	                            {% endfor %}
+	                        </td>
+	                        <td>{{ mission }}</td>
+	                        <td>{{ mission.client }}</td>
+	                        {# <td>{{ mission.date|date('d/m/Y') }}</td> #}
+	                        <td>
+	                            <a href="" class="btn btn-xs btn-info" title="Voir la fiche">
+	                                <i class="fas fa-eye"></i>
+	                            </a>
+	                            <form method="post" action="" onsubmit="return confirm('Voulez-vous vraiment archiver cette mission ?');" style="display: inline;">
+	                               <input type="hidden" name="_method" value="DELETE">
+	                               <input type="hidden" name="_token" value="{{ csrf_token('archive' ~ mission.id) }}">
+	                               <button class="btn btn-danger btn-xs" title="Archiver"><i class="fas fa-archive"></i> </button>
+	                           </form>
+	                        </td>
+	                    </tr>
+	                {% endfor %}
+	            </tbody>
+	        </table>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+
+	<script type="text/javascript">
+		$(document).ready( function () {    
+			$('#table_contact_list').DataTable({
+					"dom": 'T<"clear">lfrtip',
+			        "oTableTools": {
+			        	"sSwfPath": "/web/lib/datatables/extensions/TableTools/swf/copy_csv_xls_pdf.swf",
+			            "aButtons": [
+			                {
+			                    "sExtends": "csv",
+			                    "sButtonText": "Excel",
+			                    "mColumns": [ 0, 1, 2, 3 ],
+			                    "sFileName": "contacts.csv"
+			                },
+			                {
+			                    "sExtends": "pdf",
+			                    "sButtonText": "PDF",
+			                    "mColumns": [ 0, 1, 2, 3 ],
+			                    "sFileName": "campagnes.pdf",
+			                    "sTitle": "campagne"
+			                },
+			            ]
+			        },
+					"language" : {                
+						"url": "//cdn.datatables.net/plug-ins/1.10.7/i18n/French.json"            
+					},
+					"responsive": true,
+					"processing": true,
+				    "serverSide": true,
+				    "bFilter": false,
+				    "iDisplayLength": 25,
+				    "ajax":{
+		                url : Routing.generate('emailing_campagne_liste_ajax'),
+		                type: "post",
+		            },
+		            "columns": [
+	                   { "data": "nom" },
+	                   { "data": "nomRapport" },
+	                   { "data": "dateEnvoi" },
+	                   { "data": "dateCreation" },
+	                ],
+					fnDrawCallback: function () {
+					  $( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn',
+					  } );
+					},
+					fnInitComplete: function () {
+					  $( 'a', this.fnGetNodes() ).tooltip( {
+						"delay": 0,
+						"track": true,
+						"fade": 250,
+						"tooltipClass": 'btn',
+					  } );
+					},
+	                "columnDefs": [
+                       {
+                           "render": function ( data, type, row ) {
+                           		
+                           		var url ='';
+                           		if (row['etat'] == 'DRAFT'){
+									url = Routing.generate('emailing_campagne_editer', {'id' : row['id']});
+								} else {
+									url = Routing.generate('emailing_campagne_voir', {'id' : row['id'] });
+								}
+                                var s = '<a href="'+url+'">'+data+'</a><br />' ;
+								if(row['etat'] == 'DRAFT'){
+									s+= '<span class="label label-default">Brouillon</span>';
+								} else if(row['etat'] == 'SCHEDULED'){
+									s+= '<span class="label label-info">Planifiée</span>';
+								} else if(row['etat'] == 'SENT'){
+									s+= '<span class="label label-success">Envoyée</span>';
+								} else if(row['etat'] == 'DELIVERING'){
+									s+= '<span class="label label-warning">En cours d\'envoi</span>';
+								} else if(row['etat'] == 'ERROR'){
+									s+= '<span class="label label-danger">Erreur lors de l\'envoi</span>';
+								}
+                               return s;
+                           },
+                           "targets": 0
+                       },
+                       {
+                           "render": function ( data, type, row ) {
+                           		var s = '';
+                           		if(null != row['nomRapport']){
+                           			s+=row['nomRapport'];
+                           		} else {
+                           			s+='<i>Aucun rapport sélectionné</i>';
+                           		}
+                               	s+= '<br />'+row['nbContacts']+' destinataires' ;
+                               	return s;
+                           },
+                           "targets": 1
+                       },
+                       {
+						   "render": function ( data, type, row ) {
+							   	if(data == null){
+							   		return "";
+							   	}
+							   	
+							   	var d = data.date;
+							   	var arr = d.split("-");
+							   	var y = arr[0];
+							   	var m = arr[1];
+							   	var arrj = arr[2].split(" ");
+							   	var j = arrj[0];
+							   	var res = j+"/"+m+"/"+y;  
+							  
+							   	return res;
+							   	
+							   
+						   },
+                           "targets": 2
+                       },
+                       {
+						   "render": function ( data, type, row ) {
+							   var d = data.date;
+							   var arr = d.split("-");
+							   var y = arr[0];
+							   var m = arr[1];
+							   var arrj = arr[2].split(" ");
+							   var j = arrj[0];
+							   var res = j+"/"+m+"/"+y;  
+							  
+							   return 'Créée le '+res+' <br />par '+row['user'];
+						   },
+                           "targets": 3
+                       },
+                       {
+                           // The `data` parameter refers to the data for the cell (defined by the
+                           // `data` option, which defaults to the column being worked with, in
+                           // this case `data: 0`.
+                           "render": function ( data, type, row ) {
+    
+                                var s = '';
+                                
+								if (row['etat'] == 'DRAFT'){
+									var editerUrl = Routing.generate('emailing_campagne_editer', {'id' : row['id']});
+									s += ' <a href="'+editerUrl+'" class="btn btn-xs btn-warning" ​data-toggle="tooltip" title="Editer"><span class="glyphicon glyphicon-pencil"></span></a>';
+								} else {
+									var voirUrl = Routing.generate('emailing_campagne_voir', {'id' : row['id']});
+                                	s += '<a href="'+voirUrl+'" class="btn btn-xs btn-info" ​data-toggle="tooltip" title="Statistiques"><span class="glyphicon glyphicon-stats"></span></a>';
+								}
+
+								var supprimerUrl = Routing.generate('emailing_campagne_supprimer', {'id' : row['id']});
+								s += ' <a href="'+supprimerUrl+'" class="btn btn-xs btn-danger" ​data-toggle="tooltip" title="Supprimer"><span class="glyphicon glyphicon-trash"></span></a>';
+                                
+                                return  s;
+
+                           },
+                           "targets": 4
+                       },
+                       { "visible": false,  "targets": [ 'id' ] }
+                   ]
+			});
+
+			$("* [rel='tooltip']").tooltip({
+			   	html: true, 
+			   	placement: 'top'
+			});
+		});
+	</script>
+{% endblock %}

@@ -4,7 +4,9 @@
 
 	<div class="row hidden-xs">
 		<div class="col-md-12 bread-crumb-back">
-		<a href="{{ path('crm_contact_liste') }}" class="small">< Retour à la listes des contacts</a>
+		<a href="{{ path('crm_contact_liste') }}" class="small">
+			< Retour à la listes des contacts
+		</a>
 		</div>
 	</div>
 	<div class="row" id="compte_details">
@@ -40,8 +42,12 @@
 	    </div>
 	    <div class="col-md-12 hidden-xs">
     		<p>
-    			<a href="#opportunites">Actions commerciales du contact</a> - 
-    			<a href="#factures">Factures du contact</a> - 
+    			{% if app.user.company.hasAccesFonctionnalite('CRM_ACTION_COMMERCIALE') %}
+    				<a href="#opportunites">Actions commerciales du contact</a> - 
+    			{% endif %}
+    			{% if app.user.company.hasAccesFonctionnalite('CRM_FACTURE') %}
+    				<a href="#factures">Factures du contact</a> - 
+    			{% endif %}
     			<a href="#prises_contact">Historique des prises de contact</a> -
     			<a href="#emailings">Historique des emailings</a>
     		</p>
@@ -474,9 +480,17 @@
 	    	</div>
 	   </div>
 
-	  {{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites', 'id_to_use': contact.id, 'id_origine_type': 'contact'}) }}
-	  {{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
-  	  {{ include('crm/priseContact/crm_prise_contact_liste_part.html.twig', {'contact': contact, 'div_id': 'table_prises_contact'}) }}
+	   {% if app.user.company.hasAccesFonctionnalite('CRM_ACTION_COMMERCIALE') %}
+	  		{{ include('crm/opportunite/crm_opportunite_liste_part.html.twig', {'arr_opportunites': arr_opportunites, 'div_id': 'table_opportunites', 'id_to_use': contact.id, 'id_origine_type': 'contact'}) }}
+	  	{% endif %}
+
+	  	{% if app.user.company.hasAccesFonctionnalite('CRM_FACTURE') %}
+	  		{{ include('crm/facture/crm_facture_liste_part.html.twig', {'arr_facture': arr_factures, 'div_id': 'table_factures'}) }}
+	  	{% endif %}
+
+  	  	{{ include('crm/priseContact/crm_prise_contact_liste_part.html.twig', {'contact': contact, 'div_id': 'table_prises_contact'}) }}
+
+  	  	{{ include('emailing/contact/emailing_liste_part.html.twig', {'contact': contact, 'div_id': 'table_emailings'}) }}
 {% endblock %}
     
 {% block additionalModals %}      

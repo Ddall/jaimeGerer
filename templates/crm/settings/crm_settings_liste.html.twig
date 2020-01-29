@@ -1,7 +1,7 @@
 {% extends 'crm/crm_layout.html.twig' %}
 
 {% block stylesheets %}
-	 {{ parent() }}
+	{{ parent() }}
 	<link rel="stylesheet" href="{{ asset('lib/jquery-file-upload/css/style.css') }}">
 	<link rel="stylesheet" href="{{ asset('lib/jquery-file-upload/css/jquery.fileupload.css') }}">
 {% endblock %}
@@ -20,28 +20,32 @@
 			{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
 		{% endfor %}
 
-		<div class="col-md-12"><h2>Paramètres des contacts</h2></div>
-		{% for settings in arr_settings if settings.categorie == "CONTACT" %}
-			{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
-		{% endfor %}
+		{% if app.user.company.hasAccesFonctionnalite('CRM_CONTACT') %}
+			<div class="col-md-12"><h2>Paramètres des contacts</h2></div>
+			{% for settings in arr_settings if settings.categorie == "CONTACT" %}
+				{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
+			{% endfor %}
+		{% endif %}
 	
-
-		<div class="col-md-12"><h2>Paramètres des opportunités</h2>	</div>
-		{% for settings in arr_settings if settings.categorie == "OPPORTUNITE" %}
-			{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
-		{% endfor %}
-
-
-		<div class="col-md-12"><h2>Paramètres des devis</h2></div>
-		{% for settings in arr_settings if settings.categorie == "DEVIS" %}
-			{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
-		{% endfor %}
+		{% if app.user.company.hasAccesFonctionnalite('CRM_ACTION_COMMERCIALE') %}
+			<div class="col-md-12"><h2>Paramètres des opportunités</h2>	</div>
+			{% for settings in arr_settings if settings.categorie == "OPPORTUNITE" %}
+				{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
+			{% endfor %}
+		
+			<div class="col-md-12"><h2>Paramètres des devis</h2></div>
+			{% for settings in arr_settings if settings.categorie == "DEVIS" %}
+				{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
+			{% endfor %}
+		{% endif %}
 	
-	
-		<div class="col-md-12"><h2>Paramètres des factures</h2></div>
-		{% for settings in arr_settings if settings.categorie == "FACTURE" %}
-			{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
-		{% endfor %}
+		{% if app.user.company.hasAccesFonctionnalite('CRM_FACTURE') %}
+			<div class="col-md-12"><h2>Paramètres des factures</h2></div>
+			{% for settings in arr_settings if settings.categorie == "FACTURE" %}
+				{% include 'crm/settings/crm_settings_completer_block.html.twig' %}
+			{% endfor %}
+		{% endif %}
+
 	</div>
 
 {% endblock %}
